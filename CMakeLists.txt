@@ -10,4 +10,6 @@ find_package(benchmark REQUIRED)
 
 include(cmake/ccache.cmake)
 
+add_subdirectory(emulatorlib)
+
 add_executable(gb_emulator main.cpp)
