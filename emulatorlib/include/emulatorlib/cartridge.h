@@ -77,7 +77,7 @@ public:
     // [[nodiscard]] auto ManufacturerCode() const noexcept -> std::string_view;
     // [[nodiscard]] auto CgbFlag() const noexcept -> CbgSupport;
     // [[nodiscard]] auto LicenseeCode() const noexcept -> std::string_view;
-    [[nodiscard]] auto CartridgeType() const noexcept -> CartridgeType;
+    [[nodiscard]] auto CartridgeType() const noexcept -> EmulatorLib::CartridgeType;
     [[nodiscard]] auto RomSize() const noexcept -> size_t;
     // [[nodiscard]] auto RamSize() const noexcept -> size_t;
     [[nodiscard]] auto ValidHeaderChecksum() const noexcept -> bool;

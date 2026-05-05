@@ -52,6 +52,11 @@ constexpr std::array g_nintendoLogoData = {
     romFile.seekg(0);
     romFile.read(reinterpret_cast<char *>(romData.data()), romData.size());
 
+    if (romFile.fail() || romFile.gcount() != static_cast<std::streamsize>(romData.size()))
+    {
+        throw std::runtime_error(std::format("Failed to read ROM file {}", romPath.string()));
+    }
+
     const auto romSizeShift = std::to_underlying(romData[0x0148]);
     if (romSizeShift > 0x08)
     {

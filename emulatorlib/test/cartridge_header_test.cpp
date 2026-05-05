@@ -12,6 +12,7 @@
 #include <filesystem>
 #include <fstream>
 #include <stdexcept>
+#include <thread>
 
 namespace EmulatorLib::Test
 {
@@ -117,13 +118,15 @@ struct CartridgeHeaderRomSizePair
     bool shouldThrow;
 };
 
-[[nodiscard]] constexpr auto GenerateCartridgeHeaderRomSizePairs() noexcept -> std::array<CartridgeHeaderRomSizePair, 0xFF>
+[[nodiscard]] constexpr auto GenerateCartridgeHeaderRomSizePairs() noexcept -> std::array<CartridgeHeaderRomSizePair, 0x100>
 {
-    std::array<CartridgeHeaderRomSizePair, 0xFF> pairs;
+    std::array<CartridgeHeaderRomSizePair, 0x100> pairs{};
+
     for (size_t i = 0; i <= 0xFF; ++i)
     {
         pairs[i] = {static_cast<std::byte>(i), i > 0x08};
     }
+
     return pairs;
 }
 
@@ -134,7 +137,8 @@ class CartridgeHeaderTest : public ::testing::Test
 protected:
     void SetUp() override
     {
-        m_romPath = std::filesystem::temp_directory_path() / "test.gb";
+        m_romPath = std::filesystem::temp_directory_path() / std::format("cartridge-header-test-{}.gb",
+                                                                         std::to_string(std::hash<std::thread::id>{}(std::this_thread::get_id())));
     }
 
     template <size_t N>
