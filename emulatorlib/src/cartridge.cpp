@@ -43,7 +43,7 @@ constexpr std::array g_nintendoLogoData = {
     }
 
     const auto diskRomSize = romFile.tellg();
-    if (diskRomSize < 0x0150)
+    if (diskRomSize < 0x0150 || diskRomSize > 0x800000)
     {
         throw InvalidRomException(romPath);
     }
