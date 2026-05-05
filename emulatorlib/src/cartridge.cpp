@@ -42,9 +42,28 @@ constexpr std::array g_nintendoLogoData = {
         throw std::runtime_error(std::format("Failed to open ROM file {}", romPath.string()));
     }
 
-    romData.resize(romFile.tellg());
+    const auto diskRomSize = romFile.tellg();
+    if (diskRomSize < 0x0150)
+    {
+        throw InvalidRomException(romPath);
+    }
+
+    romData.resize(diskRomSize);
     romFile.seekg(0);
     romFile.read(reinterpret_cast<char *>(romData.data()), romData.size());
+
+    const auto romSizeShift = std::to_underlying(romData[0x0148]);
+    if (romSizeShift > 0x08)
+    {
+        throw InvalidRomException(romPath);
+    }
+
+    const auto calculatedRomSizeFromHeader = 0x8000Uz * (1 << romSizeShift);
+
+    if (calculatedRomSizeFromHeader != romData.size())
+    {
+        throw MismatchedRomSizeException(romData.size(), calculatedRomSizeFromHeader);
+    }
 
     return romData;
 }
@@ -81,7 +100,7 @@ auto Cartridge::CartridgeType() const noexcept -> EmulatorLib::CartridgeType
 
 auto Cartridge::RomSize() const noexcept -> size_t
 {
-    return m_romData.size();
+    return 0x8000 * (1 << std::to_underlying(m_romData[0x148]));
 }
 
 auto Cartridge::ValidHeaderChecksum() const noexcept -> bool

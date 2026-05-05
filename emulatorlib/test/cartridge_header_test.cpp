@@ -11,6 +11,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <stdexcept>
 
 namespace EmulatorLib::Test
 {
@@ -66,6 +67,12 @@ template <size_t N>
     return std::array<std::byte, N>{0x00_b};
 }
 
+template <size_t N>
+[[nodiscard]] constexpr auto CreateEmptyVectorRomOfSize() -> std::vector<std::byte>
+{
+    return std::vector(N, 0x00_b);
+}
+
 template <size_t RomSize, size_t DataSize>
 [[nodiscard]] constexpr auto EmplaceDataInRom(std::array<std::byte, RomSize> romData, std::array<std::byte, DataSize> data, size_t startAddress) -> std::array<std::byte, RomSize>
 {
@@ -104,6 +111,22 @@ constexpr auto CalculateChecksum(std::array<std::byte, Size> data) -> std::byte
     return checksum;
 }
 
+struct CartridgeHeaderRomSizePair
+{
+    std::byte romSizeHeaderByte;
+    bool shouldThrow;
+};
+
+[[nodiscard]] constexpr auto GenerateCartridgeHeaderRomSizePairs() noexcept -> std::array<CartridgeHeaderRomSizePair, 0xFF>
+{
+    std::array<CartridgeHeaderRomSizePair, 0xFF> pairs;
+    for (size_t i = 0; i <= 0xFF; ++i)
+    {
+        pairs[i] = {static_cast<std::byte>(i), i > 0x08};
+    }
+    return pairs;
+}
+
 } // namespace
 
 class CartridgeHeaderTest : public ::testing::Test
@@ -115,7 +138,7 @@ protected:
     }
 
     template <size_t N>
-    void WriteRomToDisk(std::array<std::byte, N> romData)
+    void WriteRomToDisk(const std::array<std::byte, N>& romData)
     {
         std::ofstream romFile(m_romPath, std::ios::binary);
         romFile.write(reinterpret_cast<const char *>(romData.data()), romData.size());
@@ -183,7 +206,7 @@ TEST_F(CartridgeHeaderTest, RomSize_WithSizeSetTo32Kb_ReturnsCorrectValue)
 
 TEST_F(CartridgeHeaderTest, RomSize_WithSizeSetTo64Kb_ReturnsCorrectValue)
 {
-    constexpr auto rom = CreateEmptyRomOfSize<0x10000>();
+    constexpr auto rom = EmplaceDataInRom(CreateEmptyRomOfSize<0x10000>(), 0x01_b, 0x0148);
     WriteRomToDisk(rom);
 
     Cartridge cartridge(m_romPath);
@@ -195,7 +218,7 @@ TEST_F(CartridgeHeaderTest, ValidHeaderChecksum_WithValidChecksum_ReturnsTrue)
 {
     constexpr auto expectedChecksum = CalculateChecksum(g_headers);
     constexpr auto rom = EmplaceDataInRom(
-        EmplaceDataInRom(CreateEmptyRomOfSize<0x10000>(), g_headers, 0x0134),
+        EmplaceDataInRom(CreateEmptyRomOfSize<0x8000>(), g_headers, 0x0134),
         expectedChecksum, 0x014D);
 
     WriteRomToDisk(rom);
@@ -208,13 +231,30 @@ TEST_F(CartridgeHeaderTest, ValidHeaderChecksum_WithInvalidChecksum_ReturnsFalse
 {
     constexpr auto expectedChecksum = CalculateChecksum(g_headers);
     constexpr auto rom = EmplaceDataInRom(
-        EmplaceDataInRom(CreateEmptyRomOfSize<0x10000>(), g_headers, 0x0134),
+        EmplaceDataInRom(CreateEmptyRomOfSize<0x8000>(), g_headers, 0x0134),
         expectedChecksum + 1, 0x014D);
 
     WriteRomToDisk(rom);
     Cartridge cartridge(m_romPath);
 
     ASSERT_THAT(cartridge.ValidHeaderChecksum(), ::testing::Eq(false));
+}
+
+TEST_F(CartridgeHeaderTest, CartridgeCreation_WithMismatchedSizeInHeader_Throws)
+{
+    constexpr auto rom =
+        EmplaceDataInRom(CreateEmptyRomOfSize<0x8000>(), 0x01_b, 0x0148);
+    WriteRomToDisk(rom);
+
+    ASSERT_THROW(Cartridge{m_romPath}, MismatchedRomSizeException);
+}
+
+TEST_F(CartridgeHeaderTest, CartridgeCreation_WithRomTooSmallForHeader_Throws)
+{
+    constexpr auto rom = CreateEmptyRomOfSize<0x14F>();
+    WriteRomToDisk(rom);
+
+    ASSERT_THROW(Cartridge{m_romPath}, InvalidRomException);
 }
 
 class CartridgeHeaderCartridgeTypeTest : public CartridgeHeaderTest, public ::testing::WithParamInterface<CartridgeType>
@@ -263,5 +303,29 @@ INSTANTIATE_TEST_SUITE_P(CartridgeHeaderCartridgeTypeTest, CartridgeHeaderCartri
                              CartridgeType::BANDAI_TAMA5,
                              CartridgeType::HUC3,
                              CartridgeType::HUC1_RAM_BATTERY));
+
+class CartridgeHeaderRomSizeTest : public CartridgeHeaderTest, public ::testing::WithParamInterface<CartridgeHeaderRomSizePair>
+{
+};
+
+TEST_P(CartridgeHeaderRomSizeTest, Test)
+{
+    const auto [romSizeHeaderByte, shouldThrow] = GetParam();
+    const auto rom = EmplaceDataInRom(CreateEmptyRomOfSize<0x200>(), romSizeHeaderByte, 0x0148);
+    WriteRomToDisk(rom);
+
+    if (shouldThrow)
+    {
+        ASSERT_THROW(Cartridge{CartridgeHeaderTest::m_romPath}, InvalidRomException);
+    }
+    else
+    {
+        // We're always throwing due to the fact we can't allocate std::arrays of 8MB on the stack. If we get the
+        // MismatchedRomSizeException we've already validated that the ROM size byte in the ROM header is valid.
+        ASSERT_THROW(Cartridge{CartridgeHeaderTest::m_romPath}, MismatchedRomSizeException);
+    }
+}
+
+INSTANTIATE_TEST_SUITE_P(CartridgeHeaderRomSizeTest, CartridgeHeaderRomSizeTest, ::testing::ValuesIn(GenerateCartridgeHeaderRomSizePairs()));
 
 } // namespace EmulatorLib::Test

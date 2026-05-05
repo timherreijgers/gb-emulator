@@ -26,6 +26,8 @@ template <size_t N>
     {
         data[i] = static_cast<std::byte>(i);
     }
+    data[0x0148] = 0x00_b;
+
     return data;
 }
 

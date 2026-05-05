@@ -5,7 +5,12 @@
 
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
 #include <filesystem>
+#include <format>
+#include <stdexcept>
+#include <string_view>
 #include <vector>
 
 namespace EmulatorLib
@@ -48,6 +53,18 @@ enum class CartridgeType : std::uint8_t
     BANDAI_TAMA5 = 0xFD,
     HUC3 = 0xFE,
     HUC1_RAM_BATTERY = 0xFF,
+};
+
+struct MismatchedRomSizeException : std::runtime_error
+{
+    explicit MismatchedRomSizeException(size_t diskRomSize, size_t headerRomSize)
+        : std::runtime_error(std::format("ROM size in header ({}) does not match actual ROM size ({})", headerRomSize, diskRomSize)) {}
+};
+
+struct InvalidRomException : std::runtime_error
+{
+    explicit InvalidRomException(const std::filesystem::path& romPath)
+        : std::runtime_error(std::format("ROM file {} is invalid", romPath.string())) {}
 };
 
 class Cartridge
