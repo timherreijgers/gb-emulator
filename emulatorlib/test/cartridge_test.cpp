@@ -11,6 +11,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <thread>
 
 namespace EmulatorLib::Test
 {
@@ -39,7 +40,8 @@ class CartridgeTest : public ::testing::Test
 protected:
     void SetUp() override
     {
-        m_romPath = std::filesystem::temp_directory_path() / "test.gb";
+        m_romPath = std::filesystem::temp_directory_path() / std::format("cartridge-test-{}.gb",
+                                                                         std::to_string(std::hash<std::thread::id>{}(std::this_thread::get_id())));
     }
 
     template <size_t N>
