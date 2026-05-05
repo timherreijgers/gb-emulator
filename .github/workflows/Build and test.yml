@@ -1,0 +1,53 @@
+name: Build and test
+
+on: [ push ]
+
+jobs:
+  check-styling:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify formatting
+        uses: jidicula/clang-format-action@v4.18.0
+        with:
+          clang-format-version: '21'
+          check-path: '.'
+
+      # - name: Verify copyright
+      #   run: python ./scripts/check_copyright.py
+
+      - name: Verify includes
+        run: python ./scripts/check_includes.py
+
+  build-and-test-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        BUILD_TYPE: [Release, Debug]
+    needs: check-styling
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build type to lower 
+        run: python3 -c 'print("BUILD_TYPE_LOWER=" + "${{matrix.BUILD_TYPE}}".lower())' >> $GITHUB_ENV
+
+      - name: Install Conan
+        uses: conan-io/setup-conan@v1
+
+      - name: Add conan remote
+        run: conan remote add tims-conan https://conan.timherreijgers.nl/artifactory/api/conan/tims-conan
+
+      - name: Install conan profiles
+        run: conan config install https://github.com/timherreijgers/conan-profiles.git
+
+      - name: Run conan install
+        run: conan install -pr:a=clang-20-linux-x86_64 -s compiler.cppstd=23 -s build_type=${{matrix.BUILD_TYPE}} -c tools.cmake.cmaketoolchain:generator="Ninja" . --build=missing
+
+      - name: Build
+        run: conan build -pr:a=clang-20-linux-x86_64 -s compiler.cppstd=23 -s build_type=${{matrix.BUILD_TYPE}} -c tools.cmake.cmaketoolchain:generator="Ninja" . --build=missing
+
+      - name: Test
+        run: ctest --preset=conan-$BUILD_TYPE_LOWER

@@ -1,0 +1,5 @@
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+    message(STATUS "ccache found, using ccache")
+    set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+endif()
