@@ -17,7 +17,7 @@ AddressBus::AddressBus(std::vector<std::reference_wrapper<AddressBusAddressable>
 {
 }
 
-void AddressBus::WriteToAddress([[maybe_unused]] uint16_t address, [[maybe_unused]] std::byte data) noexcept
+void AddressBus::WriteToAddress(uint16_t address, std::byte data) noexcept
 {
     for (auto& device : m_devices)
     {
@@ -34,6 +34,5 @@ auto AddressBus::ReadFromAddress(uint16_t address) const noexcept -> std::byte
     }
     return data;
 }
-
 
 } // namespace EmulatorLib
