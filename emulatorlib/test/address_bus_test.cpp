@@ -60,4 +60,12 @@ TEST_F(AddressBusTest, ReadFromAddress_AddressOfAddressable2_ReturnsCorrectValue
     ASSERT_THAT(m_bus.ReadFromAddress(0x0001), ::testing::Eq(0x02_b));
 }
 
+TEST_F(AddressBusTest, ReadFromAddress_BothDevicesRespond_ReturnsCombinedValue)
+{
+    ON_CALL(m_addressableMock1, ReadFromAddress(0x5000)).WillByDefault(::testing::Return(0x0F_b));
+    ON_CALL(m_addressableMock2, ReadFromAddress(0x5000)).WillByDefault(::testing::Return(0xF0_b));
+
+    ASSERT_THAT(m_bus.ReadFromAddress(0x5000), ::testing::Eq(0xFF_b));
+}
+
 } // namespace EmulatorLib::Test
