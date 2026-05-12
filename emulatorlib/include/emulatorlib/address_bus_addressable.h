@@ -20,7 +20,7 @@ public:
     AddressBusAddressable(AddressBusAddressable&&) = delete;
     AddressBusAddressable& operator=(AddressBusAddressable&&) = delete;
 
-    virtual void WriteToAddress(uint16_t address, std::byte) noexcept = 0;
+    virtual void WriteToAddress(uint16_t address, std::byte data) noexcept = 0;
     [[nodiscard]] virtual auto ReadFromAddress(uint16_t address) const noexcept -> std::byte = 0;
 };
 
