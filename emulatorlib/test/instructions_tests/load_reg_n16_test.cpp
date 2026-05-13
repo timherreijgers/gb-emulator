@@ -94,10 +94,18 @@ TEST_P(LoadRegN16Test, ExecutingCommand_WithValueToLoadAs0x5678_BehavesCorrectly
 
 INSTANTIATE_TEST_SUITE_P(LoadRegN16Test, LoadRegN16Test,
                          ::testing::Values(
-                             InstructionPair{0x01_b, [](const CpuRegisters& registers) { return registers.bcRegister.value; }},
-                             InstructionPair{0x11_b, [](const CpuRegisters& registers) { return registers.deRegister.value; }},
-                             InstructionPair{0x21_b, [](const CpuRegisters& registers) { return registers.hlRegister.value; }},
-                             InstructionPair{0x31_b, [](const CpuRegisters& registers) { return registers.stackPointer.value; }}),
+                             InstructionPair{0x01_b, [](const CpuRegisters& registers) {
+                                                 return registers.bcRegister.value;
+                                             }},
+                             InstructionPair{0x11_b, [](const CpuRegisters& registers) {
+                                                 return registers.deRegister.value;
+                                             }},
+                             InstructionPair{0x21_b, [](const CpuRegisters& registers) {
+                                                 return registers.hlRegister.value;
+                                             }},
+                             InstructionPair{0x31_b, [](const CpuRegisters& registers) {
+                                                 return registers.stackPointer.value;
+                                             }}),
                          [](const testing::TestParamInfo<LoadRegN16Test::ParamType>& info) {
                              return std::string{OpCodeToInstructionName(info.param.instruction)};
                          });

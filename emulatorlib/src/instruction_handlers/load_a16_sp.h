@@ -27,7 +27,7 @@ namespace EmulatorLib
     addressBus.WriteToAddress(cpuRegisters.wzRegister.value, static_cast<std::byte>(cpuRegisters.stackPointer.value >> 8));
     co_yield std::monostate{};
 
-    // We need this co_return here to make sure the execution of the opcode takes 5 clock cycles. We cannot read the next instruction at the same
+    // We need this co_return here to make sure the execution of the opcode takes 5 M-cycles. We cannot read the next instruction at the same
     // time we write something on the data bus.
     co_return;
 };

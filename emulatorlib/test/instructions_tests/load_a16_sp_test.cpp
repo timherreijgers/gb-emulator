@@ -35,6 +35,8 @@ TEST_F(LoadA16SPTest, ExecutingCommand_WithValueToLoadAs0x1234_BehavesCorrectly)
 {
     constexpr auto opCode = 0x08_b;
 
+    // TODO: Registers getter should be const. If we validate that LoadN16SP works, we can use that to load data into the stack pointer.
+    // For this we first need to make sure that we have a better way of creating "programs" than setting up mocks
     m_cpu.Registers().stackPointer = 0x1234;
 
     m_cpu.Step();
@@ -53,7 +55,7 @@ TEST_F(LoadA16SPTest, ExecutingCommand_WithValueToLoadAs0x1234_BehavesCorrectly)
 
     EXPECT_CALL(m_addressableMock, WriteToAddress(0x4434, 0x12_b)).Times(1);
     m_cpu.Step();
-    
+
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));
 }

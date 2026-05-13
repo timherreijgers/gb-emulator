@@ -20,11 +20,13 @@ namespace
 
     names[0x00] = "Noop";
     names[0x01] = "LoadBCn16";
+    names[0x02] = "LoadIndirectBCFromA";
     names[0x06] = "LoadBn8";
     names[0x08] = "LoadA16SP";
     names[0x0E] = "LoadCn8";
 
     names[0x11] = "LoadDEn16";
+    names[0x12] = "LoadIndirectDEFromA";
     names[0x16] = "LoadDn8";
     names[0x1E] = "LoadEn8";
 
