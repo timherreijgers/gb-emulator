@@ -47,11 +47,6 @@ Cpu::Cpu(AddressBus& bus)
 
 void Cpu::Step()
 {
-    // if (m_handler.m_handle.done())
-    // {
-    //     m_handler = m_opcodeHandlers[static_cast<uint8_t>(m_registers.instructionRegister.value)](m_bus, m_registers);
-    // }
-
     m_handler.m_handle.resume();
 
     if (!m_handler.m_handle.done())
@@ -61,7 +56,7 @@ void Cpu::Step()
 
     const auto instruction = m_bus.ReadFromAddress(m_registers.programCounter);
     m_registers.instructionRegister = instruction;
-    m_registers.programCounter += 1;
+    m_registers.programCounter++;
 
     m_handler = m_opcodeHandlers[static_cast<uint8_t>(m_registers.instructionRegister.value)](m_bus, m_registers);
 }

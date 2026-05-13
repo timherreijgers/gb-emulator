@@ -36,7 +36,7 @@ protected:
         ON_CALL(m_addressableMock, ReadFromAddress(0x0102)).WillByDefault(::testing::Return(0x00_b));
     }
 
-    ::testing::NiceMock<AddressBusAddressableMock> m_addressableMock;
+    ::testing::NaggyMock<AddressBusAddressableMock> m_addressableMock;
     AddressBus m_bus{{m_addressableMock}};
     Cpu m_cpu{m_bus};
 };
