@@ -82,13 +82,27 @@ TEST_P(LoadRegN8Test, ExecutingCommand_WithValueToLoadAs0xFE_BehavesCorrectly)
 
 INSTANTIATE_TEST_SUITE_P(LoadRegN8Test, LoadRegN8Test,
                          ::testing::Values(
-                             InstructionPair{0x06_b, [](const CpuRegisters& registers) { return registers.bRegister.value; }},
-                             InstructionPair{0x0E_b, [](const CpuRegisters& registers) { return registers.cRegister.value; }},
-                             InstructionPair{0x16_b, [](const CpuRegisters& registers) { return registers.dRegister.value; }},
-                             InstructionPair{0x1E_b, [](const CpuRegisters& registers) { return registers.eRegister.value; }},
-                             InstructionPair{0x26_b, [](const CpuRegisters& registers) { return registers.hRegister.value; }},
-                             InstructionPair{0x2E_b, [](const CpuRegisters& registers) { return registers.lRegister.value; }},
-                             InstructionPair{0x3E_b, [](const CpuRegisters& registers) { return registers.accumulator.value; }}),
+                             InstructionPair{0x06_b, [](const CpuRegisters& registers) {
+                                                 return registers.bRegister.value;
+                                             }},
+                             InstructionPair{0x0E_b, [](const CpuRegisters& registers) {
+                                                 return registers.cRegister.value;
+                                             }},
+                             InstructionPair{0x16_b, [](const CpuRegisters& registers) {
+                                                 return registers.dRegister.value;
+                                             }},
+                             InstructionPair{0x1E_b, [](const CpuRegisters& registers) {
+                                                 return registers.eRegister.value;
+                                             }},
+                             InstructionPair{0x26_b, [](const CpuRegisters& registers) {
+                                                 return registers.hRegister.value;
+                                             }},
+                             InstructionPair{0x2E_b, [](const CpuRegisters& registers) {
+                                                 return registers.lRegister.value;
+                                             }},
+                             InstructionPair{0x3E_b, [](const CpuRegisters& registers) {
+                                                 return registers.accumulator.value;
+                                             }}),
                          [](const testing::TestParamInfo<LoadRegN8Test::ParamType>& info) {
                              return std::string{OpCodeToInstructionName(info.param.instruction)};
                          });
