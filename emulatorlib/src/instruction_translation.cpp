@@ -19,12 +19,19 @@ namespace
     names.fill("Not_implemented_yet");
 
     names[0x00] = "Noop";
+    names[0x01] = "LoadBCn16";
     names[0x06] = "LoadBn8";
     names[0x0E] = "LoadCn8";
+
+    names[0x11] = "LoadDEn16";
     names[0x16] = "LoadDn8";
     names[0x1E] = "LoadEn8";
+
+    names[0x21] = "LoadHLn16";
     names[0x26] = "LoadHn8";
     names[0x2E] = "LoadLn8";
+
+    names[0x31] = "LoadSPn16";
     names[0x3E] = "LoadAn8";
 
     return names;

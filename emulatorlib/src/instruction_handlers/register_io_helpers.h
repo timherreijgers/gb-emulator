@@ -38,4 +38,20 @@ using RegisterL = decltype([](CpuRegisters& registers) -> Register8BitRef& {
     return registers.lRegister;
 });
 
+using RegisterBC = decltype([](CpuRegisters& registers) -> Register16Bit& {
+    return registers.bcRegister;
+});
+
+using RegisterDE = decltype([](CpuRegisters& registers) -> Register16Bit& {
+    return registers.deRegister;
+});
+
+using RegisterHL = decltype([](CpuRegisters& registers) -> Register16Bit& {
+    return registers.hlRegister;
+});
+
+using RegisterSP = decltype([](CpuRegisters& registers) -> Register16Bit& {
+    return registers.stackPointer;
+});
+
 } // namespace EmulatorLib
