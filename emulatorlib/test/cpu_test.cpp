@@ -6,6 +6,7 @@
 #include "emulatorlib/address_bus.h"
 #include "emulatorlib/byte_utils.h"
 #include "emulatorlib/cpu.h"
+#include "emulatorlib/cpu_flags.h"
 #include "emulatorlib/test/address_bus_addressable_mock.h"
 
 #include <gmock/gmock.h>
@@ -62,10 +63,10 @@ TEST_F(CpuTest, FirstTick_IncrementsProgramCounter)
 
 TEST_F(CpuTest, FirstTick_PutsDataFromBus_InInstructionRegister)
 {
-    EXPECT_CALL(m_addressableMock, ReadFromAddress(0x0100)).WillOnce(::testing::Return(0x02_b));
+    EXPECT_CALL(m_addressableMock, ReadFromAddress(0x0100)).WillOnce(::testing::Return(0x06_b));
 
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x02_b));
+    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x06_b));
 }
 
 } // namespace EmulatorLib::Test
