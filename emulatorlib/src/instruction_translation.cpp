@@ -40,6 +40,51 @@ namespace
     names[0x36] = "LoadHlN8";
     names[0x3E] = "LoadAn8";
 
+    names[0x40] = "Load_B_B";
+    names[0x41] = "Load_B_C";
+    names[0x42] = "Load_B_D";
+    names[0x43] = "Load_B_E";
+    names[0x44] = "Load_B_H";
+    names[0x45] = "Load_B_L";
+    names[0x47] = "Load_B_A";
+    names[0x48] = "Load_C_B";
+    names[0x49] = "Load_C_C";
+    names[0x4A] = "Load_C_D";
+    names[0x4B] = "Load_C_E";
+    names[0x4C] = "Load_C_H";
+    names[0x4D] = "Load_C_L";
+    names[0x4F] = "Load_C_A";
+
+    names[0x50] = "Load_D_B";
+    names[0x51] = "Load_D_C";
+    names[0x52] = "Load_D_D";
+    names[0x53] = "Load_D_E";
+    names[0x54] = "Load_D_H";
+    names[0x55] = "Load_D_L";
+    names[0x57] = "Load_D_A";
+    names[0x58] = "Load_E_B";
+    names[0x59] = "Load_E_C";
+    names[0x5A] = "Load_E_D";
+    names[0x5B] = "Load_E_E";
+    names[0x5C] = "Load_E_H";
+    names[0x5D] = "Load_E_L";
+    names[0x5F] = "Load_E_A";
+
+    names[0x60] = "Load_H_B";
+    names[0x61] = "Load_H_C";
+    names[0x62] = "Load_H_D";
+    names[0x63] = "Load_H_E";
+    names[0x64] = "Load_H_H";
+    names[0x65] = "Load_H_L";
+    names[0x67] = "Load_H_A";
+    names[0x68] = "Load_L_B";
+    names[0x69] = "Load_L_C";
+    names[0x6A] = "Load_L_D";
+    names[0x6B] = "Load_L_E";
+    names[0x6C] = "Load_L_H";
+    names[0x6D] = "Load_L_L";
+    names[0x6F] = "Load_L_A";
+
     names[0x70] = "LoadIndirectHLFromB";
     names[0x71] = "LoadIndirectHLFromC";
     names[0x72] = "LoadIndirectHLFromD";
@@ -47,6 +92,13 @@ namespace
     names[0x74] = "LoadIndirectHLFromH";
     names[0x75] = "LoadIndirectHLFromL";
     names[0x77] = "LoadIndirectHLFromA";
+    names[0x78] = "Load_A_B";
+    names[0x79] = "Load_A_C";
+    names[0x7A] = "Load_A_D";
+    names[0x7B] = "Load_A_E";
+    names[0x7C] = "Load_A_H";
+    names[0x7D] = "Load_A_L";
+    names[0x7F] = "Load_A_A";
 
     return names;
 }
