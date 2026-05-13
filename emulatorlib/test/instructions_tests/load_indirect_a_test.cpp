@@ -9,6 +9,8 @@
 #include "emulatorlib/instruction_translation.h"
 #include "emulatorlib/test/address_bus_addressable_mock.h"
 
+#include "instruction_handlers/register_io_helpers.h"
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -18,10 +20,23 @@ namespace EmulatorLib::Test
 namespace
 {
 
+template <typename T>
+[[nodiscard]] auto FunctionWrapper16Bit() -> std::function<Register16Bit&(CpuRegisters&)>
+{
+    return T{};
+}
+
+template <typename T>
+[[nodiscard]] auto FunctionWrapper8Bit() -> std::function<Register8Bit&(CpuRegisters&)>
+{
+    return T{};
+}
+
 struct InstructionPair
 {
     std::byte instruction;
-    std::function<Register16Bit&(CpuRegisters&)> registerGetter;
+    std::function<Register16Bit&(CpuRegisters&)> destinationRegister;
+    std::function<Register8Bit&(CpuRegisters&)> sourceRegister;
 };
 
 } // namespace
@@ -42,13 +57,14 @@ protected:
 
 TEST_P(LoadIndirectATest, ExecutingCommand_WithValueToLoadAs0x1234_BehavesCorrectly)
 {
-    const auto& [instruction, registerGetter] = GetParam();
+    const auto& [instruction, destinationRegister, sourceRegister] = GetParam();
     SetUpMocks(instruction);
 
     // TODO: Registers getter should be const. If we validate that LoadN8A and LoadN16BC works, we can use that to load data into the stack pointer.
     // For this we first need to make sure that we have a better way of creating "programs" than setting up mocks
-    registerGetter(m_cpu.Registers()) = 0x1234;
-    m_cpu.Registers().accumulator = 0xFF_b;
+    destinationRegister(m_cpu.Registers()) = 0x1234;
+    sourceRegister(m_cpu.Registers()) = 0xFF_b;
+    // m_cpu.Registers().accumulator = 0xFF_b;
 
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(instruction));
@@ -62,12 +78,9 @@ TEST_P(LoadIndirectATest, ExecutingCommand_WithValueToLoadAs0x1234_BehavesCorrec
 
 INSTANTIATE_TEST_SUITE_P(LoadIndirectATest, LoadIndirectATest,
                          ::testing::Values(
-                             InstructionPair{0x02_b, [](CpuRegisters& registers) -> Register16Bit& {
-                                                 return registers.bcRegister;
-                                             }},
-                             InstructionPair{0x12_b, [](CpuRegisters& registers) -> Register16Bit& {
-                                                 return registers.deRegister;
-                                             }}),
+                             InstructionPair{0x02_b, FunctionWrapper16Bit<RegisterBC>(), FunctionWrapper8Bit<RegisterA>()},
+                             InstructionPair{0x12_b, FunctionWrapper16Bit<RegisterDE>(), FunctionWrapper8Bit<RegisterA>()},
+                             InstructionPair{0x77_b, FunctionWrapper16Bit<RegisterHL>(), FunctionWrapper8Bit<RegisterA>()}),
                          [](const testing::TestParamInfo<LoadIndirectATest::ParamType>& info) {
                              return std::string{OpCodeToInstructionName(info.param.instruction)};
                          });

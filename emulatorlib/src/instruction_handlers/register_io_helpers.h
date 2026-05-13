@@ -54,4 +54,14 @@ using RegisterSP = decltype([](CpuRegisters& registers) -> Register16Bit& {
     return registers.stackPointer;
 });
 
+using Register16BitIncrement = decltype([](Register16Bit& reg) {
+    reg.value++;
+});
+
+using Register16BitDecrement = decltype([](Register16Bit& reg) {
+    reg.value--;
+});
+
+using RegisterNoModifier = decltype([](Register16Bit& /*reg*/) {});
+
 } // namespace EmulatorLib

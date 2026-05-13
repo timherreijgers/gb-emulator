@@ -8,7 +8,7 @@
 #include "emulatorlib/instruction_handler.h"
 
 #include "instruction_handlers/load_a16_sp.h"
-#include "instruction_handlers/load_indirect_a.h"
+#include "instruction_handlers/load_indirect.h"
 #include "instruction_handlers/load_r_n8.h"
 #include "instruction_handlers/load_rr_n16.h"
 
@@ -45,11 +45,14 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0x1E] = ExecuteLoadEn8;
 
     handlers[0x21] = ExecuteLoadHLn16;
+    handlers[0x22] = ExecuteLoadIndirectHLIncrementFromA;
     handlers[0x26] = ExecuteLoadHn8;
     handlers[0x2E] = ExecuteLoadLn8;
 
     handlers[0x31] = ExecuteLoadSPn16;
+    handlers[0x32] = ExecuteLoadIndirectHLDecrementFromA;
     handlers[0x3E] = ExecuteLoadAn8;
+    handlers[0x77] = ExecuteLoadIndirectHLFromA;
 
     return handlers;
 }
