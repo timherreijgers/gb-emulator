@@ -17,12 +17,9 @@ namespace EmulatorLib
 
 template <ReturnsRegister8Bit WriteLocation>
 constexpr auto ExecuteLoadRegN8 = [](const AddressBus& addressBus, CpuRegisters& cpuRegisters) -> InstructionHandler {
-    // Load byte from memory into register Z
-    const auto val = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
-    cpuRegisters.zRegister = val;
+    cpuRegisters.zRegister = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
     co_yield std::monostate{};
 
-    // Load byte from memory into register Z into register B
     WriteLocation{}(cpuRegisters) = cpuRegisters.zRegister.value;
     co_return;
 };
