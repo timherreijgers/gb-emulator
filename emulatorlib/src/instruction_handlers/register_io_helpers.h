@@ -14,27 +14,27 @@ using RegisterA = decltype([](CpuRegisters& registers) -> Register8Bit& {
     return registers.accumulator;
 });
 
-using RegisterB = decltype([](CpuRegisters& registers) -> Register8BitRef& {
+using RegisterB = decltype([](CpuRegisters& registers) -> Register8Bit& {
     return registers.bRegister;
 });
 
-using RegisterC = decltype([](CpuRegisters& registers) -> Register8BitRef& {
+using RegisterC = decltype([](CpuRegisters& registers) -> Register8Bit& {
     return registers.cRegister;
 });
 
-using RegisterD = decltype([](CpuRegisters& registers) -> Register8BitRef& {
+using RegisterD = decltype([](CpuRegisters& registers) -> Register8Bit& {
     return registers.dRegister;
 });
 
-using RegisterE = decltype([](CpuRegisters& registers) -> Register8BitRef& {
+using RegisterE = decltype([](CpuRegisters& registers) -> Register8Bit& {
     return registers.eRegister;
 });
 
-using RegisterH = decltype([](CpuRegisters& registers) -> Register8BitRef& {
+using RegisterH = decltype([](CpuRegisters& registers) -> Register8Bit& {
     return registers.hRegister;
 });
 
-using RegisterL = decltype([](CpuRegisters& registers) -> Register8BitRef& {
+using RegisterL = decltype([](CpuRegisters& registers) -> Register8Bit& {
     return registers.lRegister;
 });
 

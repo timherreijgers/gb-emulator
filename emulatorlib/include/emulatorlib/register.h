@@ -14,7 +14,7 @@ namespace EmulatorLib
 template <typename T>
 struct Register
 {
-    T value;
+    T& value;
 
     auto operator=(std::remove_cvref_t<T> t) -> Register<T>&
     {
@@ -37,11 +37,9 @@ struct Register
         value += other;
     }
 
-    auto operator++(int) noexcept -> Register
+    auto operator++(int) noexcept -> T
     {
-        const auto copy = *this;
-        ++value;
-        return copy;
+        return value++;
     }
 
     [[nodiscard]] auto
@@ -50,30 +48,29 @@ struct Register
         return value <=> other.value;
     }
 
-    [[nodiscard]] auto operator<=>(const T& other) const noexcept -> std::strong_ordering
+    [[nodiscard]] auto operator<=>(const T& other) const noexcept
     {
         return value <=> other;
     }
 
     [[nodiscard]]
     auto LowerByteAsRegister()
-        -> Register<std::byte&>
-        requires std::same_as<std::remove_cvref_t<T>, std::uint16_t>
+        -> Register<std::byte>
+        requires std::same_as<T, std::uint16_t>
     {
-        return Register<std::byte&>{*reinterpret_cast<std::byte *>(&value)};
+        return Register<std::byte>{*reinterpret_cast<std::byte *>(&value)};
     }
 
     [[nodiscard]]
     auto UpperByteAsRegister()
-        -> Register<std::byte&>
-        requires std::same_as<std::remove_cvref_t<T>, std::uint16_t>
+        -> Register<std::byte>
+        requires std::same_as<T, std::uint16_t>
     {
-        return Register<std::byte&>{*(reinterpret_cast<std::byte *>(&value) + 1)};
+        return Register<std::byte>{*(reinterpret_cast<std::byte *>(&value) + 1)};
     }
 };
 
 using Register16Bit = Register<uint16_t>;
 using Register8Bit = Register<std::byte>;
-using Register8BitRef = Register<std::byte&>;
 
 } // namespace EmulatorLib
