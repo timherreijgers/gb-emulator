@@ -17,17 +17,12 @@ namespace EmulatorLib
 
 template <ReturnsRegister16Bit WriteLocation>
 constexpr auto ExecuteLoadRegN16 = [](const AddressBus& addressBus, CpuRegisters& cpuRegisters) -> InstructionHandler {
-    // Load byte from memory into register Z
-    const auto val = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
-    cpuRegisters.zRegister = val;
+    cpuRegisters.zRegister = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
     co_yield std::monostate{};
 
-    // Load byte from memory into register W
-    const auto val2 = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
-    cpuRegisters.wRegister = val2;
+    cpuRegisters.wRegister = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
     co_yield std::monostate{};
 
-    // Load byte from memory into register WZ into 16 bit register
     WriteLocation{}(cpuRegisters) = cpuRegisters.wzRegister.value;
     co_return;
 };

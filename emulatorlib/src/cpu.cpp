@@ -61,6 +61,11 @@ void Cpu::Step()
     m_handler = m_opcodeHandlers[static_cast<uint8_t>(m_registers.instructionRegister.value)](m_bus, m_registers);
 }
 
+auto Cpu::Registers() noexcept -> CpuRegisters&
+{
+    return m_registers;
+}
+
 auto Cpu::Registers() const noexcept -> const CpuRegisters&
 {
     return m_registers;

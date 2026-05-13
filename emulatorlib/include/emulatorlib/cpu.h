@@ -24,6 +24,7 @@ public:
 
     void Step();
 
+    [[nodiscard]] auto Registers() noexcept -> CpuRegisters&;
     [[nodiscard]] auto Registers() const noexcept -> const CpuRegisters&;
 
 private:
