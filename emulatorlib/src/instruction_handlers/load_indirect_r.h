@@ -30,6 +30,12 @@ constexpr auto ExecuteLoadIndirectFrom = [](AddressBus& addressBus, CpuRegisters
 constexpr auto ExecuteLoadIndirectBCFromA = ExecuteLoadIndirectFrom<RegisterBC, RegisterA>;
 constexpr auto ExecuteLoadIndirectDEFromA = ExecuteLoadIndirectFrom<RegisterDE, RegisterA>;
 constexpr auto ExecuteLoadIndirectHLFromA = ExecuteLoadIndirectFrom<RegisterHL, RegisterA>;
+constexpr auto ExecuteLoadIndirectHLFromB = ExecuteLoadIndirectFrom<RegisterHL, RegisterB>;
+constexpr auto ExecuteLoadIndirectHLFromC = ExecuteLoadIndirectFrom<RegisterHL, RegisterC>;
+constexpr auto ExecuteLoadIndirectHLFromD = ExecuteLoadIndirectFrom<RegisterHL, RegisterD>;
+constexpr auto ExecuteLoadIndirectHLFromE = ExecuteLoadIndirectFrom<RegisterHL, RegisterE>;
+constexpr auto ExecuteLoadIndirectHLFromH = ExecuteLoadIndirectFrom<RegisterHL, RegisterH>;
+constexpr auto ExecuteLoadIndirectHLFromL = ExecuteLoadIndirectFrom<RegisterHL, RegisterL>;
 constexpr auto ExecuteLoadIndirectHLIncrementFromA = ExecuteLoadIndirectFrom<RegisterHL, RegisterA, Register16BitIncrement>;
 constexpr auto ExecuteLoadIndirectHLDecrementFromA = ExecuteLoadIndirectFrom<RegisterHL, RegisterA, Register16BitDecrement>;
 
