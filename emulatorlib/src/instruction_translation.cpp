@@ -37,8 +37,15 @@ namespace
 
     names[0x31] = "LoadSPn16";
     names[0x32] = "LoadIndirectHLDecrementFromA";
+    names[0x36] = "LoadHlN8";
     names[0x3E] = "LoadAn8";
 
+    names[0x70] = "LoadIndirectHLFromB";
+    names[0x71] = "LoadIndirectHLFromC";
+    names[0x72] = "LoadIndirectHLFromD";
+    names[0x73] = "LoadIndirectHLFromE";
+    names[0x74] = "LoadIndirectHLFromH";
+    names[0x75] = "LoadIndirectHLFromL";
     names[0x77] = "LoadIndirectHLFromA";
 
     return names;

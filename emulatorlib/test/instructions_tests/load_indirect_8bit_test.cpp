@@ -41,7 +41,7 @@ struct InstructionPair
 
 } // namespace
 
-class LoadIndirectATest : public ::testing::TestWithParam<InstructionPair>
+class LoadIndirect8BitTest : public ::testing::TestWithParam<InstructionPair>
 {
 protected:
     void SetUpMocks(std::byte instruction)
@@ -55,7 +55,7 @@ protected:
     Cpu m_cpu{m_bus};
 };
 
-TEST_P(LoadIndirectATest, ExecutingCommand_WithValueToLoadAs0x1234_BehavesCorrectly)
+TEST_P(LoadIndirect8BitTest, ExecutingOpCode)
 {
     const auto& [instruction, destinationRegister, sourceRegister] = GetParam();
     SetUpMocks(instruction);
@@ -64,7 +64,6 @@ TEST_P(LoadIndirectATest, ExecutingCommand_WithValueToLoadAs0x1234_BehavesCorrec
     // For this we first need to make sure that we have a better way of creating "programs" than setting up mocks
     destinationRegister(m_cpu.Registers()) = 0x1234;
     sourceRegister(m_cpu.Registers()) = 0xFF_b;
-    // m_cpu.Registers().accumulator = 0xFF_b;
 
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(instruction));
@@ -76,12 +75,46 @@ TEST_P(LoadIndirectATest, ExecutingCommand_WithValueToLoadAs0x1234_BehavesCorrec
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));
 }
 
-INSTANTIATE_TEST_SUITE_P(LoadIndirectATest, LoadIndirectATest,
+INSTANTIATE_TEST_SUITE_P(LoadIndirect8BitTest, LoadIndirect8BitTest,
                          ::testing::Values(
                              InstructionPair{0x02_b, FunctionWrapper16Bit<RegisterBC>(), FunctionWrapper8Bit<RegisterA>()},
                              InstructionPair{0x12_b, FunctionWrapper16Bit<RegisterDE>(), FunctionWrapper8Bit<RegisterA>()},
+                             InstructionPair{0x70_b, FunctionWrapper16Bit<RegisterHL>(), FunctionWrapper8Bit<RegisterB>()},
+                             InstructionPair{0x71_b, FunctionWrapper16Bit<RegisterHL>(), FunctionWrapper8Bit<RegisterC>()},
+                             InstructionPair{0x72_b, FunctionWrapper16Bit<RegisterHL>(), FunctionWrapper8Bit<RegisterD>()},
+                             InstructionPair{0x73_b, FunctionWrapper16Bit<RegisterHL>(), FunctionWrapper8Bit<RegisterE>()},
                              InstructionPair{0x77_b, FunctionWrapper16Bit<RegisterHL>(), FunctionWrapper8Bit<RegisterA>()}),
-                         [](const testing::TestParamInfo<LoadIndirectATest::ParamType>& info) {
+                         [](const testing::TestParamInfo<LoadIndirect8BitTest::ParamType>& info) {
+                             return std::string{OpCodeToInstructionName(info.param.instruction)};
+                         });
+
+using LoadIndirect8BitHLTest = LoadIndirect8BitTest;
+
+TEST_P(LoadIndirect8BitHLTest, ExecutingOpCode)
+{
+    const auto& [instruction, destinationRegister, sourceRegister] = GetParam();
+    SetUpMocks(instruction);
+
+    // TODO: Registers getter should be const. If we validate that LoadN8A and LoadN16BC works, we can use that to load data into the stack pointer.
+    // For this we first need to make sure that we have a better way of creating "programs" than setting up mocks
+    destinationRegister(m_cpu.Registers()) = 0x1234;
+    const auto expectedValue = sourceRegister(m_cpu.Registers()).value;
+
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(instruction));
+
+    EXPECT_CALL(m_addressableMock, WriteToAddress(0x1234, expectedValue)).Times(1);
+    m_cpu.Step();
+
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));
+}
+
+INSTANTIATE_TEST_SUITE_P(LoadIndirect8BitHLTest, LoadIndirect8BitHLTest,
+                         ::testing::Values(
+                             InstructionPair{0x74_b, FunctionWrapper16Bit<RegisterHL>(), FunctionWrapper8Bit<RegisterH>()},
+                             InstructionPair{0x75_b, FunctionWrapper16Bit<RegisterHL>(), FunctionWrapper8Bit<RegisterL>()}),
+                         [](const testing::TestParamInfo<LoadIndirect8BitTest::ParamType>& info) {
                              return std::string{OpCodeToInstructionName(info.param.instruction)};
                          });
 
