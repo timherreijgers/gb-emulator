@@ -30,4 +30,17 @@ concept ReturnsRegister16Bit = requires(T reg, CpuRegisters& registers) {
 template <typename T>
 concept ReturnsRegister8Bit = ReturnsRegister8BitNonRef<T> || ReturnsRegister8BitRef<T>;
 
+template <typename T>
+concept RegisterModifier8Bit = requires(T t, Register8Bit reg) {
+    { t(reg) } -> std::same_as<void>;
+};
+
+template <typename T>
+concept RegisterModifier16Bit = requires(T t, Register16Bit reg) {
+    { t(reg) } -> std::same_as<void>;
+};
+
+template <typename T>
+concept RegisterModifier = RegisterModifier8Bit<T> || RegisterModifier16Bit<T>;
+
 } // namespace EmulatorLib
