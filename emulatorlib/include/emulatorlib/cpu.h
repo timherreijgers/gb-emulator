@@ -9,6 +9,9 @@
 #include "emulatorlib/cpu_registers.h"
 #include "emulatorlib/instruction_handler.h"
 
+#include <array>
+#include <functional>
+
 namespace EmulatorLib
 {
 

@@ -11,6 +11,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <array>
 #include <stdexcept>
 #include <thread>
 
