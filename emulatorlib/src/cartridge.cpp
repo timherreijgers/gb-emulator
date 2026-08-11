@@ -9,6 +9,7 @@
 
 #include <fstream>
 #include <utility>
+#include <array>
 
 namespace EmulatorLib
 {
@@ -18,7 +19,7 @@ namespace
 
 constexpr auto g_nintendoLogoRomOffset = 0x104;
 
-constexpr std::array g_nintendoLogoData = {
+constexpr std::array<std::byte, 4 * 12> g_nintendoLogoData = {
     0xCE_b, 0xED_b, 0x66_b, 0x66_b,
     0xCC_b, 0x0D_b, 0x00_b, 0x0B_b,
     0x03_b, 0x73_b, 0x00_b, 0x83_b,

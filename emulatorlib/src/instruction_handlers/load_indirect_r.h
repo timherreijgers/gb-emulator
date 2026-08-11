@@ -39,5 +39,4 @@ constexpr auto ExecuteLoadIndirectHLFromL = ExecuteLoadIndirectFrom<RegisterHL, 
 constexpr auto ExecuteLoadIndirectHLIncrementFromA = ExecuteLoadIndirectFrom<RegisterHL, RegisterA, Register16BitIncrement>;
 constexpr auto ExecuteLoadIndirectHLDecrementFromA = ExecuteLoadIndirectFrom<RegisterHL, RegisterA, Register16BitDecrement>;
 
-
 } // namespace EmulatorLib
