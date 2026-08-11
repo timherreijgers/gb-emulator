@@ -111,6 +111,10 @@ namespace
     names[0x7E] = "LoadAFromIndirectHL";
     names[0x7F] = "Load_A_A";
 
+    names[0xE0] = "LoadIndirectN8FromA";
+
+    names[0xF0] = "LoadAFromIndirectN8";
+
     return names;
 }
 
