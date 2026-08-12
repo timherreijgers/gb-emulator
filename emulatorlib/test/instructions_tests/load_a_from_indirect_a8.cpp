@@ -17,7 +17,7 @@
 namespace EmulatorLib::Test
 {
 
-class LoadAFromIndirectN8Test : public ::testing::Test
+class LoadAFromIndirectA8Test : public ::testing::Test
 {
 protected:
     ::testing::NiceMock<AddressBusAddressableMock> m_addressableMock;
@@ -25,7 +25,7 @@ protected:
     Cpu m_cpu{m_bus};
 };
 
-TEST_F(LoadAFromIndirectN8Test, ExecutingOpCode)
+TEST_F(LoadAFromIndirectA8Test, ExecutingOpCode)
 {
     ON_CALL(m_addressableMock, ReadFromAddress(0x0100)).WillByDefault(::testing::Return(0xF0_b));
     ON_CALL(m_addressableMock, ReadFromAddress(0x0101)).WillByDefault(::testing::Return(0xAA_b));

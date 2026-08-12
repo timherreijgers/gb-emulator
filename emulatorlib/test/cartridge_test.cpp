@@ -9,9 +9,9 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <array>
 #include <filesystem>
 #include <fstream>
-#include <array>
 #include <thread>
 
 namespace EmulatorLib::Test
