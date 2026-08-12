@@ -8,6 +8,7 @@ target_link_libraries(emulatorlibTest
         PRIVATE
         GTest::gmock
         GTest::gmock_main)
+
 target_include_directories(emulatorlibTest PRIVATE src ../src)
 
 add_test(EmulatorLibTest emulatorlibTest)
