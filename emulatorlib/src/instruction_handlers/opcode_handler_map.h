@@ -6,18 +6,19 @@
 #pragma once
 
 #include "emulatorlib/instruction_handler.h"
-#include "load_a_from_indirect_address.h"
-#include "load_a_from_indirect_c.h"
-#include "load_indirect_address_from_a.h"
-#include "load_indirect_c_from_a.h"
-#include "load_r_r.h"
 
 #include "instruction_handlers/load_a16_sp.h"
+#include "instruction_handlers/load_a_from_indirect_address.h"
+#include "instruction_handlers/load_a_from_indirect_c.h"
+#include "instruction_handlers/load_indirect_address_from_a.h"
+#include "instruction_handlers/load_indirect_c_from_a.h"
 #include "instruction_handlers/load_indirect_n8.h"
 #include "instruction_handlers/load_indirect_r.h"
 #include "instruction_handlers/load_r_indirect_rr.h"
 #include "instruction_handlers/load_r_n8.h"
+#include "instruction_handlers/load_r_r.h"
 #include "instruction_handlers/load_rr_n16.h"
+#include "instruction_handlers/load_rr_rr.h"
 
 #include <array>
 #include <stdexcept>
@@ -140,6 +141,7 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
 
     handlers[0xF0] = ExecuteLoadAFromIndirectA8;
     handlers[0xF2] = ExecuteLoadAFromIndirectC;
+    handlers[0xF9] = ExecuteLoad_SP_HL;
     handlers[0xFA] = ExecuteLoadAFromIndirectA16;
 
     return handlers;
