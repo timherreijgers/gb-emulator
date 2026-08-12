@@ -15,7 +15,7 @@
 namespace EmulatorLib
 {
 
-[[nodiscard]] inline auto ExecuteLoadAFromIndirectN8(AddressBus& addressBus, CpuRegisters& cpuRegisters) -> InstructionHandler
+[[nodiscard]] inline auto ExecuteLoadAFromIndirectA8(AddressBus& addressBus, CpuRegisters& cpuRegisters) -> InstructionHandler
 {
     cpuRegisters.zRegister = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
     co_yield std::monostate{};
@@ -25,7 +25,21 @@ namespace EmulatorLib
 
     cpuRegisters.accumulator = cpuRegisters.zRegister.value;
     co_return;
-};
+}
 
+[[nodiscard]] inline auto ExecuteLoadAFromIndirectA16(AddressBus& addressBus, CpuRegisters& cpuRegisters) -> InstructionHandler
+{
+    cpuRegisters.zRegister = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
+    co_yield std::monostate{};
+
+    cpuRegisters.wRegister = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
+    co_yield std::monostate{};
+
+    cpuRegisters.zRegister = addressBus.ReadFromAddress(cpuRegisters.wzRegister.value);
+    co_yield std::monostate{};
+
+    cpuRegisters.accumulator = cpuRegisters.zRegister.value;
+    co_return;
+}
 
 } // namespace EmulatorLib
