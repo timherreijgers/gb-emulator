@@ -7,9 +7,9 @@
 
 #include "emulatorlib/byte_utils.h"
 
+#include <array>
 #include <fstream>
 #include <utility>
-#include <array>
 
 namespace EmulatorLib
 {
