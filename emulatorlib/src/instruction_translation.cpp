@@ -117,6 +117,7 @@ namespace
 
     names[0xF0] = "LoadAFromIndirectA8";
     names[0xF2] = "LoadAFromIndirectC";
+    names[0xF8] = "LoadHLFromSPPlusE";
     names[0xF9] = "Load_SP_HL";
     names[0xFA] = "LoadAFromIndirectA16";
 
