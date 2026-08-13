@@ -5,4 +5,6 @@ add_library(emulatorlib STATIC ${SOURCES} ${HEADERS})
 
 target_include_directories(emulatorlib PUBLIC include PRIVATE src)
 
+target_link_libraries(emulatorlib PRIVATE utilitylib)
+
 add_subdirectory(test)

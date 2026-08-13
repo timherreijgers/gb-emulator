@@ -10,14 +10,17 @@
 namespace UtilityLib
 {
 
-template<std::integral T>
+template<typename T>
+concept IntegralOrByte = std::integral<T> || std::is_same_v<T, std::byte>;
+
+template <IntegralOrByte T>
 struct AddWithCarryResult
 {
     T result;
     T carryBits;
 };
 
-template<std::unsigned_integral T>
+template <IntegralOrByte T>
 [[nodiscard]] constexpr auto AddWithCarry(T left, T right) noexcept -> AddWithCarryResult<T>
 {
     const T result = static_cast<T>(left + right);

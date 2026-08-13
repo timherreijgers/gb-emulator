@@ -85,15 +85,13 @@ INSTANTIATE_TEST_SUITE_P(LoadRegisterHlIndirectTest, LoadRegisterIndirectRegiste
                          ::testing::Values(
                              InstructionPair{0x0A_b, FunctionWrapper8Bit<RegisterA>(), FunctionWrapper16Bit<RegisterBC>()},
                              InstructionPair{0x1A_b, FunctionWrapper8Bit<RegisterA>(), FunctionWrapper16Bit<RegisterDE>()},
-                             InstructionPair{0x2A_b, FunctionWrapper8Bit<RegisterA>(), FunctionWrapper16Bit<RegisterHL>(), [](auto val) { return val + 1; }},
-                             InstructionPair{0x3A_b, FunctionWrapper8Bit<RegisterA>(), FunctionWrapper16Bit<RegisterHL>(), [](auto val) { return val - 1; }},
-                             InstructionPair{0x46_b, FunctionWrapper8Bit<RegisterB>(), FunctionWrapper16Bit<RegisterHL>()},
-                             InstructionPair{0x4E_b, FunctionWrapper8Bit<RegisterC>(), FunctionWrapper16Bit<RegisterHL>()},
-                             InstructionPair{0x56_b, FunctionWrapper8Bit<RegisterD>(), FunctionWrapper16Bit<RegisterHL>()},
-                             InstructionPair{0x5E_b, FunctionWrapper8Bit<RegisterE>(), FunctionWrapper16Bit<RegisterHL>()},
-                             InstructionPair{0x66_b, FunctionWrapper8Bit<RegisterH>(), FunctionWrapper16Bit<RegisterHL>()},
-                             InstructionPair{0x6E_b, FunctionWrapper8Bit<RegisterL>(), FunctionWrapper16Bit<RegisterHL>()},
-                             InstructionPair{0x7E_b, FunctionWrapper8Bit<RegisterA>(), FunctionWrapper16Bit<RegisterHL>()}),
+                             InstructionPair{0x2A_b, FunctionWrapper8Bit<RegisterA>(), FunctionWrapper16Bit<RegisterHL>(), [](auto val) {
+                                                 return val + 1;
+                                             }},
+                             InstructionPair{0x3A_b, FunctionWrapper8Bit<RegisterA>(), FunctionWrapper16Bit<RegisterHL>(), [](auto val) {
+                                                 return val - 1;
+                                             }},
+                             InstructionPair{0x46_b, FunctionWrapper8Bit<RegisterB>(), FunctionWrapper16Bit<RegisterHL>()}, InstructionPair{0x4E_b, FunctionWrapper8Bit<RegisterC>(), FunctionWrapper16Bit<RegisterHL>()}, InstructionPair{0x56_b, FunctionWrapper8Bit<RegisterD>(), FunctionWrapper16Bit<RegisterHL>()}, InstructionPair{0x5E_b, FunctionWrapper8Bit<RegisterE>(), FunctionWrapper16Bit<RegisterHL>()}, InstructionPair{0x66_b, FunctionWrapper8Bit<RegisterH>(), FunctionWrapper16Bit<RegisterHL>()}, InstructionPair{0x6E_b, FunctionWrapper8Bit<RegisterL>(), FunctionWrapper16Bit<RegisterHL>()}, InstructionPair{0x7E_b, FunctionWrapper8Bit<RegisterA>(), FunctionWrapper16Bit<RegisterHL>()}),
                          [](const testing::TestParamInfo<LoadRegisterIndirectRegister16BitTest::ParamType>& info) {
                              return std::string{OpCodeToInstructionName(info.param.instruction)};
                          });

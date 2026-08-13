@@ -15,6 +15,7 @@
 #include "instruction_handlers/load_indirect_n8.h"
 #include "instruction_handlers/load_indirect_r.h"
 #include "instruction_handlers/load_r_indirect_rr.h"
+#include "instruction_handlers/load_hl_from_sp_e8.h"
 #include "instruction_handlers/load_r_n8.h"
 #include "instruction_handlers/load_r_r.h"
 #include "instruction_handlers/load_rr_n16.h"
@@ -141,6 +142,7 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
 
     handlers[0xF0] = ExecuteLoadAFromIndirectA8;
     handlers[0xF2] = ExecuteLoadAFromIndirectC;
+    handlers[0xF8] = ExecuteLoadSPFromHlPlusE8;
     handlers[0xF9] = ExecuteLoad_SP_HL;
     handlers[0xFA] = ExecuteLoadAFromIndirectA16;
 
