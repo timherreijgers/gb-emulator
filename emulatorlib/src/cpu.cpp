@@ -5,8 +5,8 @@
 
 #include "emulatorlib/cpu.h"
 
-#include "emulatorlib/byte_utils.h"
 #include "emulatorlib/cpu_flags.h"
+#include "utilitylib/byte_utils.h"
 
 #include "instruction_handlers/opcode_handler_map.h"
 

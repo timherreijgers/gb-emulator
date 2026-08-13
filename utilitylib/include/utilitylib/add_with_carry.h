@@ -6,11 +6,12 @@
 #pragma once
 
 #include <concepts>
+#include <cstddef>
 
 namespace UtilityLib
 {
 
-template<typename T>
+template <typename T>
 concept IntegralOrByte = std::integral<T> || std::is_same_v<T, std::byte>;
 
 template <IntegralOrByte T>

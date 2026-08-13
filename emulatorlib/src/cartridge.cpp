@@ -5,7 +5,7 @@
 
 #include "emulatorlib/cartridge.h"
 
-#include "emulatorlib/byte_utils.h"
+#include "utilitylib/byte_utils.h"
 
 #include <array>
 #include <fstream>
