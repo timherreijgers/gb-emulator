@@ -4,10 +4,10 @@
  */
 
 #include "emulatorlib/address_bus.h"
-#include "emulatorlib/byte_utils.h"
 #include "emulatorlib/cpu.h"
 #include "emulatorlib/cpu_flags.h"
 #include "emulatorlib/test/address_bus_addressable_mock.h"
+#include "utilitylib/byte_utils.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

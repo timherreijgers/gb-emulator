@@ -5,7 +5,7 @@
 
 #include "emulatorlib/address_bus.h"
 
-#include "emulatorlib/byte_utils.h"
+#include "utilitylib/byte_utils.h"
 
 #include <utility>
 
