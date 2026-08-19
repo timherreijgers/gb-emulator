@@ -3,35 +3,23 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/address_bus.h"
-#include "emulatorlib/cpu.h"
+#include "instruction_test_base.h"
 #include "emulatorlib/cpu_flags.h"
-#include "emulatorlib/test/address_bus_addressable_mock.h"
-#include "utilitylib/byte_utils.h"
-
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
 
 namespace EmulatorLib::Test
 {
 
-class LoadHLFromSPPlusETest : public ::testing::Test
+class LoadHLFromSPPlusETest : public InstructionTestBase
 {
 protected:
-    void SetUpMocks(std::byte signedOffset)
-    {
-        ::testing::InSequence sequence;
-        EXPECT_CALL(m_addressableMock, ReadFromAddress(0x0100)).WillOnce(::testing::Return(0xF8_b));
-        EXPECT_CALL(m_addressableMock, ReadFromAddress(0x0101)).WillOnce(::testing::Return(signedOffset));
-        EXPECT_CALL(m_addressableMock, ReadFromAddress(0x0102)).WillOnce(::testing::Return(0x00_b));
-    }
-
     void ExecuteInstructionAndValidateSteps(const uint16_t initialHl,
                                             const uint16_t initialSp,
                                             std::byte signedOffset,
                                             const uint16_t expectedHl,
                                             std::byte expectedFlags)
     {
+        EXPECT_CALL(m_addressableMock, WriteToAddress(::testing::_, ::testing::_)).Times(0);
+
         m_cpu.Step();
         ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0xF8_b));
         ASSERT_THAT(m_cpu.Registers().programCounter, ::testing::Eq(0x0101));
@@ -59,10 +47,12 @@ protected:
         ASSERT_THAT(m_cpu.Registers().stackPointer, ::testing::Eq(initialSp));
         ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(expectedFlags));
     }
-
-    ::testing::NiceMock<AddressBusAddressableMock> m_addressableMock;
-    AddressBus m_bus{{m_addressableMock}};
-    Cpu m_cpu{m_bus};
+    
+    void SetUp() override
+    {
+        EXPECT_CALL(m_addressableMock, ReadFromAddress(::testing::Le(0x7FFF)))
+            .WillRepeatedly(::testing::Return(0x00_b));
+    }
 };
 
 TEST_F(LoadHLFromSPPlusETest, ExecutingOpCode_AdditionWithoutCheckingFlags_BehavesCorrectly)
@@ -71,7 +61,7 @@ TEST_F(LoadHLFromSPPlusETest, ExecutingOpCode_AdditionWithoutCheckingFlags_Behav
     constexpr auto stackPointer = static_cast<uint16_t>(0x1234);
     constexpr auto initialHl = static_cast<uint16_t>(0x0000);
 
-    SetUpMocks(offset);
+    m_program.WriteProgram({0xF8_b, offset, 0x00_b});
     m_cpu.Registers().stackPointer = stackPointer;
     m_cpu.Registers().hlRegister = initialHl;
 
@@ -84,7 +74,7 @@ TEST_F(LoadHLFromSPPlusETest, ExecutingOpCode_AdditionSetsHalfCarryFlag_BehavesC
     constexpr auto stackPointer = static_cast<uint16_t>(0x120F);
     constexpr auto initialHl = static_cast<uint16_t>(0xA5A5);
 
-    SetUpMocks(offset);
+    m_program.WriteProgram({0xF8_b, offset, 0x00_b});
     m_cpu.Registers().stackPointer = stackPointer;
     m_cpu.Registers().hlRegister = initialHl;
 
@@ -97,7 +87,7 @@ TEST_F(LoadHLFromSPPlusETest, ExecutingOpCode_AdditionSetsCarryFlag_BehavesCorre
     constexpr auto stackPointer = static_cast<uint16_t>(0x12F0);
     constexpr auto initialHl = static_cast<uint16_t>(0x0001);
 
-    SetUpMocks(offset);
+    m_program.WriteProgram({0xF8_b, offset, 0x00_b});
     m_cpu.Registers().stackPointer = stackPointer;
     m_cpu.Registers().hlRegister = initialHl;
 
@@ -110,7 +100,7 @@ TEST_F(LoadHLFromSPPlusETest, ExecutingOpCode_AdditionSetsHalfCarryAndCarryFlags
     constexpr auto stackPointer = static_cast<uint16_t>(0x12FF);
     constexpr auto initialHl = static_cast<uint16_t>(0xBEEF);
 
-    SetUpMocks(offset);
+    m_program.WriteProgram({0xF8_b, offset, 0x00_b});
     m_cpu.Registers().stackPointer = stackPointer;
     m_cpu.Registers().hlRegister = initialHl;
 

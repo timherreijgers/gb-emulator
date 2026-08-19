@@ -3,32 +3,21 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/address_bus.h"
-#include "emulatorlib/cpu.h"
-#include "emulatorlib/instruction_translation.h"
-#include "emulatorlib/test/address_bus_addressable_mock.h"
-#include "utilitylib/byte_utils.h"
+#include "instruction_test_base.h"
 
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
+#include "utilitylib/byte_utils.h"
 
 namespace EmulatorLib::Test
 {
 
-class LoadA16SPTest : public ::testing::Test
+class LoadA16SPTest : public InstructionTestBase
 {
 protected:
     void SetUp() override
     {
-        ON_CALL(m_addressableMock, ReadFromAddress(0x0100)).WillByDefault(::testing::Return(0x08_b));
-        ON_CALL(m_addressableMock, ReadFromAddress(0x0101)).WillByDefault(::testing::Return(0x33_b));
-        ON_CALL(m_addressableMock, ReadFromAddress(0x0102)).WillByDefault(::testing::Return(0x44_b));
-        ON_CALL(m_addressableMock, ReadFromAddress(0x0103)).WillByDefault(::testing::Return(0x00_b));
+        m_program.WriteProgram({0x08_b, 0x33_b, 0x44_b, 0x00_b});
+        EXPECT_CALL(m_addressableMock, ReadFromAddress(::testing::Le(0x7FFF))).WillRepeatedly(::testing::Return(0x00_b));
     }
-
-    ::testing::NiceMock<AddressBusAddressableMock> m_addressableMock;
-    AddressBus m_bus{{m_addressableMock}};
-    Cpu m_cpu{m_bus};
 };
 
 TEST_F(LoadA16SPTest, ExecutingCommand_WithValueToLoadAs0x1234_BehavesCorrectly)
