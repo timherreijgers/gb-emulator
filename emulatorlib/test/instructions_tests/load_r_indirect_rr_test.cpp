@@ -3,15 +3,9 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/address_bus.h"
-#include "emulatorlib/cpu.h"
+#include "instruction_test_base.h"
 #include "emulatorlib/instruction_translation.h"
-#include "emulatorlib/test/address_bus_addressable_mock.h"
 #include "instruction_handlers/register_io_helpers.h"
-#include "utilitylib/byte_utils.h"
-
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
 
 namespace EmulatorLib::Test
 {
@@ -43,24 +37,20 @@ struct InstructionPair
 
 } // namespace
 
-class LoadRegisterIndirectRegister16BitTest : public ::testing::TestWithParam<InstructionPair>
+class LoadRegisterIndirectRegister16BitTest : public InstructionTestBase, public ::testing::WithParamInterface<InstructionPair>
 {
 protected:
-    void SetUpMocks(std::byte instruction)
+    void SetUp() override
     {
-        ON_CALL(m_addressableMock, ReadFromAddress(0x0100)).WillByDefault(::testing::Return(instruction));
-        ON_CALL(m_addressableMock, ReadFromAddress(0x0101)).WillByDefault(::testing::Return(0x00_b));
+        EXPECT_CALL(m_addressableMock, ReadFromAddress(::testing::Le(0x7FFF)))
+            .WillRepeatedly(::testing::Return(0x00_b));
     }
-
-    ::testing::NiceMock<AddressBusAddressableMock> m_addressableMock;
-    AddressBus m_bus{{m_addressableMock}};
-    Cpu m_cpu{m_bus};
 };
 
 TEST_P(LoadRegisterIndirectRegister16BitTest, ExecutingOpCode)
 {
     const auto [instruction, registerToLoadTo, registerToLoadFrom, operand] = GetParam();
-    SetUpMocks(instruction);
+    m_program.WriteProgram({instruction, 0x00_b});
     registerToLoadTo(m_cpu.Registers()) = 0x00_b;
     registerToLoadFrom(m_cpu.Registers()) = 0x1234;
     const auto originalDestinationValue = registerToLoadTo(m_cpu.Registers()).value;
@@ -68,9 +58,6 @@ TEST_P(LoadRegisterIndirectRegister16BitTest, ExecutingOpCode)
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(instruction));
 
-    // TODO: We have to set a wildcard for EXPECT_CALL to ensure the test doesn't fail. When I have a better way to create
-    // programs this should not be an issue anymore.
-    EXPECT_CALL(m_addressableMock, ReadFromAddress(::testing::_)).Times(::testing::AnyNumber());
     EXPECT_CALL(m_addressableMock, ReadFromAddress(0x1234)).Times(1).WillOnce(::testing::Return(0xAA_b));
     m_cpu.Step();
     ASSERT_THAT(registerToLoadTo(m_cpu.Registers()).value, ::testing::Eq(originalDestinationValue));

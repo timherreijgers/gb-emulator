@@ -3,14 +3,8 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/address_bus.h"
-#include "emulatorlib/cpu.h"
+#include "instruction_test_base.h"
 #include "emulatorlib/instruction_translation.h"
-#include "emulatorlib/test/address_bus_addressable_mock.h"
-#include "utilitylib/byte_utils.h"
-
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
 
 namespace EmulatorLib::Test
 {
@@ -26,19 +20,14 @@ struct InstructionPair
 
 } // namespace
 
-class LoadRegN8Test : public ::testing::TestWithParam<InstructionPair>
+class LoadRegN8Test : public InstructionTestBase, public ::testing::WithParamInterface<InstructionPair>
 {
 protected:
-    void SetUpMocks(std::byte instruction, std::byte valueToSet)
+    void SetUp() override
     {
-        ON_CALL(m_addressableMock, ReadFromAddress(0x0100)).WillByDefault(::testing::Return(instruction));
-        ON_CALL(m_addressableMock, ReadFromAddress(0x0101)).WillByDefault(::testing::Return(valueToSet));
-        ON_CALL(m_addressableMock, ReadFromAddress(0x0102)).WillByDefault(::testing::Return(0x00_b));
+        EXPECT_CALL(m_addressableMock, ReadFromAddress(::testing::Le(0x7FFF)))
+            .WillRepeatedly(::testing::Return(0x00_b));
     }
-
-    ::testing::NaggyMock<AddressBusAddressableMock> m_addressableMock;
-    AddressBus m_bus{{m_addressableMock}};
-    Cpu m_cpu{m_bus};
 };
 
 TEST_P(LoadRegN8Test, ExecutingCommand_WithValueToLoadAs0xFF_BehavesCorrectly)
@@ -46,7 +35,7 @@ TEST_P(LoadRegN8Test, ExecutingCommand_WithValueToLoadAs0xFF_BehavesCorrectly)
     const auto& [instructionByte, registerValue] = GetParam();
     const auto defaultValue = registerValue(m_cpu.Registers());
 
-    SetUpMocks(instructionByte, 0xFF_b);
+    m_program.WriteProgram({instructionByte, 0xFF_b, 0x00_b});
 
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(instructionByte));
@@ -66,7 +55,7 @@ TEST_P(LoadRegN8Test, ExecutingCommand_WithValueToLoadAs0xFE_BehavesCorrectly)
     const auto defaultValue = registerValue(m_cpu.Registers());
     const auto valueToLoad = 0xFE_b;
 
-    SetUpMocks(instructionByte, valueToLoad);
+    m_program.WriteProgram({instructionByte, valueToLoad, 0x00_b});
 
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(instructionByte));
