@@ -3,9 +3,9 @@
  * Licensed using the MIT license
  */
 
-#include "instruction_test_base.h"
 #include "emulatorlib/instruction_translation.h"
 #include "instruction_handlers/register_io_helpers.h"
+#include "instruction_test_base.h"
 
 namespace EmulatorLib::Test
 {

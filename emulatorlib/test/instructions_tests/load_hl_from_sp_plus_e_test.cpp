@@ -3,8 +3,8 @@
  * Licensed using the MIT license
  */
 
-#include "instruction_test_base.h"
 #include "emulatorlib/cpu_flags.h"
+#include "instruction_test_base.h"
 
 namespace EmulatorLib::Test
 {
@@ -47,7 +47,7 @@ protected:
         ASSERT_THAT(m_cpu.Registers().stackPointer, ::testing::Eq(initialSp));
         ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(expectedFlags));
     }
-    
+
     void SetUp() override
     {
         EXPECT_CALL(m_addressableMock, ReadFromAddress(::testing::Le(0x7FFF)))
