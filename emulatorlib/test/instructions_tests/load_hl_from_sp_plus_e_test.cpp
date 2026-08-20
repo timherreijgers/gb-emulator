@@ -65,7 +65,7 @@ TEST_F(LoadHLFromSPPlusETest, ExecutingOpCode_AdditionWithoutCheckingFlags_Behav
     m_cpu.Registers().stackPointer = stackPointer;
     m_cpu.Registers().hlRegister = initialHl;
 
-    ExecuteInstructionAndValidateSteps(initialHl, stackPointer, offset, 0x1235, CpuFlags::Zero.AsByte());
+    ExecuteInstructionAndValidateSteps(initialHl, stackPointer, offset, 0x1235, 0x00_b);
 }
 
 TEST_F(LoadHLFromSPPlusETest, ExecutingOpCode_AdditionSetsHalfCarryFlag_BehavesCorrectly)

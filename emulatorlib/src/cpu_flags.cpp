@@ -8,10 +8,10 @@
 namespace EmulatorLib
 {
 
-CpuFlags CpuFlags::Zero{0x00};
-CpuFlags CpuFlags::Subtract{0x08};
-CpuFlags CpuFlags::HalfCarry{0x10};
-CpuFlags CpuFlags::Carry{0x20};
+CpuFlags CpuFlags::Zero{1 << 7};
+CpuFlags CpuFlags::Subtract{1 << 6};
+CpuFlags CpuFlags::HalfCarry{1 << 5};
+CpuFlags CpuFlags::Carry{1 << 4};
 
 CpuFlags::CpuFlags(uint8_t value)
     : m_value(value)

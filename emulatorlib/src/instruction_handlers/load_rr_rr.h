@@ -16,7 +16,7 @@ namespace EmulatorLib
 {
 
 template <ReturnsRegister16Bit WriteLocation, ReturnsRegister16Bit SourceLocation>
-constexpr auto ExecuteLoadReg16Reg16 = [](const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) -> InstructionHandler {
+constexpr auto ExecuteLoadReg16Reg16 = [](const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     WriteLocation{}(cpuRegisters) = SourceLocation{}(cpuRegisters).value;
     co_yield std::monostate{};
 

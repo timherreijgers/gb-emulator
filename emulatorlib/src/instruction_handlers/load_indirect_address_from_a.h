@@ -28,7 +28,7 @@ namespace EmulatorLib
     co_return;
 }
 
-[[nodiscard]] inline auto ExecuteLoadIndirectA16FromA(AddressBus& addressBus, CpuRegisters& cpuRegisters) -> InstructionHandler
+[[nodiscard]] inline auto ExecuteLoadIndirectA16FromA(AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler
 {
     cpuRegisters.zRegister = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
     co_yield std::monostate{};

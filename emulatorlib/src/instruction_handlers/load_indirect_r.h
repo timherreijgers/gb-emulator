@@ -16,7 +16,7 @@ namespace EmulatorLib
 {
 
 template <ReturnsRegister16Bit RegisterDestinationAddress, ReturnsRegister8Bit ReadLocation, RegisterModifier Modifier = RegisterNoModifier>
-constexpr auto ExecuteLoadIndirectFrom = [](AddressBus& addressBus, CpuRegisters& cpuRegisters) -> InstructionHandler {
+constexpr auto ExecuteLoadIndirectFrom = [](AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     const auto address = RegisterDestinationAddress{}(cpuRegisters).value;
     Modifier{}(RegisterDestinationAddress{}(cpuRegisters));
     addressBus.WriteToAddress(address, ReadLocation{}(cpuRegisters).value);

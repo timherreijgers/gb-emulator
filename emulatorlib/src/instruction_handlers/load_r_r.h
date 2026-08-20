@@ -16,7 +16,7 @@ namespace EmulatorLib
 {
 
 template <ReturnsRegister8Bit WriteLocation, ReturnsRegister8Bit SourceLocation>
-constexpr auto ExecuteLoadRegReg = [](const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) -> InstructionHandler {
+constexpr auto ExecuteLoadRegReg = [](const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     WriteLocation{}(cpuRegisters) = SourceLocation{}(cpuRegisters).value;
     co_return;
 };

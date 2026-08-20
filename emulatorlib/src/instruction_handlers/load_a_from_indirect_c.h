@@ -15,7 +15,7 @@
 namespace EmulatorLib
 {
 
-[[nodiscard]] inline auto ExecuteLoadAFromIndirectC(AddressBus& addressBus, CpuRegisters& cpuRegisters) -> InstructionHandler
+[[nodiscard]] inline auto ExecuteLoadAFromIndirectC(AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler
 {
     cpuRegisters.accumulator = addressBus.ReadFromAddress(0xFF00 | static_cast<uint8_t>(cpuRegisters.cRegister.value));
     co_yield std::monostate{};
