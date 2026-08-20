@@ -42,6 +42,11 @@ struct Register
         return value++;
     }
 
+    auto operator--(int) noexcept -> T
+    {
+        return value--;
+    }
+
     [[nodiscard]] auto
         operator<=>(const Register<T>& other) const noexcept
     {
