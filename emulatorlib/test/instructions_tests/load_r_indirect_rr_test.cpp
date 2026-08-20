@@ -83,5 +83,4 @@ INSTANTIATE_TEST_SUITE_P(LoadRegisterHlIndirectTest, LoadRegisterIndirectRegiste
                              return std::string{OpCodeToInstructionName(info.param.instruction)};
                          });
 
-
 } // namespace EmulatorLib::Test
