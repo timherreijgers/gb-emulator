@@ -21,8 +21,10 @@ struct CpuRegisters
 
     Register8Bit instructionRegister{backingInstructionRegister};
     Register8Bit interruptEnableRegister{backingInterruptEnableRegister};
-    Register8Bit accumulator{backingAccumulatorRegister};
-    Register8Bit flags{backingFlagsRegister};
+
+    Register16Bit afRegister{backingAfRegister};
+    Register8Bit accumulator{afRegister.UpperByteAsRegister()};
+    Register8Bit flags{afRegister.LowerByteAsRegister()};
 
     Register16Bit bcRegister{backingBcRegister};
     Register8Bit bRegister = bcRegister.UpperByteAsRegister();
@@ -46,8 +48,7 @@ struct CpuRegisters
 private:
     std::byte backingInstructionRegister{};
     std::byte backingInterruptEnableRegister{};
-    std::byte backingAccumulatorRegister{};
-    std::byte backingFlagsRegister{};
+    uint16_t backingAfRegister{};
     uint16_t backingBcRegister{};
     uint16_t backingDeRegister{};
     uint16_t backingHlRegister{};
