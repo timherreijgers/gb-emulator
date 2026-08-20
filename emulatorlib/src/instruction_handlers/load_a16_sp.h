@@ -12,7 +12,7 @@
 namespace EmulatorLib
 {
 
-[[nodiscard]] inline auto ExecuteLoadA16SP(AddressBus& addressBus, CpuRegisters& cpuRegisters) -> InstructionHandler
+[[nodiscard]] inline auto ExecuteLoadA16SP(AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler
 {
     cpuRegisters.zRegister = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
     co_yield std::monostate{};

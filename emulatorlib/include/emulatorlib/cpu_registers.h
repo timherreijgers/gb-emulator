@@ -12,6 +12,13 @@ namespace EmulatorLib
 
 struct CpuRegisters
 {
+    CpuRegisters() = default;
+    ~CpuRegisters() = default;
+    CpuRegisters(CpuRegisters&) = delete;
+    CpuRegisters operator=(const CpuRegisters&) = delete;
+    CpuRegisters(CpuRegisters&&) = delete;
+    CpuRegisters& operator=(const CpuRegisters&&) noexcept = delete;
+
     Register8Bit instructionRegister{backingInstructionRegister};
     Register8Bit interruptEnableRegister{backingInterruptEnableRegister};
     Register8Bit accumulator{backingAccumulatorRegister};

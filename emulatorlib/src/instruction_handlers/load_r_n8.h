@@ -16,7 +16,7 @@ namespace EmulatorLib
 {
 
 template <ReturnsRegister8Bit WriteLocation>
-constexpr auto ExecuteLoadRegN8 = [](const AddressBus& addressBus, CpuRegisters& cpuRegisters) -> InstructionHandler {
+constexpr auto ExecuteLoadRegN8 = [](const AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     cpuRegisters.zRegister = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
     co_yield std::monostate{};
 

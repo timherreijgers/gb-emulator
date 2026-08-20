@@ -5,8 +5,11 @@
 
 #pragma once
 
+#include "byte_utils.h"
+
 #include <concepts>
 #include <cstddef>
+#include <type_traits>
 
 namespace UtilityLib
 {

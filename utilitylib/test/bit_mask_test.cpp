@@ -12,16 +12,13 @@
 namespace UtilityLib::Test
 {
 
-class BitMaskTest : public ::testing::TestWithParam<uint8_t>
-{
-};
-
-TEST_P(BitMaskTest, BitMask_ReturnsCorrectMask)
-{
-    ASSERT_THAT(BitMask(GetParam()), ::testing::Eq(1_b << GetParam()));
-}
-
-INSTANTIATE_TEST_SUITE_P(BitMaskTest, BitMaskTest,
-                         ::testing::Values(0, 1, 2, 3, 4, 5, 6, 7));
+static_assert(BitMask<0> == 1_b);
+static_assert(BitMask<1> == 2_b);
+static_assert(BitMask<2> == 4_b);
+static_assert(BitMask<3> == 8_b);
+static_assert(BitMask<4> == 16_b);
+static_assert(BitMask<5> == 32_b);
+static_assert(BitMask<6> == 64_b);
+static_assert(BitMask<7> == 128_b);
 
 } // namespace UtilityLib::Test

@@ -8,6 +8,11 @@
 #include "emulatorlib/address_bus_addressable.h"
 #include "utilitylib/byte_utils.h"
 
+#include <cstddef>
+#include <cstdint>
+#include <initializer_list>
+#include <vector>
+
 namespace EmulatorLib::Test
 {
 

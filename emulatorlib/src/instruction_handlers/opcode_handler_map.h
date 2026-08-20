@@ -32,7 +32,7 @@ InstructionHandler UnimplementedOpcode(AddressBus& /*addressBus*/, CpuRegisters&
     throw std::runtime_error("Unimplemented opcode");
 }
 
-InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRegisters*/)
+InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRegisters*/) noexcept
 {
     co_return;
 }

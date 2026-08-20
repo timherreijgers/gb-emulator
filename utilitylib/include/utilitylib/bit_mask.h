@@ -11,8 +11,11 @@
 namespace UtilityLib
 {
 
-constexpr auto BitMask = [](const std::uint8_t bit) {
-    return static_cast<std::byte>(1 << bit);
-};
+template <uint8_t mask>
+concept ValidBitMask = mask < 8;
+
+template <uint8_t mask>
+    requires ValidBitMask<mask>
+constexpr auto BitMask = static_cast<std::byte>(1 << mask);
 
 } // namespace UtilityLib

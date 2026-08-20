@@ -16,7 +16,7 @@ namespace EmulatorLib
 {
 
 template <ReturnsRegister8Bit RegisterDestination, ReturnsRegister16Bit RegisterSource, RegisterModifier16Bit Modifier = RegisterNoModifier>
-constexpr auto ExecuteLoadRIndirectRr = [](AddressBus& addressBus, CpuRegisters& cpuRegisters) -> InstructionHandler {
+constexpr auto ExecuteLoadRIndirectRr = [](AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     const auto address = RegisterSource{}(cpuRegisters).value;
     Modifier{}(RegisterSource{}(cpuRegisters));
     const auto value = addressBus.ReadFromAddress(address);
