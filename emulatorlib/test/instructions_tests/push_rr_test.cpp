@@ -24,6 +24,7 @@ struct InstructionPair
 {
     std::byte instruction;
     std::function<Register16Bit&(CpuRegisters&)> sourceRegister;
+    uint16_t mask = 0xFFFF;
 };
 
 } // namespace
@@ -41,7 +42,7 @@ protected:
 
 TEST_P(PushRRTest, ExecuteOpCodeCorrectly)
 {
-    const auto& [instruction, sourceRegisterGetter] = GetParam();
+    const auto& [instruction, sourceRegisterGetter, mask] = GetParam();
     const auto& sourceRegister = sourceRegisterGetter(m_cpu.Registers());
 
     SetUpForInstruction(instruction);
@@ -56,11 +57,11 @@ TEST_P(PushRRTest, ExecuteOpCodeCorrectly)
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().stackPointer, ::testing::Eq(0xFFFD));
 
-    EXPECT_CALL(m_addressableMock, WriteToAddress(0xFFFD, 0xAA_b)).Times(1);
+    EXPECT_CALL(m_addressableMock, WriteToAddress(0xFFFD, 0xAA_b & static_cast<std::byte>(mask >> 8))).Times(1);
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().stackPointer, ::testing::Eq(0xFFFC));
 
-    EXPECT_CALL(m_addressableMock, WriteToAddress(0xFFFC, 0x88_b)).Times(1);
+    EXPECT_CALL(m_addressableMock, WriteToAddress(0xFFFC, 0x88_b & static_cast<std::byte>(mask))).Times(1);
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().stackPointer, ::testing::Eq(0xFFFC));
 
@@ -73,7 +74,7 @@ INSTANTIATE_TEST_SUITE_P(PushRRTest, PushRRTest,
                              InstructionPair{0xC5_b, FunctionWrapper16Bit<RegisterBC>()},
                              InstructionPair{0xD5_b, FunctionWrapper16Bit<RegisterDE>()},
                              InstructionPair{0xE5_b, FunctionWrapper16Bit<RegisterHL>()},
-                             InstructionPair{0xF5_b, FunctionWrapper16Bit<RegisterAF>()}),
+                             InstructionPair{0xF5_b, FunctionWrapper16Bit<RegisterAF>(), 0xFFF0}),
                          [](const testing::TestParamInfo<PushRRTest::ParamType>& info) {
                              return std::string{OpCodeToInstructionName(info.param.instruction)};
                          });

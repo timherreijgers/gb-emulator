@@ -24,6 +24,7 @@ struct InstructionPair
 {
     std::byte instruction;
     std::function<Register16Bit&(CpuRegisters&)> destinationRegister;
+    uint16_t mask = 0xFFFF;
 };
 
 } // namespace
@@ -41,7 +42,7 @@ protected:
 
 TEST_P(PopRRTest, ExecuteOpCodeCorrectly)
 {
-    const auto& [instruction, targetRegisterGetter] = GetParam();
+    const auto& [instruction, targetRegisterGetter, valueMask] = GetParam();
     const auto& targetRegister = targetRegisterGetter(m_cpu.Registers());
 
     SetUpForInstruction(instruction);
@@ -63,7 +64,7 @@ TEST_P(PopRRTest, ExecuteOpCodeCorrectly)
     ASSERT_THAT(m_cpu.Registers().wRegister, ::testing::Eq(0x34_b));
 
     m_cpu.Step();
-    ASSERT_THAT(targetRegister, ::testing::Eq(0x3412));
+    ASSERT_THAT(targetRegister, ::testing::Eq(0x3412 & valueMask));
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));
 }
 
@@ -72,7 +73,7 @@ INSTANTIATE_TEST_SUITE_P(PopRRTest, PopRRTest,
                              InstructionPair{0xC1_b, FunctionWrapper16Bit<RegisterBC>()},
                              InstructionPair{0xD1_b, FunctionWrapper16Bit<RegisterDE>()},
                              InstructionPair{0xE1_b, FunctionWrapper16Bit<RegisterHL>()},
-                             InstructionPair{0xF1_b, FunctionWrapper16Bit<RegisterAF>()}),
+                             InstructionPair{0xF1_b, FunctionWrapper16Bit<RegisterAF>(), 0xFFF0}),
                          [](const testing::TestParamInfo<PopRRTest::ParamType>& info) {
                              return std::string{OpCodeToInstructionName(info.param.instruction)};
                          });
