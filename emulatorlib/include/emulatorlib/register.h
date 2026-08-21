@@ -5,7 +5,14 @@
 
 #pragma once
 
+#include "utilitylib/byte_utils.h"
+
+#include <compare>
+#include <concepts>
+#include <cstddef>
 #include <cstdint>
+#include <limits>
+#include <type_traits>
 #include <utility>
 
 namespace EmulatorLib
@@ -15,26 +22,47 @@ template <typename T>
 struct Register
 {
     T& value;
+    T mask = static_cast<T>(std::numeric_limits<T>::max());
 
-    auto operator=(std::remove_cvref_t<T> t) -> Register<T>&
+    auto operator=(std::remove_cvref_t<T> t) -> Register&
     {
-        value = t;
+        value = (t & mask);
         return *this;
     }
 
     operator T() const noexcept
     {
-        return value;
+        return value & mask;
     }
 
     [[nodiscard]] auto operator+(const T& other) const noexcept -> T
     {
-        return value + other;
+        if constexpr (std::same_as<T, std::byte>)
+        {
+            const auto lhs = std::to_integer<unsigned int>(value);
+            const auto rhs = std::to_integer<unsigned int>(other);
+            return static_cast<std::byte>(lhs + rhs);
+        }
+        else
+        {
+            return static_cast<T>(value + other);
+        }
     }
 
     void operator+=(const T& other) noexcept
     {
-        value += other;
+        if constexpr (std::same_as<T, std::byte>)
+        {
+            const auto lhs = std::to_integer<unsigned int>(value);
+            const auto rhs = std::to_integer<unsigned int>(other);
+            value = static_cast<std::byte>(lhs + rhs);
+            value &= mask;
+        }
+        else
+        {
+            value = static_cast<T>(value + other);
+            value &= mask;
+        }
     }
 
     auto operator++(int) noexcept -> T
@@ -47,8 +75,7 @@ struct Register
         return value--;
     }
 
-    [[nodiscard]] auto
-        operator<=>(const Register<T>& other) const noexcept
+    [[nodiscard]] auto operator<=>(const Register<T>& other) const noexcept
     {
         return value <=> other.value;
     }
@@ -63,7 +90,7 @@ struct Register
         -> Register<std::byte>
         requires std::same_as<T, std::uint16_t>
     {
-        return Register<std::byte>{*reinterpret_cast<std::byte *>(&value)};
+        return Register<std::byte>{*reinterpret_cast<std::byte *>(&value), static_cast<std::byte>(mask)};
     }
 
     [[nodiscard]]
@@ -71,7 +98,7 @@ struct Register
         -> Register<std::byte>
         requires std::same_as<T, std::uint16_t>
     {
-        return Register<std::byte>{*(reinterpret_cast<std::byte *>(&value) + 1)};
+        return Register<std::byte>{*(reinterpret_cast<std::byte *>(&value) + 1), static_cast<std::byte>(mask >> 8)};
     }
 };
 

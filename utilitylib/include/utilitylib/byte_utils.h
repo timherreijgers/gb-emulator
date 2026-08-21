@@ -5,14 +5,22 @@
 
 #pragma once
 
+#include <utilitylib/integral_suffixes.h>
+
 #include <concepts>
 #include <cstddef>
+#include <limits>
 #include <utility>
 
-constexpr std::byte operator""_b(unsigned long long v)
+namespace std
 {
-    return static_cast<std::byte>(v);
-}
+
+template <>
+class numeric_limits<std::byte> : public numeric_limits<unsigned char>
+{
+};
+
+} // namespace std
 
 [[nodiscard]] constexpr auto operator-(const std::byte lhs, const std::byte rhs) -> std::byte
 {
