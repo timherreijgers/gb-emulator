@@ -6,6 +6,7 @@
 #pragma once
 
 #include "emulatorlib/register.h"
+#include "utilitylib/integral_suffixes.h"
 
 namespace EmulatorLib
 {
@@ -22,7 +23,7 @@ struct CpuRegisters
     Register8Bit instructionRegister{backingInstructionRegister};
     Register8Bit interruptEnableRegister{backingInterruptEnableRegister};
 
-    Register16Bit afRegister{backingAfRegister};
+    Register16Bit afRegister{backingAfRegister, 0xFFF0_u16};
     Register8Bit accumulator{afRegister.UpperByteAsRegister()};
     Register8Bit flags{afRegister.LowerByteAsRegister()};
 

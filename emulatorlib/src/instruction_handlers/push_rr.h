@@ -15,17 +15,17 @@
 namespace EmulatorLib
 {
 
-template <ReturnsRegister16Bit ReadLocation, uint16_t ValueMask = 0xFFFF>
+template <ReturnsRegister16Bit ReadLocation>
 constexpr auto ExecutePushRr = [](AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     const auto& registerSource = ReadLocation{}(cpuRegisters);
 
     cpuRegisters.stackPointer--;
     co_yield std::monostate{};
 
-    addressBus.WriteToAddress(cpuRegisters.stackPointer--, static_cast<std::byte>(registerSource.value >> 8) & static_cast<std::byte>(ValueMask >> 8));
+    addressBus.WriteToAddress(cpuRegisters.stackPointer--, static_cast<std::byte>(registerSource.value >> 8));
     co_yield std::monostate{};
 
-    addressBus.WriteToAddress(cpuRegisters.stackPointer, static_cast<std::byte>(registerSource.value & 0xFF) & static_cast<std::byte>(ValueMask));
+    addressBus.WriteToAddress(cpuRegisters.stackPointer, static_cast<std::byte>(registerSource.value & 0xFF));
     co_yield std::monostate{};
 
     // We need this co_return here to make sure the execution of the opcode takes 4 M-cycles. We cannot read the next instruction at the same
@@ -36,6 +36,6 @@ constexpr auto ExecutePushRr = [](AddressBus& addressBus, CpuRegisters& cpuRegis
 constexpr auto ExecutePushBC = ExecutePushRr<RegisterBC>;
 constexpr auto ExecutePushDE = ExecutePushRr<RegisterDE>;
 constexpr auto ExecutePushHL = ExecutePushRr<RegisterHL>;
-constexpr auto ExecutePushAF = ExecutePushRr<RegisterAF, 0xFFF0>;
+constexpr auto ExecutePushAF = ExecutePushRr<RegisterAF>;
 
 } // namespace EmulatorLib
