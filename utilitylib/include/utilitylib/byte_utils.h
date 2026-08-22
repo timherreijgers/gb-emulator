@@ -5,22 +5,12 @@
 
 #pragma once
 
+#include <utilitylib/byte_limits.h>
 #include <utilitylib/integral_suffixes.h>
 
 #include <concepts>
 #include <cstddef>
-#include <limits>
 #include <utility>
-
-namespace std
-{
-
-template <>
-class numeric_limits<std::byte> : public numeric_limits<unsigned char>
-{
-};
-
-} // namespace std
 
 [[nodiscard]] constexpr auto operator-(const std::byte lhs, const std::byte rhs) -> std::byte
 {

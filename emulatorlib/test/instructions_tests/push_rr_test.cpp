@@ -43,12 +43,12 @@ protected:
 TEST_P(PushRRTest, ExecuteOpCodeCorrectly)
 {
     const auto& [instruction, sourceRegisterGetter, mask] = GetParam();
-    const auto& sourceRegister = sourceRegisterGetter(m_cpu.Registers());
+    auto& sourceRegister = sourceRegisterGetter(m_cpu.Registers());
 
     SetUpForInstruction(instruction);
 
     m_cpu.Registers().stackPointer = 0xFFFE;
-    sourceRegister.value = 0xAA88;
+    sourceRegister = 0xAA88_u16;
 
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(instruction));
