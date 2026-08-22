@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <utilitylib/byte_limits.h>
 #include <utilitylib/integral_suffixes.h>
+#include <utilitylib/numeric_limits.h>
 
 #include <concepts>
 #include <cstddef>

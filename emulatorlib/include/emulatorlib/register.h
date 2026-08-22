@@ -7,13 +7,10 @@
 
 #include "utilitylib/byte_utils.h"
 
-#include <compare>
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
-#include <limits>
 #include <type_traits>
-#include <utility>
 
 namespace EmulatorLib
 {
@@ -22,7 +19,7 @@ template <typename T>
 struct Register
 {
     T& value;
-    T mask = static_cast<T>(std::numeric_limits<T>::max());
+    T mask = static_cast<T>(UtilityLib::numeric_limits<T>::max());
 
     auto operator=(std::remove_cvref_t<T> t) -> Register&
     {
