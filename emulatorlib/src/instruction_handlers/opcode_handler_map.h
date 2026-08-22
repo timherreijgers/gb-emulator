@@ -6,9 +6,8 @@
 #pragma once
 
 #include "emulatorlib/instruction_handler.h"
-#include "pop_rr.h"
-#include "push_rr.h"
 
+#include "instruction_handlers/inc_r.h"
 #include "instruction_handlers/load_a16_sp.h"
 #include "instruction_handlers/load_a_from_indirect_address.h"
 #include "instruction_handlers/load_a_from_indirect_c.h"
@@ -22,6 +21,8 @@
 #include "instruction_handlers/load_r_r.h"
 #include "instruction_handlers/load_rr_n16.h"
 #include "instruction_handlers/load_rr_rr.h"
+#include "instruction_handlers/pop_rr.h"
+#include "instruction_handlers/push_rr.h"
 
 #include <array>
 #include <stdexcept>
@@ -47,27 +48,34 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0x00] = ExecuteNoop;
     handlers[0x01] = ExecuteLoadBCn16;
     handlers[0x02] = ExecuteLoadIndirectBCFromA;
+    handlers[0x04] = ExecuteIncB;
     handlers[0x06] = ExecuteLoadBn8;
     handlers[0x08] = ExecuteLoadA16SP;
     handlers[0x0A] = ExecuteLoadIndirectAFromBC;
+    handlers[0x0C] = ExecuteIncC;
     handlers[0x0E] = ExecuteLoadCn8;
 
     handlers[0x11] = ExecuteLoadDEn16;
     handlers[0x12] = ExecuteLoadIndirectDEFromA;
+    handlers[0x14] = ExecuteIncD;
     handlers[0x16] = ExecuteLoadDn8;
     handlers[0x1A] = ExecuteLoadIndirectAFromDE;
+    handlers[0x1C] = ExecuteIncE;
     handlers[0x1E] = ExecuteLoadEn8;
 
     handlers[0x21] = ExecuteLoadHLn16;
     handlers[0x22] = ExecuteLoadIndirectHLIncrementFromA;
+    handlers[0x24] = ExecuteIncH;
     handlers[0x26] = ExecuteLoadHn8;
     handlers[0x2A] = ExecuteLoadIndirectAFromHLIncrement;
+    handlers[0x2C] = ExecuteIncL;
     handlers[0x2E] = ExecuteLoadLn8;
 
     handlers[0x31] = ExecuteLoadSPn16;
     handlers[0x32] = ExecuteLoadIndirectHLDecrementFromA;
     handlers[0x36] = ExecuteLoadIndirectHlN8;
     handlers[0x3A] = ExecuteLoadIndirectAFromHLDecrement;
+    handlers[0x3C] = ExecuteIncA;
     handlers[0x3E] = ExecuteLoadAn8;
 
     handlers[0x40] = ExecuteLoad_B_B;

@@ -21,27 +21,34 @@ namespace
     names[0x00] = "Noop";
     names[0x01] = "LoadBCn16";
     names[0x02] = "LoadIndirectBCFromA";
+    names[0x04] = "IncB";
     names[0x06] = "LoadBn8";
     names[0x08] = "LoadA16SP";
     names[0x0A] = "LoadAFromIndirectBC";
+    names[0x0C] = "IncC";
     names[0x0E] = "LoadCn8";
 
     names[0x11] = "LoadDEn16";
     names[0x12] = "LoadIndirectDEFromA";
+    names[0x14] = "IncD";
     names[0x16] = "LoadDn8";
     names[0x1A] = "LoadAFromIndirectDE";
+    names[0x1C] = "IncE";
     names[0x1E] = "LoadEn8";
 
     names[0x21] = "LoadHLn16";
     names[0x22] = "LoadIndirectHLIncrementFromA";
+    names[0x24] = "IncH";
     names[0x26] = "LoadHn8";
     names[0x2A] = "LoadAFromIndirectHLIncrement";
+    names[0x2C] = "IncL";
     names[0x2E] = "LoadLn8";
 
     names[0x31] = "LoadSPn16";
     names[0x32] = "LoadIndirectHLDecrementFromA";
     names[0x36] = "LoadHlN8";
     names[0x3A] = "LoadAFromIndirectHLDecrement";
+    names[0x3C] = "IncA";
     names[0x3E] = "LoadAn8";
 
     names[0x40] = "Load_B_B";
