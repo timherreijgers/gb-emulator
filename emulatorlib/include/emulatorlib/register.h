@@ -39,13 +39,13 @@ struct Register
     {
         if constexpr (std::same_as<T, std::byte>)
         {
-            const auto lhs = std::to_integer<unsigned int>(value);
+            const auto lhs = std::to_integer<unsigned int>(value & mask);
             const auto rhs = std::to_integer<unsigned int>(other);
-            return static_cast<std::byte>(lhs + rhs);
+            return static_cast<std::byte>(lhs + rhs) & mask;
         }
         else
         {
-            return static_cast<T>(value + other);
+            return static_cast<T>((value & mask) + other) & mask;
         }
     }
 
@@ -53,15 +53,13 @@ struct Register
     {
         if constexpr (std::same_as<T, std::byte>)
         {
-            const auto lhs = std::to_integer<unsigned int>(value);
+            const auto lhs = std::to_integer<unsigned int>(value & mask);
             const auto rhs = std::to_integer<unsigned int>(other);
-            value = static_cast<std::byte>(lhs + rhs);
-            value &= mask;
+            value = static_cast<std::byte>(lhs + rhs) & mask;
         }
         else
         {
-            value = static_cast<T>(value + other);
-            value &= mask;
+            value = static_cast<T>((value & mask) + other) & mask;
         }
     }
 
