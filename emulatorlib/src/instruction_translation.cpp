@@ -125,8 +125,18 @@ namespace
     names[0x7E] = "LoadAFromIndirectHL";
     names[0x7F] = "Load_A_A";
 
+    names[0x80] = "AddB";
+    names[0x81] = "AddC";
+    names[0x82] = "AddD";
+    names[0x83] = "AddE";
+    names[0x84] = "AddH";
+    names[0x85] = "AddL";
+    names[0x87] = "AddA";
+
     names[0xC1] = "POP_BC";
     names[0xC5] = "PUSH_BC";
+
+    names[0xC6] = "AddAn8";
 
     names[0xD1] = "POP_DE";
     names[0xD5] = "PUSH_DE";
