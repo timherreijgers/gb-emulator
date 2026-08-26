@@ -106,6 +106,32 @@ TEST_P(DecRTest, ExecutingOpCode_SetsHalfCarryTo1)
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Subtract.AsByte() | CpuFlags::HalfCarry.AsByte()));
 }
 
+TEST_P(DecRTest, ExecutingOpCode_CarryFlagRemainsUnchangedWhenZero)
+{
+    const auto& [instruction, targetRegister] = GetParam();
+    m_program.WriteProgram({instruction, 0x00_b});
+
+    m_cpu.Registers().flags = 0x00_b;
+    targetRegister(m_cpu.Registers()) = 0x00_b;
+
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().flags.value, ::testing::Eq(CpuFlags::Subtract.AsByte() | CpuFlags::HalfCarry.AsByte()));
+}
+
+TEST_P(DecRTest, ExecutingOpCode_CarryFlagRemainsUnchangedWhenOne)
+{
+    const auto& [instruction, targetRegister] = GetParam();
+    m_program.WriteProgram({instruction, 0x00_b});
+
+    m_cpu.Registers().flags = CpuFlags::Carry.AsByte();
+    targetRegister(m_cpu.Registers()) = 0x02_b;
+
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Subtract.AsByte() | CpuFlags::Carry.AsByte()));
+}
+
 INSTANTIATE_TEST_SUITE_P(DecRTest, DecRTest,
                          ::testing::Values(
                              InstructionPair{0x05_b, FunctionWrapper8Bit<RegisterB>()},

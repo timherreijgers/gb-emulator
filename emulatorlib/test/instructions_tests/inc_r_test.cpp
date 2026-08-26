@@ -119,6 +119,32 @@ TEST_P(IncRTest, ExecutingOpCode_SetsHalfCarryTo1)
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte()));
 }
 
+TEST_P(IncRTest, ExecutingOpCode_CarryFlagRemainsUnchangedWhenZero)
+{
+    const auto& [instruction, targetRegister] = GetParam();
+    m_program.WriteProgram({instruction, 0x00_b});
+
+    m_cpu.Registers().flags = 0x00_b;
+    targetRegister(m_cpu.Registers()) = 0x04_b;
+
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(0x00_b));
+}
+
+TEST_P(IncRTest, ExecutingOpCode_CarryFlagRemainsUnchangedWhenOne)
+{
+    const auto& [instruction, targetRegister] = GetParam();
+    m_program.WriteProgram({instruction, 0x00_b});
+
+    m_cpu.Registers().flags = CpuFlags::Carry.AsByte();
+    targetRegister(m_cpu.Registers()) = 0x04_b;
+
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Carry.AsByte()));
+}
+
 INSTANTIATE_TEST_SUITE_P(IncRTest, IncRTest,
                          ::testing::Values(
                              InstructionPair{0x04_b, FunctionWrapper8Bit<RegisterB>()},
