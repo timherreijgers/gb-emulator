@@ -70,6 +70,20 @@ struct Register
         return value--;
     }
 
+    auto operator&=(T other) noexcept -> Register<T>&
+    {
+        value &= other;
+        value &= mask;
+        return *this;
+    }
+
+    auto operator|=(T other) noexcept -> Register<T>&
+    {
+        value |= other;
+        value &= mask;
+        return *this;
+    }
+
     [[nodiscard]] auto operator<=>(const Register<T>& other) const noexcept
     {
         return value <=> other.value;
