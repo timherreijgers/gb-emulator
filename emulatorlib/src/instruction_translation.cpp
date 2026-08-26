@@ -133,10 +133,19 @@ namespace
     names[0x85] = "AddL";
     names[0x87] = "AddA";
 
+    names[0x88] = "AdcB";
+    names[0x89] = "AdcC";
+    names[0x8A] = "AdcD";
+    names[0x8B] = "AdcE";
+    names[0x8C] = "AdcH";
+    names[0x8D] = "AdcL";
+    names[0x8F] = "AdcA";
+
     names[0xC1] = "POP_BC";
     names[0xC5] = "PUSH_BC";
 
     names[0xC6] = "AddAn8";
+    names[0xCE] = "AdcAn8";
 
     names[0xD1] = "POP_DE";
     names[0xD5] = "PUSH_DE";
