@@ -7,6 +7,8 @@
 
 #include "emulatorlib/instruction_handler.h"
 
+#include "instruction_handlers/add_a_n8.h"
+#include "instruction_handlers/add_r.h"
 #include "instruction_handlers/dec_r.h"
 #include "instruction_handlers/inc_r.h"
 #include "instruction_handlers/load_a16_sp.h"
@@ -154,8 +156,18 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0x7E] = ExecuteLoadIndirectAFromHL;
     handlers[0x7F] = ExecuteLoad_A_A;
 
+    handlers[0x80] = ExecuteAddB;
+    handlers[0x81] = ExecuteAddC;
+    handlers[0x82] = ExecuteAddD;
+    handlers[0x83] = ExecuteAddE;
+    handlers[0x84] = ExecuteAddH;
+    handlers[0x85] = ExecuteAddL;
+    handlers[0x87] = ExecuteAddA;
+
     handlers[0xC1] = ExecutePopBC;
     handlers[0xC5] = ExecutePushBC;
+
+    handlers[0xC6] = ExecuteAddAn8;
 
     handlers[0xD1] = ExecutePopDE;
     handlers[0xD5] = ExecutePushDE;
