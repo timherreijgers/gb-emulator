@@ -32,4 +32,20 @@ template <IntegralOrByte T>
     return {result, carryBits};
 }
 
+template <IntegralOrByte T, IntegralOrByte... Ts>
+    requires(sizeof...(Ts) >= 2)
+[[nodiscard]] constexpr auto AddWithCarry(T first, Ts... rest) noexcept -> AddWithCarryResult<T>
+{
+    T accResult = first;
+    T accCarry = static_cast<T>(0);
+    (
+        [&](T val) {
+            const auto [r, c] = AddWithCarry(accResult, val);
+            accResult = r;
+            accCarry = static_cast<T>(accCarry | c);
+        }(static_cast<T>(rest)),
+        ...);
+    return {accResult, accCarry};
+}
+
 } // namespace UtilityLib

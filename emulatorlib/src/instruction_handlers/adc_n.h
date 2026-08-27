@@ -10,6 +10,7 @@
 #include "emulatorlib/instruction_handler.h"
 
 #include "instruction_handlers/register_io_helpers.h"
+#include "utilitylib/add_with_carry.h"
 #include "utilitylib/bit_mask.h"
 
 namespace EmulatorLib
@@ -19,15 +20,14 @@ constexpr auto ExecuteAdcAn8 = [](const AddressBus& addressBus, CpuRegisters& cp
     cpuRegisters.zRegister = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
     co_yield std::monostate{};
 
-    const auto originalAccumulator = cpuRegisters.accumulator.value;
-    const auto carry = (cpuRegisters.flags.value & CpuFlags::Carry.AsByte()) > 0x00_b ? 1 : 0;
-    const auto sum = static_cast<int>(originalAccumulator) + static_cast<int>(cpuRegisters.zRegister.value) + carry;
-    cpuRegisters.accumulator = static_cast<std::byte>(sum & 0xFF);
+    const auto carryIn = (cpuRegisters.flags.value & CpuFlags::Carry.AsByte()) > 0x00_b ? 0x01_b : 0x00_b;
+    const auto [result, carry] = UtilityLib::AddWithCarry(cpuRegisters.accumulator.value, cpuRegisters.zRegister.value, carryIn);
+    cpuRegisters.accumulator = result;
 
     cpuRegisters.flags.value = 0x00_b;
-    cpuRegisters.flags.value |= cpuRegisters.accumulator == 0x00_b ? CpuFlags::Zero.AsByte() : 0x00_b;
-    cpuRegisters.flags.value |= ((static_cast<int>(originalAccumulator) & 0x0F) + (static_cast<int>(cpuRegisters.zRegister.value) & 0x0F) + carry > 0x0F) ? CpuFlags::HalfCarry.AsByte() : 0x00_b;
-    cpuRegisters.flags.value |= sum > 0xFF ? CpuFlags::Carry.AsByte() : 0x00_b;
+    cpuRegisters.flags.value |= result == 0x00_b ? CpuFlags::Zero.AsByte() : 0x00_b;
+    cpuRegisters.flags.value |= (carry & UtilityLib::BitMask<3>) > 0x00_b ? CpuFlags::HalfCarry.AsByte() : 0x00_b;
+    cpuRegisters.flags.value |= (carry & UtilityLib::BitMask<7>) > 0x00_b ? CpuFlags::Carry.AsByte() : 0x00_b;
 
     co_return;
 };
