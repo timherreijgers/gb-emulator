@@ -7,7 +7,7 @@
 
 #include "emulatorlib/instruction_handler.h"
 
-#include "instruction_handlers/adc_n.h"
+#include "instruction_handlers/adc_a_n8.h"
 #include "instruction_handlers/adc_r.h"
 #include "instruction_handlers/add_a_n8.h"
 #include "instruction_handlers/add_r.h"

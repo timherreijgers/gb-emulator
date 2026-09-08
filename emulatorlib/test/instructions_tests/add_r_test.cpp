@@ -3,6 +3,8 @@
  * Licensed using the MIT license
  */
 
+#include "register_function_wrappers.h"
+
 #include "emulatorlib/cpu_flags.h"
 #include "emulatorlib/instruction_translation.h"
 #include "instruction_handlers/register_io_helpers.h"
@@ -13,12 +15,6 @@ namespace EmulatorLib::Test
 
 namespace
 {
-
-template <typename T>
-[[nodiscard]] auto FunctionWrapper8Bit() -> std::function<Register8Bit&(CpuRegisters&)>
-{
-    return T{};
-}
 
 struct InstructionPair
 {
@@ -152,6 +148,21 @@ TEST_P(AddRTest, ExecutingOpCode_SetsCarryTo1)
     m_cpu.Step();
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Carry.AsByte()));
+}
+
+TEST_P(AddRTest, ExecutingOpCode_SetsZeroHalfCarryAndCarry)
+{
+    const auto& [instruction, sourceRegister] = GetParam();
+    m_program.WriteProgram({instruction, 0x00_b});
+
+    m_cpu.Registers().accumulator = 0xF8_b;
+    sourceRegister(m_cpu.Registers()) = 0x08_b;
+
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().accumulator, ::testing::Eq(0x00_b));
+    ASSERT_THAT(m_cpu.Registers().flags,
+                ::testing::Eq(CpuFlags::Zero.AsByte() | CpuFlags::HalfCarry.AsByte() | CpuFlags::Carry.AsByte()));
 }
 
 INSTANTIATE_TEST_SUITE_P(AddRTest, AddRTest,

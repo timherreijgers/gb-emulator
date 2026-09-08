@@ -15,7 +15,7 @@ namespace UtilityLib
 {
 
 template <typename T>
-concept IntegralOrByte = std::integral<T> || std::is_same_v<T, std::byte>;
+concept IntegralOrByte = std::unsigned_integral<T> || std::is_same_v<T, std::byte>;
 
 template <IntegralOrByte T>
 struct AddWithCarryResult
@@ -32,20 +32,17 @@ template <IntegralOrByte T>
     return {result, carryBits};
 }
 
-template <IntegralOrByte T, IntegralOrByte... Ts>
-    requires(sizeof...(Ts) >= 2)
-[[nodiscard]] constexpr auto AddWithCarry(T first, Ts... rest) noexcept -> AddWithCarryResult<T>
+template <IntegralOrByte T>
+[[nodiscard]] constexpr auto AddWithCarryIn(T left, T right, bool carryIn) noexcept -> AddWithCarryResult<T>
 {
-    T accResult = first;
-    T accCarry = static_cast<T>(0);
-    (
-        [&](T val) {
-            const auto [r, c] = AddWithCarry(accResult, val);
-            accResult = r;
-            accCarry = static_cast<T>(accCarry | c);
-        }(static_cast<T>(rest)),
-        ...);
-    return {accResult, accCarry};
+    const auto [result, carryBits] = AddWithCarry(left, right);
+    if (!carryIn)
+    {
+        return {result, carryBits};
+    }
+
+    const auto [resultWithCarry, carryBitsWithCarry] = AddWithCarry(result, static_cast<T>(1));
+    return {resultWithCarry, static_cast<T>(carryBits | carryBitsWithCarry)};
 }
 
 } // namespace UtilityLib

@@ -3,6 +3,8 @@
  * Licensed using the MIT license
  */
 
+#include "register_function_wrappers.h"
+
 #include "emulatorlib/cpu_flags.h"
 #include "emulatorlib/instruction_translation.h"
 #include "instruction_handlers/register_io_helpers.h"
@@ -13,12 +15,6 @@ namespace EmulatorLib::Test
 
 namespace
 {
-
-template <typename T>
-[[nodiscard]] auto FunctionWrapper8Bit() -> std::function<Register8Bit&(CpuRegisters&)>
-{
-    return T{};
-}
 
 struct InstructionPair
 {
