@@ -14,6 +14,15 @@ namespace UtilityLib::Test
 namespace
 {
 
+template <typename... Ts>
+concept AddWithCarryCallable = requires(Ts... values) {
+    AddWithCarry(values...);
+};
+
+static_assert(!AddWithCarryCallable<std::byte, int, std::byte>);
+static_assert(!AddWithCarryCallable<int, int>);
+static_assert(!AddWithCarryCallable<uint8_t, uint8_t, uint8_t>);
+
 struct AddWithCarryTestParam
 {
     uint8_t left;
@@ -26,6 +35,22 @@ struct AddWithCarryTestParam
 class AddWithCarryTest : public ::testing::TestWithParam<AddWithCarryTestParam>
 {
 };
+
+TEST(AddWithCarryInTest, AddingCarryIn_SetsHalfCarry)
+{
+    const auto result = AddWithCarryIn(uint8_t{0x08}, uint8_t{0x08}, true);
+
+    ASSERT_THAT(result.result, ::testing::Eq(uint8_t{0x11}));
+    ASSERT_THAT(result.carryBits, ::testing::Eq(uint8_t{0x08}));
+}
+
+TEST(AddWithCarryInTest, AddingCarryIn_SetsHalfCarryAndCarry)
+{
+    const auto result = AddWithCarryIn(uint8_t{0xFF}, uint8_t{0x00}, true);
+
+    ASSERT_THAT(result.result, ::testing::Eq(uint8_t{0x00}));
+    ASSERT_THAT(result.carryBits, ::testing::Eq(uint8_t{0xFF}));
+}
 
 TEST_P(AddWithCarryTest, AddingTwoNumbers_ReturnsCorrectNumber)
 {

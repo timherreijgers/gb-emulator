@@ -6,6 +6,7 @@
 #pragma once
 
 #include "emulatorlib/address_bus.h"
+#include "emulatorlib/cpu_flags.h"
 #include "emulatorlib/cpu_registers.h"
 #include "emulatorlib/instruction_handler.h"
 
