@@ -46,6 +46,13 @@ template <typename T> concept RegisterModifier16Bit // t(reg) -> void
 template <typename T> concept RegisterModifier      // either 8-bit or 16-bit modifier
 ```
 
+## Flag Helpers (`instruction_handlers/flag_helpers.h`)
+
+- `CarryIn(registers)` reads the current Carry flag for instructions that consume it.
+- `ApplyAdditionFlags(registers, result, carryPerBit)` rebuilds Zero, HalfCarry, and Carry after 8-bit addition, clearing Subtract.
+- `LD HL, SP+e8` only shares `CarryIn`; it clears Zero and derives its flags according to its distinct instruction rules.
+- Each handler header directly includes every public emulator header needed by symbols it uses; it must not depend on an incidental include order.
+
 ## Implemented Instructions
 
 ### Load/Move Instructions

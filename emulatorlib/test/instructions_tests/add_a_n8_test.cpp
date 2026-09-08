@@ -128,4 +128,18 @@ TEST_F(AddAN8Test, ExecutingOpCode_SetsCarryTo1)
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Carry.AsByte()));
 }
 
+TEST_F(AddAN8Test, ExecutingOpCode_SetsZeroHalfCarryAndCarry)
+{
+    m_program.WriteProgram({0xC6_b, 0x08_b});
+
+    m_cpu.Registers().accumulator = 0xF8_b;
+
+    m_cpu.Step();
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().accumulator, ::testing::Eq(0x00_b));
+    ASSERT_THAT(m_cpu.Registers().flags,
+                ::testing::Eq(CpuFlags::Zero.AsByte() | CpuFlags::HalfCarry.AsByte() | CpuFlags::Carry.AsByte()));
+}
+
 } // namespace EmulatorLib::Test

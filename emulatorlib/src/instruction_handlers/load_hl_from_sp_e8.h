@@ -7,6 +7,7 @@
 #include "emulatorlib/cpu_registers.h"
 #include "emulatorlib/instruction_handler.h"
 
+#include "instruction_handlers/flag_helpers.h"
 #include "utilitylib/add_with_carry.h"
 #include "utilitylib/bit_mask.h"
 
@@ -26,7 +27,7 @@ namespace EmulatorLib
 
     const auto adjustment = zSign > 0_b ? 0xFF_b : 0x00_b;
     cpuRegisters.hRegister = static_cast<std::byte>(cpuRegisters.stackPointer.value >> 8) + adjustment +
-                             ((cpuRegisters.flags & CpuFlags::Carry.AsByte()) > 0_b ? 0x01_b : 0x00_b);
+                             (CarryIn(cpuRegisters) ? 0x01_b : 0x00_b);
     co_return;
 }
 

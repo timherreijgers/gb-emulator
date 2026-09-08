@@ -9,10 +9,10 @@
 #include "emulatorlib/cpu_registers.h"
 #include "emulatorlib/instruction_handler.h"
 
+#include "instruction_handlers/flag_helpers.h"
 #include "instruction_handlers/register_concepts.h"
 #include "instruction_handlers/register_io_helpers.h"
 #include "utilitylib/add_with_carry.h"
-#include "utilitylib/bit_mask.h"
 
 namespace EmulatorLib
 {
@@ -23,10 +23,7 @@ constexpr auto ExecuteAddR = [](const AddressBus& /*addressBus*/, CpuRegisters& 
     const auto [result, carry] = UtilityLib::AddWithCarry(cpuRegisters.accumulator.value, targetRegister.value);
     cpuRegisters.accumulator = result;
 
-    cpuRegisters.flags.value = 0x00_b;
-    cpuRegisters.flags.value |= result == 0x00_b ? CpuFlags::Zero.AsByte() : 0x00_b;
-    cpuRegisters.flags.value |= (carry & UtilityLib::BitMask<3>) > 0x00_b ? CpuFlags::HalfCarry.AsByte() : 0x00_b;
-    cpuRegisters.flags.value |= (carry & UtilityLib::BitMask<7>) > 0x00_b ? CpuFlags::Carry.AsByte() : 0x00_b;
+    ApplyAdditionFlags(cpuRegisters, result, carry);
 
     co_return;
 };

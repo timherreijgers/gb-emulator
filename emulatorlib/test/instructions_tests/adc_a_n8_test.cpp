@@ -116,6 +116,50 @@ TEST_F(AdcNTest, ExecutingOpCode_SetsHalfCarryTo1)
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte()));
 }
 
+TEST_F(AdcNTest, ExecutingOpCode_CarryInSetsHalfCarry)
+{
+    m_program.WriteProgram({0xCE_b, 0x00_b});
+
+    m_cpu.Registers().flags = CpuFlags::Carry.AsByte();
+    m_cpu.Registers().accumulator = 0x0F_b;
+
+    m_cpu.Step();
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().accumulator, ::testing::Eq(0x10_b));
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte()));
+}
+
+TEST_F(AdcNTest, ExecutingOpCode_CarryInSetsZeroHalfCarryAndCarry)
+{
+    m_program.WriteProgram({0xCE_b, 0x00_b});
+
+    m_cpu.Registers().flags = CpuFlags::Carry.AsByte();
+    m_cpu.Registers().accumulator = 0xFF_b;
+
+    m_cpu.Step();
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().accumulator, ::testing::Eq(0x00_b));
+    ASSERT_THAT(m_cpu.Registers().flags,
+                ::testing::Eq(CpuFlags::Zero.AsByte() | CpuFlags::HalfCarry.AsByte() | CpuFlags::Carry.AsByte()));
+}
+
+TEST_F(AdcNTest, ExecutingOpCode_CarryInPreservesHalfCarryAndCarry)
+{
+    m_program.WriteProgram({0xCE_b, 0xFF_b});
+
+    m_cpu.Registers().flags = CpuFlags::Carry.AsByte();
+    m_cpu.Registers().accumulator = 0xFF_b;
+
+    m_cpu.Step();
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().accumulator, ::testing::Eq(0xFF_b));
+    ASSERT_THAT(m_cpu.Registers().flags,
+                ::testing::Eq(CpuFlags::HalfCarry.AsByte() | CpuFlags::Carry.AsByte()));
+}
+
 TEST_F(AdcNTest, ExecutingOpCode_SetsCarryTo0)
 {
     m_program.WriteProgram({0xCE_b, 0x10_b});

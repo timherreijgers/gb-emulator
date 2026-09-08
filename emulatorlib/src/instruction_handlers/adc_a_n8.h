@@ -15,11 +15,12 @@
 namespace EmulatorLib
 {
 
-constexpr auto ExecuteAddAn8 = [](const AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
+constexpr auto ExecuteAdcAn8 = [](const AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     cpuRegisters.zRegister = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
     co_yield std::monostate{};
 
-    const auto [result, carry] = UtilityLib::AddWithCarry(cpuRegisters.accumulator.value, cpuRegisters.zRegister.value);
+    const auto carryIn = CarryIn(cpuRegisters);
+    const auto [result, carry] = UtilityLib::AddWithCarryIn(cpuRegisters.accumulator.value, cpuRegisters.zRegister.value, carryIn);
     cpuRegisters.accumulator = result;
 
     ApplyAdditionFlags(cpuRegisters, result, carry);

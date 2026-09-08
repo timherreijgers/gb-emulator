@@ -36,12 +36,16 @@ struct AddWithCarryResult<T> {
     T carryBits;  // bits that represent carries (position 3 and 7 for half/carry flags)
 };
 
-template <UnsignedIntegralOrByte T, SameAsT... Rest>
-[[nodiscard]] auto AddWithCarry(T first, Rest... rest) noexcept -> AddWithCarryResult<T>;
+template <UnsignedIntegralOrByte T>
+[[nodiscard]] auto AddWithCarry(T left, T right) noexcept -> AddWithCarryResult<T>;
+
+template <UnsignedIntegralOrByte T>
+[[nodiscard]] auto AddWithCarryIn(T left, T right, bool carryIn) noexcept -> AddWithCarryResult<T>;
 }
 ```
 - Computes `a + b` and returns both result and carry bits
-- Supports variadic arguments for multi-operand addition
+- `AddWithCarryIn` adds an explicit one-bit carry-in to two operands
+- Accepts only unsigned integral types or `std::byte`
 - Carry bits use bitmask positions (bit 3 for half-carry, bit 7 for carry)
 
 ## Sub With Borrow (`sub_with_borrow.h`)
