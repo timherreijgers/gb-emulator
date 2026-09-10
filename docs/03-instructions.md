@@ -100,14 +100,16 @@ template <typename T> concept RegisterModifier      // either 8-bit or 16-bit mo
 
 | Opcode(s) | Mnemonic   | Handler         | Description                   |
 |-----------|------------|-----------------|-------------------------------|
-| 0x80-0x87 | `ADD A, r` | `ExecuteAddR`   | A = A + r (r includes `(HL)`) |
+| 0x80-0x85, 0x87 | `ADD A, r` | `ExecuteAddR`                  | A = A + r (register operand)    |
+| 0x86      | `ADD A, (HL)` | `ExecuteAddAFromIndirectHL` | A = A + value at HL             |
 | 0xC6      | `ADD A, n` | `ExecuteAddAn8` | A = A + n (immediate)         |
 
 #### Addition with Carry
 
 | Opcode(s) | Mnemonic   | Handler         | Description                            |
 |-----------|------------|-----------------|----------------------------------------|
-| 0x88-0x8F | `ADC A, r` | `ExecuteAdcR`   | A = A + r + C flag (r includes `(HL)`) |
+| 0x88-0x8D, 0x8F | `ADC A, r` | `ExecuteAdcR`                 | A = A + r + C flag (register operand) |
+| 0x8E      | `ADC A, (HL)` | `ExecuteAdcAFromIndirectHL` | A = A + value at HL + C flag     |
 | 0xCE      | `ADC A, n` | `ExecuteAdcAn8` | A = A + n + C flag                     |
 
 Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) via `ExecuteAddAFromIndirectHL`, and
