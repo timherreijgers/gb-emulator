@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "adc_a_from_indirect_hl.h"
 #include "emulatorlib/instruction_handler.h"
 
 #include "instruction_handlers/adc_a_n8.h"
@@ -173,6 +174,7 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0x8B] = ExecuteAdcE;
     handlers[0x8C] = ExecuteAdcH;
     handlers[0x8D] = ExecuteAdcL;
+    handlers[0x8E] = ExecuteAdcAFromIndirectHL;
     handlers[0x8F] = ExecuteAdcA;
 
     handlers[0xC1] = ExecutePopBC;

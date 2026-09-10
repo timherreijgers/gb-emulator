@@ -133,13 +133,13 @@ namespace
     names[0x85] = "AddL";
     names[0x85] = "AddAFromIndirectHL";
     names[0x87] = "AddA";
-
     names[0x88] = "AdcB";
     names[0x89] = "AdcC";
     names[0x8A] = "AdcD";
     names[0x8B] = "AdcE";
     names[0x8C] = "AdcH";
     names[0x8D] = "AdcL";
+    names[0x8E] = "AdcAFromIndirectHL";
     names[0x8F] = "AdcA";
 
     names[0xC1] = "POP_BC";
