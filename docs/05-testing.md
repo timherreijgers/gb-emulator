@@ -62,8 +62,10 @@ Parameterized tests for each instruction family:
 | `pop_rr_test.cpp` | `POP rr` |
 | `add_r_test.cpp` | `ADD A, r` |
 | `add_a_n8_test.cpp` | `ADD A, n` |
+| `add_a_from_indirect_hl_test.cpp` | `ADD A, (HL)` |
 | `adc_r_test.cpp` | `ADC A, r` |
-| `adc_n_test.cpp` | `ADC A, n` |
+| `adc_a_n8_test.cpp` | `ADC A, n` |
+| `adc_a_from_indirect_hl_test.cpp` | `ADC A, (HL)` |
 | `adc_a_test.cpp` | (alias for adc_r) |
 | `inc_r_test.cpp` | `INC r` |
 | `dec_r_test.cpp` | `DEC r` |
