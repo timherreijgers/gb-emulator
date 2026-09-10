@@ -9,6 +9,7 @@
 
 #include "instruction_handlers/adc_a_n8.h"
 #include "instruction_handlers/adc_r.h"
+#include "instruction_handlers/add_a_from_indirect_hl.h"
 #include "instruction_handlers/add_a_n8.h"
 #include "instruction_handlers/add_r.h"
 #include "instruction_handlers/dec_r.h"
@@ -164,8 +165,8 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0x83] = ExecuteAddE;
     handlers[0x84] = ExecuteAddH;
     handlers[0x85] = ExecuteAddL;
+    handlers[0x86] = ExecuteAddAFromIndirectHL;
     handlers[0x87] = ExecuteAddA;
-
     handlers[0x88] = ExecuteAdcB;
     handlers[0x89] = ExecuteAdcC;
     handlers[0x8A] = ExecuteAdcD;

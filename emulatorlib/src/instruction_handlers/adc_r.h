@@ -20,6 +20,7 @@ namespace EmulatorLib
 template <ReturnsRegister8Bit TargetRegister>
 constexpr auto ExecuteAdcR = [](const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     auto& targetRegister = TargetRegister{}(cpuRegisters);
+
     const auto carryIn = CarryIn(cpuRegisters);
     const auto [result, carry] = UtilityLib::AddWithCarryIn(cpuRegisters.accumulator.value, targetRegister.value, carryIn);
     cpuRegisters.accumulator = result;
