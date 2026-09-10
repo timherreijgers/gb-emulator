@@ -13,12 +13,12 @@
 namespace EmulatorLib
 {
 
-[[nodiscard]] inline auto CarryIn(const CpuRegisters& registers) noexcept -> bool
+[[nodiscard]] constexpr auto CarryIn(const CpuRegisters& registers) noexcept -> bool
 {
     return (registers.flags.value & CpuFlags::Carry.AsByte()) > 0x00_b;
 }
 
-inline auto ApplyAdditionFlags(CpuRegisters& registers, const std::byte result, const std::byte carryPerBit) noexcept -> void
+constexpr auto ApplyAdditionFlags(CpuRegisters& registers, const std::byte result, const std::byte carryPerBit) noexcept -> void
 {
     registers.flags.value = (result == 0x00_b ? CpuFlags::Zero.AsByte() : 0x00_b) |
                             ((carryPerBit & UtilityLib::BitMask<3>) > 0x00_b ? CpuFlags::HalfCarry.AsByte() : 0x00_b) |

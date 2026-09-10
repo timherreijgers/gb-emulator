@@ -131,6 +131,7 @@ namespace
     names[0x83] = "AddE";
     names[0x84] = "AddH";
     names[0x85] = "AddL";
+    names[0x85] = "AddAFromIndirectHL";
     names[0x87] = "AddA";
 
     names[0x88] = "AdcB";
