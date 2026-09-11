@@ -115,6 +115,12 @@ template <typename T> concept RegisterModifier      // either 8-bit or 16-bit mo
 Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) via `ExecuteAddAFromIndirectHL`, and
 `ADC A,(HL)` (0x8E) via `ExecuteAdcAFromIndirectHL`.
 
+#### Subtraction
+
+| Opcode(s) | Mnemonic   | Handler         | Description                   |
+|-----------|------------|-----------------|-------------------------------|
+| 0x90-0x95, 0x97 | `SUB r` | `ExecuteSubR` | A = A - r (register operand) |
+
 #### Increment/Decrement
 
 | Opcode(s)                                | Mnemonic | Handler       | Description |

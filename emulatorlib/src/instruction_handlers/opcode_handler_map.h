@@ -177,6 +177,14 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0x8E] = ExecuteAdcAFromIndirectHL;
     handlers[0x8F] = ExecuteAdcA;
 
+    handlers[0x90] = ExecuteSubB;
+    handlers[0x91] = ExecuteSubC;
+    handlers[0x92] = ExecuteSubD;
+    handlers[0x93] = ExecuteSubE;
+    handlers[0x94] = ExecuteSubH;
+    handlers[0x95] = ExecuteSubL;
+    handlers[0x97] = ExecuteSubA;
+
     handlers[0xC1] = ExecutePopBC;
     handlers[0xC5] = ExecutePushBC;
 
