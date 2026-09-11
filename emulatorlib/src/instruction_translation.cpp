@@ -142,6 +142,14 @@ namespace
     names[0x8E] = "AdcAFromIndirectHL";
     names[0x8F] = "AdcA";
 
+    names[0x90] = "SubB";
+    names[0x91] = "SubC";
+    names[0x92] = "SubD";
+    names[0x93] = "SubE";
+    names[0x94] = "SubH";
+    names[0x95] = "SubL";
+    names[0x97] = "SubA";
+
     names[0xC1] = "POP_BC";
     names[0xC5] = "PUSH_BC";
 
