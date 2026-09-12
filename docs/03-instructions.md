@@ -53,13 +53,42 @@ template <typename T> concept RegisterModifier      // either 8-bit or 16-bit mo
 
 ## Flag Helpers (`instruction_handlers/flag_helpers.h`)
 
-- `CarryIn(registers)` reads the current Carry flag for instructions that consume it.
-- `ApplyAdditionFlags(registers, result, carryPerBit)` rebuilds Zero, HalfCarry, and Carry after 8-bit addition,
-  clearing Subtract.
-- `LD HL, SP+e8` only shares `CarryIn`; it clears Zero and derives its flags according to its distinct instruction
-  rules.
-- Each handler header directly includes every public emulator header needed by symbols it uses; it must not depend on an
-  incidental include order.
+Lambda-based flag manipulation functions:
+
+- `CarryIn(registers)` — reads the current Carry flag for instructions that consume it
+- `ApplyAdditionFlags(registers, result, carryPerBit)` — rebuilds Zero, HalfCarry, and Carry after 8-bit addition,
+  clearing the Subtract flag
+- `ApplySubtractionFlags(registers, result, carryPerBit)` — sets Subtract flag and rebuilds Zero, HalfCarry, and Carry
+
+`LD HL, SP+e8` only shares `CarryIn`; it clears Zero and derives its flags according to its distinct instruction
+rules.
+
+Each handler header directly includes every public emulator header needed by symbols it uses; it must not depend on an
+incidental include order.
+
+## Generic Math Operand Template (`instruction_handlers/mathetical_r.h`)
+
+A generic template pattern for register-to-register arithmetic instructions:
+
+```cpp
+template <ReturnsRegister8Bit TargetRegister, MathOperand Operand, SetFlagFunction FlagFunction>
+constexpr auto ExecuteMathOperandR = [](const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler
+```
+
+Uses concepts to support two operand styles:
+- `MathOperandWithoutRegisters<T>` — callable as `T{}(left, right)` returning `MathematicalResult<T>`
+- `MathOperandWithRegisters<T>` — callable as `T{}(registers, left, right)` returning `MathematicalResult<T>`
+- `SetFlagFunction<T>` — callable as `T{}(registers, result, carry)` returning `void`
+
+### Instantiated Handlers
+
+| Operation | Flags Function | Handlers |
+|-----------|---------------|----------|
+| `ADD` | `ApplyAdditionFlags` | `ExecuteAddA`, `ExecuteAddB`, `ExecuteAddC`, `ExecuteAddD`, `ExecuteAddE`, `ExecuteAddH`, `ExecuteAddL` |
+| `SUB` | `ApplySubtractionFlags` | `ExecuteSubA`, `ExecuteSubB`, `ExecuteSubC`, `ExecuteSubD`, `ExecuteSubE`, `ExecuteSubH`, `ExecuteSubL`, `ExecuteSubAFromIndirectHL` |
+| `ADC` | `ApplyAdditionFlags` | `ExecuteAdcA`, `ExecuteAdcB`, `ExecuteAdcC`, `ExecuteAdcD`, `ExecuteAdcE`, `ExecuteAdcH`, `ExecuteAdcL` |
+
+The ADC handlers use `AdcWithCarryWrapper` which extracts the carry flag via `CarryIn()` before calling `UtilityLib::AddWithCarryIn()`.
 
 ## Implemented Instructions
 
@@ -98,22 +127,29 @@ template <typename T> concept RegisterModifier      // either 8-bit or 16-bit mo
 
 #### Addition
 
-| Opcode(s) | Mnemonic   | Handler         | Description                   |
-|-----------|------------|-----------------|-------------------------------|
-| 0x80-0x85, 0x87 | `ADD A, r` | `ExecuteAddR`                  | A = A + r (register operand)    |
-| 0x86      | `ADD A, (HL)` | `ExecuteAddAFromIndirectHL` | A = A + value at HL             |
-| 0xC6      | `ADD A, n` | `ExecuteAddAn8` | A = A + n (immediate)         |
+| Opcode(s) | Mnemonic   | Handler                                            | Description                          |
+|-----------|------------|----------------------------------------------------|--------------------------------------|
+| 0x80-0x85, 0x87 | `ADD A, r` | `ExecuteAddB`–`ExecuteAddL`, `ExecuteAddA` (via `mathetical_r.h`) | A = A + r (register operand)     |
+| 0x86      | `ADD A, (HL)` | `ExecuteAddAFromIndirectHL`                      | A = A + value at HL                  |
+| 0xC6      | `ADD A, n` | `ExecuteAddAn8`                                    | A = A + n (immediate)                |
 
 #### Addition with Carry
 
-| Opcode(s) | Mnemonic   | Handler         | Description                            |
-|-----------|------------|-----------------|----------------------------------------|
-| 0x88-0x8D, 0x8F | `ADC A, r` | `ExecuteAdcR`                 | A = A + r + C flag (register operand) |
-| 0x8E      | `ADC A, (HL)` | `ExecuteAdcAFromIndirectHL` | A = A + value at HL + C flag     |
-| 0xCE      | `ADC A, n` | `ExecuteAdcAn8` | A = A + n + C flag                     |
+| Opcode(s) | Mnemonic   | Handler                                            | Description                             |
+|-----------|------------|----------------------------------------------------|-----------------------------------------|
+| 0x88-0x8D, 0x8F | `ADC A, r` | `ExecuteAdcB`–`ExecuteAdcL`, `ExecuteAdcA` (via `mathetical_r.h`) | A = A + r + C flag (register operand) |
+| 0x8E      | `ADC A, (HL)` | `ExecuteAdcAFromIndirectHL`                      | A = A + value at HL + C flag            |
+| 0xCE      | `ADC A, n` | `ExecuteAdcAn8`                                      | A = A + n + C flag                      |
 
-Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) via `ExecuteAddAFromIndirectHL`, and
-`ADC A,(HL)` (0x8E) via `ExecuteAdcAFromIndirectHL`.
+Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) via `ExecuteAddAFromIndirectHL`,
+`ADC A,(HL)` (0x8E) via `ExecuteAdcAFromIndirectHL`, and `SUB A,(HL)` (0x96) via `ExecuteSubAFromIndirectHL`.
+
+#### Subtraction
+
+| Opcode(s) | Mnemonic   | Handler                                            | Description                |
+|-----------|------------|----------------------------------------------------|----------------------------|
+| 0x90-0x95, 0x97 | `SUB r` | `ExecuteSubB`–`ExecuteSubL`, `ExecuteSubA` (via `mathetical_r.h`) | A = A - r (register operand) |
+| 0x96      | `SUB A, (HL)` | `ExecuteSubAFromIndirectHL`                      | A = A - value at HL                  |
 
 #### Increment/Decrement
 
