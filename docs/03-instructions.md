@@ -85,7 +85,7 @@ Uses concepts to support two operand styles:
 | Operation | Flags Function | Handlers |
 |-----------|---------------|----------|
 | `ADD` | `ApplyAdditionFlags` | `ExecuteAddA`, `ExecuteAddB`, `ExecuteAddC`, `ExecuteAddD`, `ExecuteAddE`, `ExecuteAddH`, `ExecuteAddL` |
-| `SUB` | `ApplySubtractionFlags` | `ExecuteSubA`, `ExecuteSubB`, `ExecuteSubC`, `ExecuteSubD`, `ExecuteSubE`, `ExecuteSubH`, `ExecuteSubL` |
+| `SUB` | `ApplySubtractionFlags` | `ExecuteSubA`, `ExecuteSubB`, `ExecuteSubC`, `ExecuteSubD`, `ExecuteSubE`, `ExecuteSubH`, `ExecuteSubL`, `ExecuteSubAFromIndirectHL` |
 | `ADC` | `ApplyAdditionFlags` | `ExecuteAdcA`, `ExecuteAdcB`, `ExecuteAdcC`, `ExecuteAdcD`, `ExecuteAdcE`, `ExecuteAdcH`, `ExecuteAdcL` |
 
 The ADC handlers use `AdcWithCarryWrapper` which extracts the carry flag via `CarryIn()` before calling `UtilityLib::AddWithCarryIn()`.
@@ -141,14 +141,15 @@ The ADC handlers use `AdcWithCarryWrapper` which extracts the carry flag via `Ca
 | 0x8E      | `ADC A, (HL)` | `ExecuteAdcAFromIndirectHL`                      | A = A + value at HL + C flag            |
 | 0xCE      | `ADC A, n` | `ExecuteAdcAn8`                                      | A = A + n + C flag                      |
 
-Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) via `ExecuteAddAFromIndirectHL`, and
-`ADC A,(HL)` (0x8E) via `ExecuteAdcAFromIndirectHL`.
+Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) via `ExecuteAddAFromIndirectHL`,
+`ADC A,(HL)` (0x8E) via `ExecuteAdcAFromIndirectHL`, and `SUB A,(HL)` (0x96) via `ExecuteSubAFromIndirectHL`.
 
 #### Subtraction
 
 | Opcode(s) | Mnemonic   | Handler                                            | Description                |
 |-----------|------------|----------------------------------------------------|----------------------------|
 | 0x90-0x95, 0x97 | `SUB r` | `ExecuteSubB`–`ExecuteSubL`, `ExecuteSubA` (via `mathetical_r.h`) | A = A - r (register operand) |
+| 0x96      | `SUB A, (HL)` | `ExecuteSubAFromIndirectHL`                      | A = A - value at HL                  |
 
 #### Increment/Decrement
 

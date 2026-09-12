@@ -148,6 +148,7 @@ namespace
     names[0x93] = "SubE";
     names[0x94] = "SubH";
     names[0x95] = "SubL";
+    names[0x96] = "SubAFromIndirectHL";
     names[0x97] = "SubA";
 
     names[0xC1] = "POP_BC";
