@@ -38,7 +38,7 @@ TEST_P(SubWithBorrowTest, SubtractingTwoNumbers_ReturnsCorrectBorrowBits)
 {
     const auto& [left, right, carryBits] = GetParam();
     const auto result = SubWithBorrow(left, right);
-    ASSERT_THAT(result.borrowBits, ::testing::Eq(carryBits));
+    ASSERT_THAT(result.carryBits, ::testing::Eq(carryBits));
 }
 
 INSTANTIATE_TEST_SUITE_P(

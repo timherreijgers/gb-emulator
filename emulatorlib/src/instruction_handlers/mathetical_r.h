@@ -22,13 +22,21 @@ namespace EmulatorLib
 {
 
 template <typename T>
-concept MathOperand =
-    std::invocable<T, std::byte, std::byte> && (std::same_as<
-                                                    std::invoke_result_t<T, std::byte, std::byte>,
-                                                    UtilityLib::AddWithCarryResult<std::byte>> ||
-                                                std::same_as<
-                                                    std::invoke_result_t<T, std::byte, std::byte>,
-                                                    UtilityLib::SubWithBorrowResult<std::byte>>);
+concept MathOperandWithoutRegisters =
+    std::invocable<T, std::byte, std::byte> &&
+    std::same_as<
+        std::invoke_result_t<T, std::byte, std::byte>,
+        UtilityLib::MathematicalResult<std::byte>>;
+
+template <typename T>
+concept MathOperandWithRegisters =
+    std::invocable<T, const CpuRegisters&, std::byte, std::byte> &&
+    std::same_as<
+        std::invoke_result_t<T, const CpuRegisters&, std::byte, std::byte>,
+        UtilityLib::MathematicalResult<std::byte>>;
+
+template <typename T>
+concept MathOperand = MathOperandWithoutRegisters<T> || MathOperandWithRegisters<T>;
 
 template <typename T>
 concept SetFlagFunction =
@@ -36,11 +44,27 @@ concept SetFlagFunction =
                                                                   std::invoke_result_t<T, CpuRegisters&, std::byte, std::byte>,
                                                                   void>;
 
+constexpr auto AdcWithCarryWrapper = [](const CpuRegisters& cpuRegisters, UtilityLib::IntegralOrByte auto left, UtilityLib::IntegralOrByte auto right) {
+    const auto carryIn = CarryIn(cpuRegisters);
+    return UtilityLib::AddWithCarryIn(left, right, carryIn);
+};
+
 template <ReturnsRegister8Bit TargetRegister, MathOperand Operand, SetFlagFunction FlagFunction>
 constexpr auto ExecuteMathOperandR = [](const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     auto& targetRegister = TargetRegister{}(cpuRegisters);
 
-    const auto [result, carry] = Operand{}(cpuRegisters.accumulator.value, targetRegister.value);
+    const auto [result, carry] = [&] {
+        if constexpr (MathOperandWithoutRegisters<Operand>)
+        {
+            return Operand{}(cpuRegisters.accumulator.value, targetRegister.value);
+        }
+
+        if constexpr (MathOperandWithRegisters<Operand>)
+        {
+            return Operand{}(cpuRegisters, cpuRegisters.accumulator.value, targetRegister.value);
+        }
+    }();
+
     cpuRegisters.accumulator = result;
 
     FlagFunction{}(cpuRegisters, result, carry);
@@ -63,5 +87,13 @@ constexpr auto ExecuteSubD = ExecuteMathOperandR<RegisterD, decltype(UtilityLib:
 constexpr auto ExecuteSubE = ExecuteMathOperandR<RegisterE, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags)>;
 constexpr auto ExecuteSubH = ExecuteMathOperandR<RegisterH, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags)>;
 constexpr auto ExecuteSubL = ExecuteMathOperandR<RegisterL, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags)>;
+
+constexpr auto ExecuteAdcA = ExecuteMathOperandR<RegisterA, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteAdcB = ExecuteMathOperandR<RegisterB, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteAdcC = ExecuteMathOperandR<RegisterC, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteAdcD = ExecuteMathOperandR<RegisterD, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteAdcE = ExecuteMathOperandR<RegisterE, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteAdcH = ExecuteMathOperandR<RegisterH, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteAdcL = ExecuteMathOperandR<RegisterL, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
 
 } // namespace EmulatorLib

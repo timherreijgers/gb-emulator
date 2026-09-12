@@ -5,28 +5,15 @@
 
 #pragma once
 
-#include "byte_utils.h"
+#include "utilitylib/mathematical_result.h"
 
-#include <concepts>
-#include <cstddef>
-#include <type_traits>
 #include <typeinfo>
 
 namespace UtilityLib
 {
 
-template <typename T>
-concept SubWithBorrowOperand = std::integral<T> || std::is_same_v<T, std::byte>;
-
-template <SubWithBorrowOperand T>
-struct [[nodiscard]] SubWithBorrowResult
-{
-    T result;
-    T borrowBits;
-};
-
 // Implemented using Borrow-Lookahead subtractor algorithm
-constexpr auto SubWithBorrow = [](SubWithBorrowOperand auto left, SubWithBorrowOperand auto right) constexpr noexcept -> SubWithBorrowResult<decltype(left)> {
+constexpr auto SubWithBorrow = [](IntegralOrByte auto left, IntegralOrByte auto right) constexpr noexcept -> MathematicalResult<decltype(left)> {
     static_assert(typeid(decltype(left)) == typeid(decltype(right)));
 
     const auto result = static_cast<decltype(left)>(left - right);
