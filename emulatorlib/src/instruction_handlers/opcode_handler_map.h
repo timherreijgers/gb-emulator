@@ -7,6 +7,7 @@
 
 #include "adc_a_from_indirect_hl.h"
 #include "emulatorlib/instruction_handler.h"
+#include "sub_a_from_indirect_hl.h"
 
 #include "instruction_handlers/adc_a_n8.h"
 #include "instruction_handlers/add_a_from_indirect_hl.h"
@@ -182,6 +183,7 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0x93] = ExecuteSubE;
     handlers[0x94] = ExecuteSubH;
     handlers[0x95] = ExecuteSubL;
+    handlers[0x96] = ExecuteSubAFromIndirectHL;
     handlers[0x97] = ExecuteSubA;
 
     handlers[0xC1] = ExecutePopBC;

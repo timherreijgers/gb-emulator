@@ -69,6 +69,7 @@ Parameterized tests for each instruction family:
 | `adc_a_test.cpp` | (alias for adc_r) |
 | `sub_r_test.cpp` | `SUB r` |
 | `sub_a_test.cpp` | (alias for sub_r / SUB A) |
+| `sub_a_from_indirect_hl_test.cpp` | `SUB A, (HL)` |
 | `inc_r_test.cpp` | `INC r` |
 | `dec_r_test.cpp` | `DEC r` |
 | `load_hl_indirect_increment_a_test.cpp` | `LD A, (HL+)` |
