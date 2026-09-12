@@ -12,7 +12,6 @@
 #include "instruction_handlers/adc_r.h"
 #include "instruction_handlers/add_a_from_indirect_hl.h"
 #include "instruction_handlers/add_a_n8.h"
-#include "instruction_handlers/add_r.h"
 #include "instruction_handlers/dec_r.h"
 #include "instruction_handlers/inc_r.h"
 #include "instruction_handlers/load_a16_sp.h"
@@ -28,6 +27,7 @@
 #include "instruction_handlers/load_r_r.h"
 #include "instruction_handlers/load_rr_n16.h"
 #include "instruction_handlers/load_rr_rr.h"
+#include "instruction_handlers/mathetical_r.h"
 #include "instruction_handlers/pop_rr.h"
 #include "instruction_handlers/push_rr.h"
 

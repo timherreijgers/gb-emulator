@@ -10,6 +10,7 @@
 #include <concepts>
 #include <cstddef>
 #include <type_traits>
+#include <typeinfo>
 
 namespace UtilityLib
 {
@@ -18,19 +19,19 @@ template <typename T>
 concept IntegralOrByte = std::unsigned_integral<T> || std::is_same_v<T, std::byte>;
 
 template <IntegralOrByte T>
-struct AddWithCarryResult
+struct [[nodiscard]] AddWithCarryResult
 {
     T result;
     T carryBits;
 };
 
-template <IntegralOrByte T>
-[[nodiscard]] constexpr auto AddWithCarry(T left, T right) noexcept -> AddWithCarryResult<T>
-{
-    const T result = static_cast<T>(left + right);
-    const T carryBits = static_cast<T>((left & right) | ((left | right) & static_cast<T>(~result)));
+constexpr auto AddWithCarry = [](IntegralOrByte auto left, IntegralOrByte auto right) noexcept -> AddWithCarryResult<decltype(left)> {
+    static_assert(typeid(decltype(left)) == typeid(decltype(right)));
+
+    const auto result = static_cast<decltype(left)>(left + right);
+    const auto carryBits = static_cast<decltype(left)>((left & right) | ((left | right) & static_cast<decltype(left)>(~result)));
     return {result, carryBits};
-}
+};
 
 template <IntegralOrByte T>
 [[nodiscard]] constexpr auto AddWithCarryIn(T left, T right, bool carryIn) noexcept -> AddWithCarryResult<T>
