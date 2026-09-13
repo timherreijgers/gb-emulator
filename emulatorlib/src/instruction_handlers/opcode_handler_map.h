@@ -185,6 +185,14 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0x95] = ExecuteSubL;
     handlers[0x96] = ExecuteSubAFromIndirectHL;
     handlers[0x97] = ExecuteSubA;
+    handlers[0x98] = ExecuteSbcB;
+    handlers[0x99] = ExecuteSbcC;
+    handlers[0x9A] = ExecuteSbcD;
+    handlers[0x9B] = ExecuteSbcE;
+    handlers[0x9C] = ExecuteSbcH;
+    handlers[0x9D] = ExecuteSbcL;
+    // handlers[0x9E] = ExecuteSbcAFromIndirectHL;
+    handlers[0x9F] = ExecuteSbcA;
 
     handlers[0xC1] = ExecutePopBC;
     handlers[0xC5] = ExecutePushBC;

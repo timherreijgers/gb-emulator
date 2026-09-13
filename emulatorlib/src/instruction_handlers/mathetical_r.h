@@ -49,6 +49,11 @@ constexpr auto AdcWithCarryWrapper = [](const CpuRegisters& cpuRegisters, Utilit
     return UtilityLib::AddWithCarryIn(left, right, carryIn);
 };
 
+constexpr auto SbcWithBorrowWrapper = [](const CpuRegisters& cpuRegisters, UtilityLib::IntegralOrByte auto left, UtilityLib::IntegralOrByte auto right) {
+    const auto borrowIn = CarryIn(cpuRegisters);
+    return UtilityLib::SubWithBorrowIn(left, right, borrowIn);
+};
+
 template <ReturnsRegister8Bit TargetRegister, MathOperand Operand, SetFlagFunction FlagFunction>
 constexpr auto ExecuteMathOperandR = [](const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     auto& targetRegister = TargetRegister{}(cpuRegisters);
@@ -80,6 +85,14 @@ constexpr auto ExecuteAddE = ExecuteMathOperandR<RegisterE, decltype(UtilityLib:
 constexpr auto ExecuteAddH = ExecuteMathOperandR<RegisterH, decltype(UtilityLib::AddWithCarry), decltype(ApplyAdditionFlags)>;
 constexpr auto ExecuteAddL = ExecuteMathOperandR<RegisterL, decltype(UtilityLib::AddWithCarry), decltype(ApplyAdditionFlags)>;
 
+constexpr auto ExecuteAdcA = ExecuteMathOperandR<RegisterA, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteAdcB = ExecuteMathOperandR<RegisterB, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteAdcC = ExecuteMathOperandR<RegisterC, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteAdcD = ExecuteMathOperandR<RegisterD, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteAdcE = ExecuteMathOperandR<RegisterE, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteAdcH = ExecuteMathOperandR<RegisterH, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteAdcL = ExecuteMathOperandR<RegisterL, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+
 constexpr auto ExecuteSubA = ExecuteMathOperandR<RegisterA, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags)>;
 constexpr auto ExecuteSubB = ExecuteMathOperandR<RegisterB, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags)>;
 constexpr auto ExecuteSubC = ExecuteMathOperandR<RegisterC, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags)>;
@@ -88,12 +101,13 @@ constexpr auto ExecuteSubE = ExecuteMathOperandR<RegisterE, decltype(UtilityLib:
 constexpr auto ExecuteSubH = ExecuteMathOperandR<RegisterH, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags)>;
 constexpr auto ExecuteSubL = ExecuteMathOperandR<RegisterL, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags)>;
 
-constexpr auto ExecuteAdcA = ExecuteMathOperandR<RegisterA, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
-constexpr auto ExecuteAdcB = ExecuteMathOperandR<RegisterB, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
-constexpr auto ExecuteAdcC = ExecuteMathOperandR<RegisterC, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
-constexpr auto ExecuteAdcD = ExecuteMathOperandR<RegisterD, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
-constexpr auto ExecuteAdcE = ExecuteMathOperandR<RegisterE, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
-constexpr auto ExecuteAdcH = ExecuteMathOperandR<RegisterH, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
-constexpr auto ExecuteAdcL = ExecuteMathOperandR<RegisterL, decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteSbcA = ExecuteMathOperandR<RegisterA, decltype(SbcWithBorrowWrapper), decltype(ApplySubtractionFlags)>;
+constexpr auto ExecuteSbcB = ExecuteMathOperandR<RegisterB, decltype(SbcWithBorrowWrapper), decltype(ApplySubtractionFlags)>;
+constexpr auto ExecuteSbcC = ExecuteMathOperandR<RegisterC, decltype(SbcWithBorrowWrapper), decltype(ApplySubtractionFlags)>;
+constexpr auto ExecuteSbcD = ExecuteMathOperandR<RegisterD, decltype(SbcWithBorrowWrapper), decltype(ApplySubtractionFlags)>;
+constexpr auto ExecuteSbcE = ExecuteMathOperandR<RegisterE, decltype(SbcWithBorrowWrapper), decltype(ApplySubtractionFlags)>;
+constexpr auto ExecuteSbcH = ExecuteMathOperandR<RegisterH, decltype(SbcWithBorrowWrapper), decltype(ApplySubtractionFlags)>;
+constexpr auto ExecuteSbcL = ExecuteMathOperandR<RegisterL, decltype(SbcWithBorrowWrapper), decltype(ApplySubtractionFlags)>;
+
 
 } // namespace EmulatorLib

@@ -25,4 +25,17 @@ constexpr auto SubWithBorrow = [](IntegralOrByte auto left, IntegralOrByte auto 
     return {result, borrowBits};
 };
 
+constexpr auto SubWithBorrowIn = [](IntegralOrByte auto left, IntegralOrByte auto right, bool borrowIn) constexpr noexcept -> MathematicalResult<decltype(left)> {
+    static_assert(typeid(decltype(left)) == typeid(decltype(right)));
+
+    const auto [result, borrowBits] = SubWithBorrow(left, right);
+    if (!borrowIn)
+    {
+        return {result, borrowBits};
+    }
+
+    const auto [resultWithBorrow, borrowBitsWithBorrow] = SubWithBorrow(result, static_cast<decltype(left)>(1));
+    return {resultWithBorrow, static_cast<decltype(left)>(borrowBits | borrowBitsWithBorrow)};
+};
+
 } // namespace UtilityLib

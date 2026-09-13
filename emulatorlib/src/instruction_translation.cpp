@@ -150,6 +150,13 @@ namespace
     names[0x95] = "SubL";
     names[0x96] = "SubAFromIndirectHL";
     names[0x97] = "SubA";
+    names[0x98] = "SbcB";
+    names[0x99] = "SbcC";
+    names[0x9A] = "SbcD";
+    names[0x9B] = "SbcE";
+    names[0x9C] = "SbcH";
+    names[0x9D] = "SbcL";
+    names[0x9F] = "SbcA";
 
     names[0xC1] = "POP_BC";
     names[0xC5] = "PUSH_BC";
