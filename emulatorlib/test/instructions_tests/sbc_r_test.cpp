@@ -138,6 +138,20 @@ TEST_P(SbcRTest, ExecutingOpCode_CarryInSetsHalfCarry)
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Subtract.AsByte() | CpuFlags::HalfCarry.AsByte()));
 }
 
+TEST_P(SbcRTest, ExecutingOpCode_ClearsHalfCarryAndCarryFlags)
+{
+    const auto& [instruction, sourceRegister] = GetParam();
+    m_program.WriteProgram({instruction, 0x00_b});
+
+    m_cpu.Registers().flags = CpuFlags::HalfCarry.AsByte() | CpuFlags::Carry.AsByte();
+    m_cpu.Registers().accumulator = 0x22_b;
+    sourceRegister(m_cpu.Registers()) = 0x10_b;
+
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Subtract.AsByte()));
+}
+
 TEST_P(SbcRTest, ExecutingOpCode_SetsCarry)
 {
     const auto& [instruction, sourceRegister] = GetParam();

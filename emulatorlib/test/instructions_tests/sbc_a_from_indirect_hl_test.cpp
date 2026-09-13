@@ -116,6 +116,21 @@ TEST_F(SbcAFromIndirectHlTest, ExecutingOpCode_CarryInSetsHalfCarry)
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Subtract.AsByte() | CpuFlags::HalfCarry.AsByte()));
 }
 
+TEST_F(SbcAFromIndirectHlTest, ExecutingOpCode_ClearsHalfCarryAndCarryFlags)
+{
+    m_program.WriteProgram({0x9E_b});
+    EXPECT_CALL(m_addressableMock, ReadFromAddress(0x8080)).WillOnce(testing::Return(0x10_b));
+
+    m_cpu.Registers().accumulator = 0x22_b;
+    m_cpu.Registers().flags = CpuFlags::HalfCarry.AsByte() | CpuFlags::Carry.AsByte();
+    m_cpu.Registers().hlRegister = 0x8080;
+
+    m_cpu.Step();
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Subtract.AsByte()));
+}
+
 TEST_F(SbcAFromIndirectHlTest, ExecutingOpCode_SetsCarry)
 {
     m_program.WriteProgram({0x9E_b});

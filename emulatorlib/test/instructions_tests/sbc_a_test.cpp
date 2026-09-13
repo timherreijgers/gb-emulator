@@ -59,6 +59,18 @@ TEST_F(SbcATest, ExecutingOpCode_SetsZeroAndSubtractionFlags)
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Subtract.AsByte() | CpuFlags::Zero.AsByte()));
 }
 
+TEST_F(SbcATest, ExecutingOpCode_ClearsHalfCarryAndCarryFlags)
+{
+    m_program.WriteProgram({0x9F_b, 0x00_b});
+
+    m_cpu.Registers().accumulator = 0x42_b;
+    m_cpu.Registers().flags = CpuFlags::HalfCarry.AsByte();
+
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Subtract.AsByte() | CpuFlags::Zero.AsByte()));
+}
+
 TEST_F(SbcATest, ExecutingOpCode_CarryInSetsHalfCarryAndCarry)
 {
     m_program.WriteProgram({0x9F_b, 0x00_b});
