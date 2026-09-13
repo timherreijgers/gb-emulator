@@ -75,10 +75,13 @@ template <UnsignedIntegralOrByte T>
 namespace UtilityLib {
 
 constexpr auto SubWithBorrow = [](IntegralOrByte auto left, IntegralOrByte auto right) constexpr noexcept -> MathematicalResult<decltype(left)>;
+
+constexpr auto SubWithBorrowIn = [](IntegralOrByte auto left, IntegralOrByte auto right, bool borrowIn) constexpr noexcept -> MathematicalResult<decltype(left)>;
 }
 ```
 
 - Implemented using Borrow-Lookahead subtractor algorithm
+- `SubWithBorrowIn` subtracts an explicit one-bit borrow-in and combines the borrow masks from both subtraction steps
 - Returns a `MathematicalResult<T>` (same struct as `AddWithCarry`) with `result` and `carryBits`
 - Uses the `IntegralOrByte` concept from `mathematical_result.h`
 - Used for `SUB`/`SBC` flag computation

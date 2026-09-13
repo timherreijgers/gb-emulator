@@ -84,6 +84,12 @@ Instruction tests typically follow this pattern:
 4. Call `m_cpu.Step()`
 5. Assert final register state and instruction register
 
+### Parameterized Instruction Test Names
+
+For every `INSTANTIATE_TEST_SUITE_P`, derive the parameter name from
+`OpCodeToInstructionName(info.param.instruction)`. Instruction names are defined only in
+`instruction_translation.cpp`; do not duplicate a name in the test parameter data.
+
 ### Utility Tests (`utilitylib/test/`)
 | File | Tests |
 |------|-------|

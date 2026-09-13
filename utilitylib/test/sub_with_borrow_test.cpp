@@ -23,6 +23,22 @@ struct SubWithBorrowTestParam
 
 } // namespace
 
+TEST(SubWithBorrowInTest, SubtractingBorrowIn_SetsHalfBorrow)
+{
+    const auto result = SubWithBorrowIn(uint8_t{0x10}, uint8_t{0x00}, true);
+
+    ASSERT_THAT(result.result, ::testing::Eq(uint8_t{0x0F}));
+    ASSERT_THAT(result.carryBits, ::testing::Eq(uint8_t{0x0F}));
+}
+
+TEST(SubWithBorrowInTest, SubtractingBorrowIn_SetsHalfBorrowAndBorrow)
+{
+    const auto result = SubWithBorrowIn(uint8_t{0x00}, uint8_t{0x00}, true);
+
+    ASSERT_THAT(result.result, ::testing::Eq(uint8_t{0xFF}));
+    ASSERT_THAT(result.carryBits, ::testing::Eq(uint8_t{0xFF}));
+}
+
 class SubWithBorrowTest : public ::testing::TestWithParam<SubWithBorrowTestParam>
 {
 };
