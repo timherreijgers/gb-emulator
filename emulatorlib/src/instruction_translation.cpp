@@ -156,6 +156,7 @@ namespace
     names[0x9B] = "SbcE";
     names[0x9C] = "SbcH";
     names[0x9D] = "SbcL";
+    names[0x9E] = "SbcAFromIndirectHL";
     names[0x9F] = "SbcA";
 
     names[0xC1] = "POP_BC";
