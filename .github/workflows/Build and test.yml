@@ -25,13 +25,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        BUILD_TYPE: [Release, Debug]
+        BUILD_TYPE: [ Release, Debug ]
     needs: check-styling
 
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Build type to lower 
+
+      - name: Build type to lower
         run: python3 -c 'print("BUILD_TYPE_LOWER=" + "${{matrix.BUILD_TYPE}}".lower())' >> $GITHUB_ENV
 
       - name: Install Conan
@@ -44,10 +44,10 @@ jobs:
         run: conan config install https://github.com/timherreijgers/conan-profiles.git
 
       - name: Run conan install
-        run: conan install -pr:a=clang-20-linux-x86_64 -s compiler.cppstd=23 -s build_type=${{matrix.BUILD_TYPE}} -c tools.cmake.cmaketoolchain:generator="Ninja" . --build=missing
+        run: conan install -pr:a=clang-22-linux-x86_64 -s compiler.cppstd=23 -s build_type=${{matrix.BUILD_TYPE}} -c tools.cmake.cmaketoolchain:generator="Ninja" . --build=missing
 
       - name: Build
-        run: conan build -pr:a=clang-20-linux-x86_64 -s compiler.cppstd=23 -s build_type=${{matrix.BUILD_TYPE}} -c tools.cmake.cmaketoolchain:generator="Ninja" . --build=missing
+        run: conan build -pr:a=clang-22-linux-x86_64 -s compiler.cppstd=23 -s build_type=${{matrix.BUILD_TYPE}} -c tools.cmake.cmaketoolchain:generator="Ninja" . --build=missing
 
       - name: Test
         run: ctest --preset=conan-$BUILD_TYPE_LOWER
