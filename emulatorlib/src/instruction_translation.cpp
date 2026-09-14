@@ -142,6 +142,15 @@ namespace
     names[0x8E] = "AdcAFromIndirectHL";
     names[0x8F] = "AdcA";
 
+    names[0xA0] = "AndB";
+    names[0xA1] = "AndC";
+    names[0xA2] = "AndD";
+    names[0xA3] = "AndE";
+    names[0xA4] = "AndH";
+    names[0xA5] = "AndL";
+    names[0xA6] = "AndAFromIndirectHL";
+    names[0xA7] = "AndA";
+
     names[0x90] = "SubB";
     names[0x91] = "SubC";
     names[0x92] = "SubD";
