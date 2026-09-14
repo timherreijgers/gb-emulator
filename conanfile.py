@@ -11,7 +11,7 @@ class GBEmulatorRecipe(ConanFile):
         self.requires("benchmark/1.9.4")
 
     def build_requirements(self):
-        self.tool_requires("llvm-toolchain/23.1.1")
+        self.tool_requires("llvm-toolchain/22.1.8")
         self.tool_requires("cmake/[>=4.2.0]")
 
     def build(self):
