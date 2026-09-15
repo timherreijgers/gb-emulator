@@ -59,6 +59,8 @@ Lambda-based flag manipulation functions:
 - `ApplyAdditionFlags(registers, result, carryPerBit)` — rebuilds Zero, HalfCarry, and Carry after 8-bit addition,
   clearing the Subtract flag
 - `ApplySubtractionFlags(registers, result, carryPerBit)` — sets Subtract flag and rebuilds Zero, HalfCarry, and Carry
+- `ApplyAndFlags(registers, result, carryPerBit)` — rebuilds flags after 8-bit AND, setting HalfCarry, setting Zero
+  when the result is zero, and clearing Subtract and Carry
 
 `LD HL, SP+e8` only shares `CarryIn`; it clears Zero and derives its flags according to its distinct instruction
 rules.
@@ -158,6 +160,14 @@ Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) v
 | 0x98-0x9D, 0x9F | `SBC A, r` | `ExecuteSbcB`–`ExecuteSbcL`, `ExecuteSbcA` (via `mathetical_r.h`) | A = A - r - C flag |
 | 0x9E | `SBC A, (HL)` | `ExecuteSbcAFromIndirectHL` | A = A - value at HL - C flag |
 
+#### Logical AND
+
+| Opcode(s) | Mnemonic | Handler | Description |
+|-----------|----------|---------|-------------|
+| 0xA0-0xA5 | `AND A, r` | `ExecuteAndB`–`ExecuteAndL` | A = A & r (register operand) |
+| 0xA6 | `AND A, (HL)` | `ExecuteAndAFromIndirectHL` | A = A & value at HL |
+| 0xA7 | `AND A, A` | `ExecuteAndA` | A = A & A |
+
 #### Increment/Decrement
 
 | Opcode(s)                                | Mnemonic | Handler       | Description |
@@ -170,7 +180,7 @@ Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) v
 Major categories not yet implemented:
 
 - **Control flow**: JP, JR, CALL, RET, RST, DJNZ, STOP
-- **Logic**: AND, OR, XOR, CPL
+- **Logic**: OR, XOR, CPL
 - **Shift/Rotate**: SLA, SRL, SLL, SLL, RL, RR, RLC, RRC
 - **Decimal adjustment**: DAA
 - **Special**: SCF, CCF, HALT, EI, DI

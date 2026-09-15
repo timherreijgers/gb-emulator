@@ -23,4 +23,26 @@ TEST(FlagHelpersTest, ApplyingAdditionFlags_SetsZeroHalfCarryAndCarryAndClearsSu
                 ::testing::Eq(CpuFlags::Zero.AsByte() | CpuFlags::HalfCarry.AsByte() | CpuFlags::Carry.AsByte()));
 }
 
+TEST(FlagHelpersTest, ApplyingSubtractionFlags_SetsZeroHalfCarryAndCarryAndSetsSubtract)
+{
+    CpuRegisters registers;
+    registers.flags = 0x00_b;
+
+    ApplySubtractionFlags(registers, 0x00_b, 0x88_b);
+
+    ASSERT_THAT(registers.flags,
+                ::testing::Eq(CpuFlags::Zero.AsByte() | CpuFlags::HalfCarry.AsByte() | CpuFlags::Carry.AsByte() | CpuFlags::Subtract.AsByte()));
+}
+
+TEST(FlagHelpersTest, ApplyingAndFlags_SetsZeroHalfCarry)
+{
+    CpuRegisters registers;
+    registers.flags = CpuFlags::Subtract.AsByte() | CpuFlags::Carry.AsByte();
+
+    ApplyAndFlags(registers, 0x00_b, 0x88_b);
+
+    ASSERT_THAT(registers.flags,
+                ::testing::Eq(CpuFlags::Zero.AsByte() | CpuFlags::HalfCarry.AsByte()));
+}
+
 } // namespace EmulatorLib::Test
