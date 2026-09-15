@@ -24,7 +24,6 @@ constexpr auto ApplyAdditionFlags = [](CpuRegisters& registers, const std::byte 
                             ((carryPerBit & UtilityLib::BitMask<7>) > 0x00_b ? CpuFlags::Carry.AsByte() : 0x00_b);
 };
 
-// TODO: Add test
 constexpr auto ApplySubtractionFlags = [](CpuRegisters& registers, const std::byte result, const std::byte carryPerBit) noexcept -> void {
     registers.flags.value = CpuFlags::Subtract.AsByte() |
                             (result == 0x00_b ? CpuFlags::Zero.AsByte() : 0x00_b) |
@@ -32,7 +31,6 @@ constexpr auto ApplySubtractionFlags = [](CpuRegisters& registers, const std::by
                             ((carryPerBit & UtilityLib::BitMask<7>) > 0x00_b ? CpuFlags::Carry.AsByte() : 0x00_b);
 };
 
-// TODO: Add test
 constexpr auto ApplyAndFlags = [](CpuRegisters& registers, const std::byte result, const std::byte /*carry*/) noexcept -> void {
     registers.flags.value = (result == 0x00_b ? CpuFlags::Zero.AsByte() : 0x00_b) | CpuFlags::HalfCarry.AsByte();
 };
