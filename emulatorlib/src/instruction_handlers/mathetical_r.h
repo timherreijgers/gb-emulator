@@ -54,6 +54,11 @@ constexpr auto SbcWithBorrowWrapper = [](const CpuRegisters& cpuRegisters, Utili
     return UtilityLib::SubWithBorrowIn(left, right, borrowIn);
 };
 
+constexpr auto AndOperand = [](std::byte left, std::byte right) noexcept -> UtilityLib::MathematicalResult<std::byte> {
+    const auto result = static_cast<std::byte>(static_cast<uint8_t>(left) & static_cast<uint8_t>(right));
+    return {result, 0x00_b};
+};
+
 template <ReturnsRegister8Bit TargetRegister, MathOperand Operand, SetFlagFunction FlagFunction>
 constexpr auto ExecuteMathOperandR = [](const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     auto& targetRegister = TargetRegister{}(cpuRegisters);
@@ -109,5 +114,12 @@ constexpr auto ExecuteSbcE = ExecuteMathOperandR<RegisterE, decltype(SbcWithBorr
 constexpr auto ExecuteSbcH = ExecuteMathOperandR<RegisterH, decltype(SbcWithBorrowWrapper), decltype(ApplySubtractionFlags)>;
 constexpr auto ExecuteSbcL = ExecuteMathOperandR<RegisterL, decltype(SbcWithBorrowWrapper), decltype(ApplySubtractionFlags)>;
 
+constexpr auto ExecuteAndA = ExecuteMathOperandR<RegisterA, decltype(AndOperand), decltype(ApplyAndFlags)>;
+constexpr auto ExecuteAndB = ExecuteMathOperandR<RegisterB, decltype(AndOperand), decltype(ApplyAndFlags)>;
+constexpr auto ExecuteAndC = ExecuteMathOperandR<RegisterC, decltype(AndOperand), decltype(ApplyAndFlags)>;
+constexpr auto ExecuteAndD = ExecuteMathOperandR<RegisterD, decltype(AndOperand), decltype(ApplyAndFlags)>;
+constexpr auto ExecuteAndE = ExecuteMathOperandR<RegisterE, decltype(AndOperand), decltype(ApplyAndFlags)>;
+constexpr auto ExecuteAndH = ExecuteMathOperandR<RegisterH, decltype(AndOperand), decltype(ApplyAndFlags)>;
+constexpr auto ExecuteAndL = ExecuteMathOperandR<RegisterL, decltype(AndOperand), decltype(ApplyAndFlags)>;
 
 } // namespace EmulatorLib

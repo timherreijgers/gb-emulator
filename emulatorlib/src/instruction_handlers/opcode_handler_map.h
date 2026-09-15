@@ -5,14 +5,13 @@
 
 #pragma once
 
-#include "adc_a_from_indirect_hl.h"
 #include "emulatorlib/instruction_handler.h"
-#include "sbc_a_from_indirect_hl.h"
-#include "sub_a_from_indirect_hl.h"
 
+#include "instruction_handlers/adc_a_from_indirect_hl.h"
 #include "instruction_handlers/adc_a_n8.h"
 #include "instruction_handlers/add_a_from_indirect_hl.h"
 #include "instruction_handlers/add_a_n8.h"
+#include "instruction_handlers/and_a_from_indirect_hl.h"
 #include "instruction_handlers/dec_r.h"
 #include "instruction_handlers/inc_r.h"
 #include "instruction_handlers/load_a16_sp.h"
@@ -31,6 +30,8 @@
 #include "instruction_handlers/mathetical_r.h"
 #include "instruction_handlers/pop_rr.h"
 #include "instruction_handlers/push_rr.h"
+#include "instruction_handlers/sbc_a_from_indirect_hl.h"
+#include "instruction_handlers/sub_a_from_indirect_hl.h"
 
 #include <array>
 #include <stdexcept>
@@ -194,6 +195,15 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0x9D] = ExecuteSbcL;
     handlers[0x9E] = ExecuteSbcAFromIndirectHL;
     handlers[0x9F] = ExecuteSbcA;
+
+    handlers[0xA0] = ExecuteAndB;
+    handlers[0xA1] = ExecuteAndC;
+    handlers[0xA2] = ExecuteAndD;
+    handlers[0xA3] = ExecuteAndE;
+    handlers[0xA4] = ExecuteAndH;
+    handlers[0xA5] = ExecuteAndL;
+    handlers[0xA6] = ExecuteAndAFromIndirectHL;
+    handlers[0xA7] = ExecuteAndA;
 
     handlers[0xC1] = ExecutePopBC;
     handlers[0xC5] = ExecutePushBC;
