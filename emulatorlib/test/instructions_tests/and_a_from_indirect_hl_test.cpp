@@ -66,7 +66,7 @@ TEST_F(AndAIndirectHlTest, ExecutingOpCode_SetsHalfCarry)
     m_cpu.Step();
     m_cpu.Step();
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte() | CpuFlags::Zero.AsByte()));
 }
 
 TEST_F(AndAIndirectHlTest, ExecutingOpCode_ClearsCarryFlag)
@@ -81,7 +81,7 @@ TEST_F(AndAIndirectHlTest, ExecutingOpCode_ClearsCarryFlag)
     m_cpu.Step();
     m_cpu.Step();
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte() | CpuFlags::Zero.AsByte()));
 }
 
 TEST_F(AndAIndirectHlTest, ExecutingOpCode_SetsZeroFlag)

@@ -73,7 +73,7 @@ TEST_P(AndRTest, ExecutingOpCode_SetsHalfCarry)
 
     m_cpu.Registers().flags = 0x00_b;
     m_cpu.Registers().accumulator = 0xF0_b;
-    sourceRegister(m_cpu.Registers()) = 0x0F_b;
+    sourceRegister(m_cpu.Registers()) = 0xF0_b;
 
     m_cpu.Step();
     m_cpu.Step();
@@ -105,7 +105,7 @@ TEST_P(AndRTest, ExecutingOpCode_ClearsCarryFlag)
 
     m_cpu.Step();
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte() | CpuFlags::Zero.AsByte()));
 }
 
 TEST_P(AndRTest, ExecutingOpCode_SetsZeroFlag)
