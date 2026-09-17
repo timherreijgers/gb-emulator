@@ -7,8 +7,8 @@ class GBEmulatorRecipe(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
 
     def requirements(self):
-        self.requires("gtest/1.17.0")
-        self.requires("benchmark/1.9.4")
+        self.requires("gtest/1.18.0")
+        self.requires("benchmark/1.9.5")
 
     def build_requirements(self):
         self.tool_requires("llvm-toolchain/22.1.8")
