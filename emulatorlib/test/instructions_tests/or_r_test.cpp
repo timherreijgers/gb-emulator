@@ -24,7 +24,7 @@ struct InstructionPair
 
 } // namespace
 
-class AndRTest : public InstructionTestBase, public ::testing::WithParamInterface<InstructionPair>
+class OrRTest : public InstructionTestBase, public ::testing::WithParamInterface<InstructionPair>
 {
 protected:
     void SetUp() override
@@ -34,7 +34,7 @@ protected:
     }
 };
 
-TEST_P(AndRTest, ExecutingOpCode)
+TEST_P(OrRTest, ExecutingOpCode)
 {
     const auto& [instruction, sourceRegister] = GetParam();
     m_program.WriteProgram({instruction, 0x00_b});
@@ -48,11 +48,11 @@ TEST_P(AndRTest, ExecutingOpCode)
     ASSERT_THAT(sourceRegister(m_cpu.Registers()), ::testing::Eq(0x0F_b));
 
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().accumulator, ::testing::Eq(0x00_b));
+    ASSERT_THAT(m_cpu.Registers().accumulator, ::testing::Eq(0xFF_b));
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));
 }
 
-TEST_P(AndRTest, ExecutingOpCode_ClearsSubtractionFlag)
+TEST_P(OrRTest, ExecutingOpCode_ClearsSubtractionFlag)
 {
     const auto& [instruction, sourceRegister] = GetParam();
     m_program.WriteProgram({instruction, 0x00_b});
@@ -63,10 +63,10 @@ TEST_P(AndRTest, ExecutingOpCode_ClearsSubtractionFlag)
 
     m_cpu.Step();
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(0x00_b));
 }
 
-TEST_P(AndRTest, ExecutingOpCode_SetsHalfCarry)
+TEST_P(OrRTest, ExecutingOpCode_ClearsHalfCarry)
 {
     const auto& [instruction, sourceRegister] = GetParam();
     m_program.WriteProgram({instruction, 0x00_b});
@@ -77,10 +77,10 @@ TEST_P(AndRTest, ExecutingOpCode_SetsHalfCarry)
 
     m_cpu.Step();
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(0x00_b));
 }
 
-TEST_P(AndRTest, ExecutingOpCode_ClearsCarryFlag)
+TEST_P(OrRTest, ExecutingOpCode_ClearsCarryFlag)
 {
     const auto& [instruction, sourceRegister] = GetParam();
     m_program.WriteProgram({instruction, 0x00_b});
@@ -91,25 +91,25 @@ TEST_P(AndRTest, ExecutingOpCode_ClearsCarryFlag)
 
     m_cpu.Step();
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte() | CpuFlags::Zero.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(0x00_b));
 }
 
-TEST_P(AndRTest, ExecutingOpCode_SetsZeroFlag)
+TEST_P(OrRTest, ExecutingOpCode_SetsZeroFlag)
 {
     const auto& [instruction, sourceRegister] = GetParam();
     m_program.WriteProgram({instruction, 0x00_b});
 
     m_cpu.Registers().flags = 0x00_b;
-    m_cpu.Registers().accumulator = 0xF0_b;
-    sourceRegister(m_cpu.Registers()) = 0x0F_b;
+    m_cpu.Registers().accumulator = 0x00_b;
+    sourceRegister(m_cpu.Registers()) = 0x00_b;
 
     m_cpu.Step();
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().flags,
-                ::testing::Eq(CpuFlags::Zero.AsByte() | CpuFlags::HalfCarry.AsByte()));
+                ::testing::Eq(CpuFlags::Zero.AsByte()));
 }
 
-TEST_P(AndRTest, ExecutingOpCode_ClearsZeroFlag)
+TEST_P(OrRTest, ExecutingOpCode_ClearsZeroFlag)
 {
     const auto& [instruction, sourceRegister] = GetParam();
     m_program.WriteProgram({instruction, 0x00_b});
@@ -120,18 +120,18 @@ TEST_P(AndRTest, ExecutingOpCode_ClearsZeroFlag)
 
     m_cpu.Step();
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(0x00_b));
 }
 
-INSTANTIATE_TEST_SUITE_P(AndRTest, AndRTest,
+INSTANTIATE_TEST_SUITE_P(OrRTest, OrRTest,
                          ::testing::Values(
-                             InstructionPair{0xA0_b, FunctionWrapper8Bit<RegisterB>()},
-                             InstructionPair{0xA1_b, FunctionWrapper8Bit<RegisterC>()},
-                             InstructionPair{0xA2_b, FunctionWrapper8Bit<RegisterD>()},
-                             InstructionPair{0xA3_b, FunctionWrapper8Bit<RegisterE>()},
-                             InstructionPair{0xA4_b, FunctionWrapper8Bit<RegisterH>()},
-                             InstructionPair{0xA5_b, FunctionWrapper8Bit<RegisterL>()}),
-                         [](const testing::TestParamInfo<AndRTest::ParamType>& info) {
+                             InstructionPair{0xB0_b, FunctionWrapper8Bit<RegisterB>()},
+                             InstructionPair{0xB1_b, FunctionWrapper8Bit<RegisterC>()},
+                             InstructionPair{0xB2_b, FunctionWrapper8Bit<RegisterD>()},
+                             InstructionPair{0xB3_b, FunctionWrapper8Bit<RegisterE>()},
+                             InstructionPair{0xB4_b, FunctionWrapper8Bit<RegisterH>()},
+                             InstructionPair{0xB5_b, FunctionWrapper8Bit<RegisterL>()}),
+                         [](const testing::TestParamInfo<OrRTest::ParamType>& info) {
                              return std::string{OpCodeToInstructionName(info.param.instruction)};
                          });
 

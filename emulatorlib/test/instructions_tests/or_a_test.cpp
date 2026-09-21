@@ -10,7 +10,7 @@
 namespace EmulatorLib::Test
 {
 
-class AndATest : public InstructionTestBase
+class OrATest : public InstructionTestBase
 {
 protected:
     void SetUp() override
@@ -20,14 +20,14 @@ protected:
     }
 };
 
-TEST_F(AndATest, ExecutingOpCode)
+TEST_F(OrATest, ExecutingOpCode)
 {
-    m_program.WriteProgram({0xA7_b, 0x00_b});
+    m_program.WriteProgram({0xB7_b, 0x00_b});
 
     m_cpu.Registers().accumulator = 0xF0_b;
 
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0xA7_b));
+    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0xB7_b));
     ASSERT_THAT(m_cpu.Registers().accumulator, ::testing::Eq(0xF0_b));
 
     m_cpu.Step();
@@ -35,45 +35,45 @@ TEST_F(AndATest, ExecutingOpCode)
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));
 }
 
-TEST_F(AndATest, ExecutingOpCode_ClearsSubtractionFlag)
+TEST_F(OrATest, ExecutingOpCode_ClearsSubtractionFlag)
 {
-    m_program.WriteProgram({0xA7_b, 0x00_b});
+    m_program.WriteProgram({0xB7_b, 0x00_b});
 
     m_cpu.Registers().flags = CpuFlags::Subtract.AsByte();
     m_cpu.Registers().accumulator = 0xFF_b;
 
     m_cpu.Step();
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(0x00_b));
 }
 
-TEST_F(AndATest, ExecutingOpCode_SetsHalfCarry)
+TEST_F(OrATest, ExecutingOpCode_ClearsHalfCarry)
 {
-    m_program.WriteProgram({0xA7_b, 0x00_b});
+    m_program.WriteProgram({0xB7_b, 0x00_b});
 
     m_cpu.Registers().flags = 0x00_b;
-    m_cpu.Registers().accumulator = 0x08_b;
+    m_cpu.Registers().accumulator = 0xF0_b;
 
     m_cpu.Step();
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(0x00_b));
 }
 
-TEST_F(AndATest, ExecutingOpCode_ClearsCarryFlag)
+TEST_F(OrATest, ExecutingOpCode_ClearsCarryFlag)
 {
-    m_program.WriteProgram({0xA7_b, 0x00_b});
+    m_program.WriteProgram({0xB7_b, 0x00_b});
 
     m_cpu.Registers().flags = CpuFlags::Carry.AsByte();
     m_cpu.Registers().accumulator = 0xF0_b;
 
     m_cpu.Step();
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(0x00_b));
 }
 
-TEST_F(AndATest, ExecutingOpCode_SetsZeroFlag)
+TEST_F(OrATest, ExecutingOpCode_SetsZeroFlag)
 {
-    m_program.WriteProgram({0xA7_b, 0x00_b});
+    m_program.WriteProgram({0xB7_b, 0x00_b});
 
     m_cpu.Registers().flags = 0x00_b;
     m_cpu.Registers().accumulator = 0x00_b;
@@ -81,19 +81,19 @@ TEST_F(AndATest, ExecutingOpCode_SetsZeroFlag)
     m_cpu.Step();
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().flags,
-                ::testing::Eq(CpuFlags::Zero.AsByte() | CpuFlags::HalfCarry.AsByte()));
+                ::testing::Eq(CpuFlags::Zero.AsByte() | 0x00_b));
 }
 
-TEST_F(AndATest, ExecutingOpCode_ClearsZeroFlag)
+TEST_F(OrATest, ExecutingOpCode_ClearsZeroFlag)
 {
-    m_program.WriteProgram({0xA7_b, 0x00_b});
+    m_program.WriteProgram({0xB7_b, 0x00_b});
 
     m_cpu.Registers().flags = CpuFlags::Zero.AsByte();
     m_cpu.Registers().accumulator = 0xFF_b;
 
     m_cpu.Step();
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::HalfCarry.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(0x00_b));
 }
 
 } // namespace EmulatorLib::Test

@@ -61,6 +61,8 @@ Lambda-based flag manipulation functions:
 - `ApplySubtractionFlags(registers, result, carryPerBit)` — sets Subtract flag and rebuilds Zero, HalfCarry, and Carry
 - `ApplyAndFlags(registers, result, carryPerBit)` — rebuilds flags after 8-bit AND, setting HalfCarry, setting Zero
   when the result is zero, and clearing Subtract and Carry
+- `ApplyOrFlags(registers, result, carryPerBit)` — rebuilds flags after 8-bit OR, setting Zero when the result is
+  zero and clearing Subtract, HalfCarry, and Carry
 
 `LD HL, SP+e8` only shares `CarryIn`; it clears Zero and derives its flags according to its distinct instruction
 rules.
@@ -89,6 +91,7 @@ Uses concepts to support two operand styles:
 | `ADD` | `ApplyAdditionFlags` | `ExecuteAddA`, `ExecuteAddB`, `ExecuteAddC`, `ExecuteAddD`, `ExecuteAddE`, `ExecuteAddH`, `ExecuteAddL` |
 | `SUB` | `ApplySubtractionFlags` | `ExecuteSubA`, `ExecuteSubB`, `ExecuteSubC`, `ExecuteSubD`, `ExecuteSubE`, `ExecuteSubH`, `ExecuteSubL`, `ExecuteSubAFromIndirectHL` |
 | `ADC` | `ApplyAdditionFlags` | `ExecuteAdcA`, `ExecuteAdcB`, `ExecuteAdcC`, `ExecuteAdcD`, `ExecuteAdcE`, `ExecuteAdcH`, `ExecuteAdcL` |
+| `OR` | `ApplyOrFlags` | `ExecuteOrA`, `ExecuteOrB`, `ExecuteOrC`, `ExecuteOrD`, `ExecuteOrE`, `ExecuteOrH`, `ExecuteOrL` |
 
 The ADC handlers use `AdcWithCarryWrapper` which extracts the carry flag via `CarryIn()` before calling `UtilityLib::AddWithCarryIn()`.
 
@@ -144,7 +147,8 @@ The ADC handlers use `AdcWithCarryWrapper` which extracts the carry flag via `Ca
 | 0xCE      | `ADC A, n` | `ExecuteAdcAn8`                                      | A = A + n + C flag                      |
 
 Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) via `ExecuteAddAFromIndirectHL`,
-`ADC A,(HL)` (0x8E) via `ExecuteAdcAFromIndirectHL`, and `SUB A,(HL)` (0x96) via `ExecuteSubAFromIndirectHL`.
+`ADC A,(HL)` (0x8E) via `ExecuteAdcAFromIndirectHL`, `SUB A,(HL)` (0x96) via `ExecuteSubAFromIndirectHL`, and
+`OR A,(HL)` (0xB6) via `ExecuteOrAFromIndirectHL`.
 
 #### Subtraction
 
@@ -168,6 +172,17 @@ Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) v
 | 0xA6 | `AND A, (HL)` | `ExecuteAndAFromIndirectHL` | A = A & value at HL |
 | 0xA7 | `AND A, A` | `ExecuteAndA` | A = A & A |
 
+#### Logical OR
+
+| Opcode(s) | Mnemonic | Handler | Description |
+|-----------|----------|---------|-------------|
+| 0xB0-0xB5 | `OR A, r` | `ExecuteOrB`–`ExecuteOrL` | A = A \| r (register operand) |
+| 0xB6 | `OR A, (HL)` | `ExecuteOrAFromIndirectHL` | A = A \| value at HL |
+| 0xB7 | `OR A, A` | `ExecuteOrA` | A = A \| A |
+
+`OR A, (HL)` reads the operand, yields for one M-cycle, then updates A. All OR forms set Zero only when the result
+is zero and clear Subtract, HalfCarry, and Carry.
+
 #### Increment/Decrement
 
 | Opcode(s)                                | Mnemonic | Handler       | Description |
@@ -180,7 +195,7 @@ Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) v
 Major categories not yet implemented:
 
 - **Control flow**: JP, JR, CALL, RET, RST, DJNZ, STOP
-- **Logic**: OR, XOR, CPL
+- **Logic**: XOR, CPL
 - **Shift/Rotate**: SLA, SRL, SLL, SLL, RL, RR, RLC, RRC
 - **Decimal adjustment**: DAA
 - **Special**: SCF, CCF, HALT, EI, DI
