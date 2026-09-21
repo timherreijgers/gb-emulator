@@ -45,4 +45,15 @@ TEST(FlagHelpersTest, ApplyingAndFlags_SetsZeroHalfCarry)
                 ::testing::Eq(CpuFlags::Zero.AsByte() | CpuFlags::HalfCarry.AsByte()));
 }
 
+TEST(FlagHelpersTest, ApplyingOrFlags_SetsZero)
+{
+    CpuRegisters registers;
+    registers.flags = CpuFlags::Subtract.AsByte() | CpuFlags::Carry.AsByte();
+
+    ApplyOrFlags(registers, 0x00_b, 0x88_b);
+
+    ASSERT_THAT(registers.flags,
+                ::testing::Eq(CpuFlags::Zero.AsByte()));
+}
+
 } // namespace EmulatorLib::Test

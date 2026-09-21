@@ -59,6 +59,11 @@ constexpr auto AndOperand = [](std::byte left, std::byte right) noexcept -> Util
     return {result, 0x00_b};
 };
 
+constexpr auto OrOperand = [](std::byte left, std::byte right) noexcept -> UtilityLib::MathematicalResult<std::byte> {
+    const auto result = static_cast<std::byte>(static_cast<uint8_t>(left) | static_cast<uint8_t>(right));
+    return {result, 0x00_b};
+};
+
 template <ReturnsRegister8Bit TargetRegister, MathOperand Operand, SetFlagFunction FlagFunction>
 constexpr auto ExecuteMathOperandR = [](const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     auto& targetRegister = TargetRegister{}(cpuRegisters);
@@ -121,5 +126,13 @@ constexpr auto ExecuteAndD = ExecuteMathOperandR<RegisterD, decltype(AndOperand)
 constexpr auto ExecuteAndE = ExecuteMathOperandR<RegisterE, decltype(AndOperand), decltype(ApplyAndFlags)>;
 constexpr auto ExecuteAndH = ExecuteMathOperandR<RegisterH, decltype(AndOperand), decltype(ApplyAndFlags)>;
 constexpr auto ExecuteAndL = ExecuteMathOperandR<RegisterL, decltype(AndOperand), decltype(ApplyAndFlags)>;
+
+constexpr auto ExecuteOrA = ExecuteMathOperandR<RegisterA, decltype(OrOperand), decltype(ApplyOrFlags)>;
+constexpr auto ExecuteOrB = ExecuteMathOperandR<RegisterB, decltype(OrOperand), decltype(ApplyOrFlags)>;
+constexpr auto ExecuteOrC = ExecuteMathOperandR<RegisterC, decltype(OrOperand), decltype(ApplyOrFlags)>;
+constexpr auto ExecuteOrD = ExecuteMathOperandR<RegisterD, decltype(OrOperand), decltype(ApplyOrFlags)>;
+constexpr auto ExecuteOrE = ExecuteMathOperandR<RegisterE, decltype(OrOperand), decltype(ApplyOrFlags)>;
+constexpr auto ExecuteOrH = ExecuteMathOperandR<RegisterH, decltype(OrOperand), decltype(ApplyOrFlags)>;
+constexpr auto ExecuteOrL = ExecuteMathOperandR<RegisterL, decltype(OrOperand), decltype(ApplyOrFlags)>;
 
 } // namespace EmulatorLib

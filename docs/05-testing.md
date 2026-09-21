@@ -38,7 +38,7 @@ protected:
 | `cartridge_test.cpp` | ROM loading, data access |
 | `cartridge_header_test.cpp` | Nintendo logo, title, cartridge type, ROM size, checksum validation |
 | `masked_register_test.cpp` | Register mask enforcement, byte sub-register propagation |
-| `flag_helpers_test.cpp` | Addition, subtraction, and AND flag calculations |
+| `flag_helpers_test.cpp` | Addition, subtraction, AND, and OR flag calculations |
 
 ### Instruction Tests (`emulatorlib/test/instructions_tests/`)
 Parameterized tests for each instruction family:
@@ -77,6 +77,9 @@ Parameterized tests for each instruction family:
 | `and_r_test.cpp` | `AND A, r` for register operands B, C, D, E, H, and L |
 | `and_a_from_indirect_hl_test.cpp` | `AND A, (HL)` |
 | `and_a_test.cpp` | `AND A, A` |
+| `or_r_test.cpp` | `OR A, r` for register operands B, C, D, E, H, and L |
+| `or_a_from_indirect_hl_test.cpp` | `OR A, (HL)` |
+| `or_a_test.cpp` | `OR A, A` |
 | `inc_r_test.cpp` | `INC r` |
 | `dec_r_test.cpp` | `DEC r` |
 | `load_hl_indirect_increment_a_test.cpp` | `LD A, (HL+)` |

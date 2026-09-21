@@ -142,15 +142,6 @@ namespace
     names[0x8E] = "AdcAFromIndirectHL";
     names[0x8F] = "AdcA";
 
-    names[0xA0] = "AndB";
-    names[0xA1] = "AndC";
-    names[0xA2] = "AndD";
-    names[0xA3] = "AndE";
-    names[0xA4] = "AndH";
-    names[0xA5] = "AndL";
-    names[0xA6] = "AndAFromIndirectHL";
-    names[0xA7] = "AndA";
-
     names[0x90] = "SubB";
     names[0x91] = "SubC";
     names[0x92] = "SubD";
@@ -167,6 +158,24 @@ namespace
     names[0x9D] = "SbcL";
     names[0x9E] = "SbcAFromIndirectHL";
     names[0x9F] = "SbcA";
+
+    names[0xA0] = "AndB";
+    names[0xA1] = "AndC";
+    names[0xA2] = "AndD";
+    names[0xA3] = "AndE";
+    names[0xA4] = "AndH";
+    names[0xA5] = "AndL";
+    names[0xA6] = "AndAFromIndirectHL";
+    names[0xA7] = "AndA";
+
+    names[0xB0] = "OrB";
+    names[0xB1] = "OrC";
+    names[0xB2] = "OrD";
+    names[0xB3] = "OrE";
+    names[0xB4] = "OrH";
+    names[0xB5] = "OrL";
+    names[0xB6] = "OrAFromIndirectHL";
+    names[0xB7] = "OrA";
 
     names[0xC1] = "POP_BC";
     names[0xC5] = "PUSH_BC";

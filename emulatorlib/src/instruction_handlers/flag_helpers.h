@@ -35,4 +35,8 @@ constexpr auto ApplyAndFlags = [](CpuRegisters& registers, const std::byte resul
     registers.flags.value = (result == 0x00_b ? CpuFlags::Zero.AsByte() : 0x00_b) | CpuFlags::HalfCarry.AsByte();
 };
 
+constexpr auto ApplyOrFlags = [](CpuRegisters& registers, const std::byte result, const std::byte /*carry*/) noexcept -> void {
+    registers.flags.value = (result == 0x00_b ? CpuFlags::Zero.AsByte() : 0x00_b);
+};
+
 } // namespace EmulatorLib
