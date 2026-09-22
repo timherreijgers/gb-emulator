@@ -44,10 +44,10 @@ jobs:
         run: conan config install https://github.com/timherreijgers/conan-profiles.git
 
       - name: Run conan install
-        run: conan install -pr:a=clang-22-linux-x86_64 -s compiler.cppstd=23 -s build_type=${{matrix.BUILD_TYPE}} -c tools.cmake.cmaketoolchain:generator="Ninja" . --build=missing
+        run: conan install -pr:a=clang-22-linux-x86_64 -s compiler.cppstd=26 -s build_type=${{matrix.BUILD_TYPE}} -c tools.cmake.cmaketoolchain:generator="Ninja" . --build=missing
 
       - name: Build
-        run: conan build -pr:a=clang-22-linux-x86_64 -s compiler.cppstd=23 -s build_type=${{matrix.BUILD_TYPE}} -c tools.cmake.cmaketoolchain:generator="Ninja" . --build=missing
+        run: conan build -pr:a=clang-22-linux-x86_64 -s compiler.cppstd=26 -s build_type=${{matrix.BUILD_TYPE}} -c tools.cmake.cmaketoolchain:generator="Ninja" . --build=missing
 
       - name: Test
         run: ctest --preset=conan-$BUILD_TYPE_LOWER
