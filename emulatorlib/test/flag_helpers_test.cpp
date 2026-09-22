@@ -48,7 +48,7 @@ TEST(FlagHelpersTest, ApplyingAndFlags_SetsZeroHalfCarry)
 TEST(FlagHelpersTest, ApplyingOrFlags_SetsZero)
 {
     CpuRegisters registers;
-    registers.flags = CpuFlags::Subtract.AsByte() | CpuFlags::Carry.AsByte();
+    registers.flags = CpuFlags::Subtract.AsByte() | CpuFlags::HalfCarry.AsByte() | CpuFlags::Carry.AsByte();
 
     ApplyOrFlags(registers, 0x00_b, 0x88_b);
 

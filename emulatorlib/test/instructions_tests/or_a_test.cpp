@@ -51,7 +51,7 @@ TEST_F(OrATest, ExecutingOpCode_ClearsHalfCarry)
 {
     m_program.WriteProgram({0xB7_b, 0x00_b});
 
-    m_cpu.Registers().flags = 0x00_b;
+    m_cpu.Registers().flags = CpuFlags::HalfCarry.AsByte();
     m_cpu.Registers().accumulator = 0xF0_b;
 
     m_cpu.Step();
