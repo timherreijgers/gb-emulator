@@ -1,7 +1,7 @@
 # GB Emulator Project Overview
 
 ## What is this?
-A simple Game Boy emulator written in modern C++23, targeting the classic 8-bit Game Boy (DMG) architecture.
+A simple Game Boy emulator written in modern C++26, targeting the classic 8-bit Game Boy (DMG) architecture.
 
 ## Project Structure
 ```
@@ -23,7 +23,7 @@ gb-emulator/
 ## Build System
 - **CMake** (≥ 4.2) with Conan package manager
 - **Compiler**: Clang 20+
-- **C++ Standard**: C++23
+- **C++ Standard**: C++26
 - **Testing**: Google Test + Google Mock
 - **Benchmarking**: Google Benchmark
 - **Compiler flags**: `-Wall -Wextra -Wpedantic -Werror`
@@ -52,7 +52,7 @@ The emulator follows a device-interconnect model:
 - **AddressBus** routes read/write operations to connected devices via `AddressBusAddressable` interface
 - **CPU** contains registers, opcode dispatch, and uses coroutines for multi-cycle instruction execution
 - **Cartridge** loads and parses ROM files (header validation, Nintendo logo check)
-- Instruction handlers are implemented as C++23 coroutines using `co_yield` for multi-cycle timing and `co_return` for completion
+- Instruction handlers are implemented as C++26 coroutines using `co_yield` for multi-cycle timing and `co_return` for completion
 
 ## Key Conventions
 - All files include MIT license header: `Copyright © 2026. Tim Herreijgers`

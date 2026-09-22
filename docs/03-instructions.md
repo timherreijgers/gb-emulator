@@ -2,7 +2,7 @@
 
 ## Instruction Handler Pattern
 
-All instructions are implemented as C++23 coroutines with signature:
+All instructions are implemented as C++26 coroutines with signature:
 
 ```cpp
 auto Execute<Name>(AddressBus& addressBus, CpuRegisters& cpuRegisters) -> InstructionHandler

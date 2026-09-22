@@ -31,7 +31,7 @@ operator-(std::byte, integral) -> std::byte
 ## Numeric Limits (`numeric_limits.h`)
 
 Custom `UtilityLib::numeric_limits<T>` specializing `std::numeric_limits<std::byte>` to use `unsigned char` limits
-(since `std::byte` lacks numeric limits in C++23).
+(since `std::byte` lacks numeric limits in C++26).
 
 ## Mathematical Result (`mathematical_result.h`)
 
