@@ -71,7 +71,7 @@ TEST_P(OrRTest, ExecutingOpCode_ClearsHalfCarry)
     const auto& [instruction, sourceRegister] = GetParam();
     m_program.WriteProgram({instruction, 0x00_b});
 
-    m_cpu.Registers().flags = 0x00_b;
+    m_cpu.Registers().flags = CpuFlags::HalfCarry.AsByte();
     m_cpu.Registers().accumulator = 0xF0_b;
     sourceRegister(m_cpu.Registers()) = 0xF0_b;
 

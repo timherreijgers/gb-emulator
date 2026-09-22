@@ -58,7 +58,7 @@ TEST_F(OrAIndirectHlTest, ExecutingOpCode_SetsHalfCarry)
 {
     m_program.WriteProgram({0xB6_b});
 
-    m_cpu.Registers().flags = 0x00_b;
+    m_cpu.Registers().flags = CpuFlags::HalfCarry.AsByte();
     m_cpu.Registers().accumulator = 0x00_b;
     m_cpu.Registers().hlRegister = 0x8080;
 
