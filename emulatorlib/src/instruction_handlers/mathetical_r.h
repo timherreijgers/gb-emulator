@@ -64,6 +64,11 @@ constexpr auto OrOperand = [](std::byte left, std::byte right) noexcept -> Utili
     return {result, 0x00_b};
 };
 
+constexpr auto XorOperand = [](std::byte left, std::byte right) noexcept -> UtilityLib::MathematicalResult<std::byte> {
+    const auto result = static_cast<std::byte>(static_cast<uint8_t>(left) ^ static_cast<uint8_t>(right));
+    return {result, 0x00_b};
+};
+
 template <ReturnsRegister8Bit TargetRegister, MathOperand Operand, SetFlagFunction FlagFunction>
 constexpr auto ExecuteMathOperandR = [](const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     auto& targetRegister = TargetRegister{}(cpuRegisters);
@@ -134,5 +139,13 @@ constexpr auto ExecuteOrD = ExecuteMathOperandR<RegisterD, decltype(OrOperand), 
 constexpr auto ExecuteOrE = ExecuteMathOperandR<RegisterE, decltype(OrOperand), decltype(ApplyOrFlags)>;
 constexpr auto ExecuteOrH = ExecuteMathOperandR<RegisterH, decltype(OrOperand), decltype(ApplyOrFlags)>;
 constexpr auto ExecuteOrL = ExecuteMathOperandR<RegisterL, decltype(OrOperand), decltype(ApplyOrFlags)>;
+
+constexpr auto ExecuteXorA = ExecuteMathOperandR<RegisterA, decltype(XorOperand), decltype(ApplyXorFlags)>;
+constexpr auto ExecuteXorB = ExecuteMathOperandR<RegisterB, decltype(XorOperand), decltype(ApplyXorFlags)>;
+constexpr auto ExecuteXorC = ExecuteMathOperandR<RegisterC, decltype(XorOperand), decltype(ApplyXorFlags)>;
+constexpr auto ExecuteXorD = ExecuteMathOperandR<RegisterD, decltype(XorOperand), decltype(ApplyXorFlags)>;
+constexpr auto ExecuteXorE = ExecuteMathOperandR<RegisterE, decltype(XorOperand), decltype(ApplyXorFlags)>;
+constexpr auto ExecuteXorH = ExecuteMathOperandR<RegisterH, decltype(XorOperand), decltype(ApplyXorFlags)>;
+constexpr auto ExecuteXorL = ExecuteMathOperandR<RegisterL, decltype(XorOperand), decltype(ApplyXorFlags)>;
 
 } // namespace EmulatorLib

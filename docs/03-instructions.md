@@ -63,6 +63,8 @@ Lambda-based flag manipulation functions:
   when the result is zero, and clearing Subtract and Carry
 - `ApplyOrFlags(registers, result, carryPerBit)` — rebuilds flags after 8-bit OR, setting Zero when the result is
   zero and clearing Subtract, HalfCarry, and Carry
+- `ApplyXorFlags(registers, result, carryPerBit)` — rebuilds flags after 8-bit XOR, setting Zero when the result is
+  zero and clearing Subtract, HalfCarry, and Carry
 
 `LD HL, SP+e8` only shares `CarryIn`; it clears Zero and derives its flags according to its distinct instruction
 rules.
@@ -92,6 +94,7 @@ Uses concepts to support two operand styles:
 | `SUB` | `ApplySubtractionFlags` | `ExecuteSubA`, `ExecuteSubB`, `ExecuteSubC`, `ExecuteSubD`, `ExecuteSubE`, `ExecuteSubH`, `ExecuteSubL`, `ExecuteSubAFromIndirectHL` |
 | `ADC` | `ApplyAdditionFlags` | `ExecuteAdcA`, `ExecuteAdcB`, `ExecuteAdcC`, `ExecuteAdcD`, `ExecuteAdcE`, `ExecuteAdcH`, `ExecuteAdcL` |
 | `OR` | `ApplyOrFlags` | `ExecuteOrA`, `ExecuteOrB`, `ExecuteOrC`, `ExecuteOrD`, `ExecuteOrE`, `ExecuteOrH`, `ExecuteOrL` |
+| `XOR` | `ApplyXorFlags` | `ExecuteXorA`, `ExecuteXorB`, `ExecuteXorC`, `ExecuteXorD`, `ExecuteXorE`, `ExecuteXorH`, `ExecuteXorL`, `ExecuteXorAFromIndirectHL` |
 
 The ADC handlers use `AdcWithCarryWrapper` which extracts the carry flag via `CarryIn()` before calling `UtilityLib::AddWithCarryIn()`.
 
@@ -172,6 +175,16 @@ Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) v
 | 0xA6 | `AND A, (HL)` | `ExecuteAndAFromIndirectHL` | A = A & value at HL |
 | 0xA7 | `AND A, A` | `ExecuteAndA` | A = A & A |
 
+#### Logical XOR
+
+| Opcode(s) | Mnemonic | Handler | Description |
+|-----------|----------|---------|-------------|
+| 0xA8-0xAD | `XOR A, r` | `ExecuteXorB`–`ExecuteXorL` | A = A ^ r (register operand) |
+| 0xAE | `XOR A, (HL)` | `ExecuteXorAFromIndirectHL` | A = A ^ value at HL |
+| 0xAF | `XOR A, A` | `ExecuteXorA` | A = A ^ A |
+
+All XOR forms set Zero only when the result is zero and clear Subtract, HalfCarry, and Carry.
+
 #### Logical OR
 
 | Opcode(s) | Mnemonic | Handler | Description |
@@ -195,7 +208,7 @@ is zero and clear Subtract, HalfCarry, and Carry.
 Major categories not yet implemented:
 
 - **Control flow**: JP, JR, CALL, RET, RST, DJNZ, STOP
-- **Logic**: XOR, CPL
+- **Logic**: CPL
 - **Shift/Rotate**: SLA, SRL, SLL, SLL, RL, RR, RLC, RRC
 - **Decimal adjustment**: DAA
 - **Special**: SCF, CCF, HALT, EI, DI

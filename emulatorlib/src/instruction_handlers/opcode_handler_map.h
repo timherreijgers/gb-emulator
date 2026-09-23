@@ -7,6 +7,7 @@
 
 #include "emulatorlib/instruction_handler.h"
 #include "or_a_from_indirect_hl.h"
+#include "xor_a_from_indirect_hl.h"
 
 #include "instruction_handlers/adc_a_from_indirect_hl.h"
 #include "instruction_handlers/adc_a_n8.h"
@@ -205,6 +206,14 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0xA5] = ExecuteAndL;
     handlers[0xA6] = ExecuteAndAFromIndirectHL;
     handlers[0xA7] = ExecuteAndA;
+    handlers[0xA8] = ExecuteXorB;
+    handlers[0xA9] = ExecuteXorC;
+    handlers[0xAA] = ExecuteXorD;
+    handlers[0xAB] = ExecuteXorE;
+    handlers[0xAC] = ExecuteXorH;
+    handlers[0xAD] = ExecuteXorL;
+    handlers[0xAE] = ExecuteXorAFromIndirectHL;
+    handlers[0xAF] = ExecuteXorA;
 
     handlers[0xB0] = ExecuteOrB;
     handlers[0xB1] = ExecuteOrC;

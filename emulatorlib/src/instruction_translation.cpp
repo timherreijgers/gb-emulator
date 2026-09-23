@@ -167,6 +167,14 @@ namespace
     names[0xA5] = "AndL";
     names[0xA6] = "AndAFromIndirectHL";
     names[0xA7] = "AndA";
+    names[0xA8] = "XorB";
+    names[0xA9] = "XorC";
+    names[0xAA] = "XorD";
+    names[0xAB] = "XorE";
+    names[0xAC] = "XorH";
+    names[0xAD] = "XorL";
+    names[0xAE] = "XorAFromIndirectHL";
+    names[0xAF] = "XorA";
 
     names[0xB0] = "OrB";
     names[0xB1] = "OrC";
