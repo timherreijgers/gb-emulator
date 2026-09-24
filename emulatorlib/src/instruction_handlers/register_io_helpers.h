@@ -38,6 +38,10 @@ using RegisterL = decltype([](CpuRegisters& registers) -> Register8Bit& {
     return registers.lRegister;
 });
 
+using RegisterZ = decltype([](CpuRegisters& registers) -> Register8Bit& {
+    return registers.zRegister;
+});
+
 using RegisterAF = decltype([](CpuRegisters& registers) -> Register16Bit& {
     return registers.afRegister;
 });

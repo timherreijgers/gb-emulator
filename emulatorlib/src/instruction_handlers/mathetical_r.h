@@ -69,7 +69,7 @@ constexpr auto XorOperand = [](std::byte left, std::byte right) noexcept -> Util
     return {result, 0x00_b};
 };
 
-template <ReturnsRegister8Bit TargetRegister, MathOperand Operand, SetFlagFunction FlagFunction>
+template <ReturnsRegister8Bit TargetRegister, MathOperand Operand, SetFlagFunction FlagFunction, ReturnsRegister8Bit AccumulatorRegister = RegisterA>
 constexpr auto ExecuteMathOperandR = [](const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     auto& targetRegister = TargetRegister{}(cpuRegisters);
 
@@ -85,7 +85,7 @@ constexpr auto ExecuteMathOperandR = [](const AddressBus& /*addressBus*/, CpuReg
         }
     }();
 
-    cpuRegisters.accumulator = result;
+    AccumulatorRegister{}(cpuRegisters) = result;
 
     FlagFunction{}(cpuRegisters, result, carry);
 
@@ -147,5 +147,14 @@ constexpr auto ExecuteXorD = ExecuteMathOperandR<RegisterD, decltype(XorOperand)
 constexpr auto ExecuteXorE = ExecuteMathOperandR<RegisterE, decltype(XorOperand), decltype(ApplyXorFlags)>;
 constexpr auto ExecuteXorH = ExecuteMathOperandR<RegisterH, decltype(XorOperand), decltype(ApplyXorFlags)>;
 constexpr auto ExecuteXorL = ExecuteMathOperandR<RegisterL, decltype(XorOperand), decltype(ApplyXorFlags)>;
+
+// TODO: Do we want to write to Z register as "sink" instead of actually ignoring the return value of the subtraction?
+constexpr auto ExecuteCpA = ExecuteMathOperandR<RegisterA, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags), RegisterZ>;
+constexpr auto ExecuteCpB = ExecuteMathOperandR<RegisterB, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags), RegisterZ>;
+constexpr auto ExecuteCpC = ExecuteMathOperandR<RegisterC, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags), RegisterZ>;
+constexpr auto ExecuteCpD = ExecuteMathOperandR<RegisterD, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags), RegisterZ>;
+constexpr auto ExecuteCpE = ExecuteMathOperandR<RegisterE, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags), RegisterZ>;
+constexpr auto ExecuteCpH = ExecuteMathOperandR<RegisterH, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags), RegisterZ>;
+constexpr auto ExecuteCpL = ExecuteMathOperandR<RegisterL, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags), RegisterZ>;
 
 } // namespace EmulatorLib

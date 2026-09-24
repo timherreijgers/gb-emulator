@@ -184,6 +184,14 @@ namespace
     names[0xB5] = "OrL";
     names[0xB6] = "OrAFromIndirectHL";
     names[0xB7] = "OrA";
+    names[0xB8] = "CpB";
+    names[0xB9] = "CpC";
+    names[0xBA] = "CpD";
+    names[0xBB] = "CpE";
+    names[0xBC] = "CpH";
+    names[0xBD] = "CpL";
+    names[0xBE] = "CpAFromIndirectHL";
+    names[0xBF] = "CpA";
 
     names[0xC1] = "POP_BC";
     names[0xC5] = "PUSH_BC";

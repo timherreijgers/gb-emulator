@@ -74,6 +74,9 @@ Parameterized tests for each instruction family:
 | `sbc_r_test.cpp` | `SBC A, r` |
 | `sbc_a_test.cpp` | `SBC A, A` |
 | `sbc_a_from_indirect_hl_test.cpp` | `SBC A, (HL)` |
+| `cp_r_test.cpp` | `CP A, r` for register operands B, C, D, E, H, and L |
+| `cp_a_from_indirect_hl_test.cpp` | `CP A, (HL)` |
+| `cp_a_test.cpp` | `CP A, A` |
 | `and_r_test.cpp` | `AND A, r` for register operands B, C, D, E, H, and L |
 | `and_a_from_indirect_hl_test.cpp` | `AND A, (HL)` |
 | `and_a_test.cpp` | `AND A, A` |
