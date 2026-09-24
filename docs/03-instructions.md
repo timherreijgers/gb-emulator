@@ -92,6 +92,7 @@ Uses concepts to support two operand styles:
 |-----------|---------------|----------|
 | `ADD` | `ApplyAdditionFlags` | `ExecuteAddA`, `ExecuteAddB`, `ExecuteAddC`, `ExecuteAddD`, `ExecuteAddE`, `ExecuteAddH`, `ExecuteAddL` |
 | `SUB` | `ApplySubtractionFlags` | `ExecuteSubA`, `ExecuteSubB`, `ExecuteSubC`, `ExecuteSubD`, `ExecuteSubE`, `ExecuteSubH`, `ExecuteSubL`, `ExecuteSubAFromIndirectHL` |
+| `CP` | `ApplySubtractionFlags` | `ExecuteCpA`, `ExecuteCpB`, `ExecuteCpC`, `ExecuteCpD`, `ExecuteCpE`, `ExecuteCpH`, `ExecuteCpL` |
 | `ADC` | `ApplyAdditionFlags` | `ExecuteAdcA`, `ExecuteAdcB`, `ExecuteAdcC`, `ExecuteAdcD`, `ExecuteAdcE`, `ExecuteAdcH`, `ExecuteAdcL` |
 | `OR` | `ApplyOrFlags` | `ExecuteOrA`, `ExecuteOrB`, `ExecuteOrC`, `ExecuteOrD`, `ExecuteOrE`, `ExecuteOrH`, `ExecuteOrL` |
 | `XOR` | `ApplyXorFlags` | `ExecuteXorA`, `ExecuteXorB`, `ExecuteXorC`, `ExecuteXorD`, `ExecuteXorE`, `ExecuteXorH`, `ExecuteXorL`, `ExecuteXorAFromIndirectHL` |
@@ -151,7 +152,7 @@ The ADC handlers use `AdcWithCarryWrapper` which extracts the carry flag via `Ca
 
 Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) via `ExecuteAddAFromIndirectHL`,
 `ADC A,(HL)` (0x8E) via `ExecuteAdcAFromIndirectHL`, `SUB A,(HL)` (0x96) via `ExecuteSubAFromIndirectHL`, and
-`OR A,(HL)` (0xB6) via `ExecuteOrAFromIndirectHL`.
+`OR A,(HL)` (0xB6) via `ExecuteOrAFromIndirectHL`, and `CP A,(HL)` (0xBE) via `ExecuteCpAFromIndirectHL`.
 
 #### Subtraction
 
@@ -166,6 +167,14 @@ Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) v
 |-----------|----------|---------|-------------|
 | 0x98-0x9D, 0x9F | `SBC A, r` | `ExecuteSbcB`–`ExecuteSbcL`, `ExecuteSbcA` (via `mathetical_r.h`) | A = A - r - C flag |
 | 0x9E | `SBC A, (HL)` | `ExecuteSbcAFromIndirectHL` | A = A - value at HL - C flag |
+
+#### Compare
+
+| Opcode(s) | Mnemonic | Handler | Description |
+|-----------|----------|---------|-------------|
+| 0xB8-0xBD | `CP A, r` | `ExecuteCpB`–`ExecuteCpL` | Set subtraction flags for A - r without modifying A |
+| 0xBE | `CP A, (HL)` | `ExecuteCpAFromIndirectHL` | Set subtraction flags for A - value at HL without modifying A |
+| 0xBF | `CP A, A` | `ExecuteCpA` | Set subtraction flags for A - A without modifying A |
 
 #### Logical AND
 

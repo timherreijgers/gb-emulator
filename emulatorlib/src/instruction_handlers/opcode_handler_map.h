@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "cp_a_from_indirect_hl.h"
 #include "emulatorlib/instruction_handler.h"
 #include "or_a_from_indirect_hl.h"
 #include "xor_a_from_indirect_hl.h"
@@ -223,6 +224,14 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0xB5] = ExecuteOrL;
     handlers[0xB6] = ExecuteOrAFromIndirectHL;
     handlers[0xB7] = ExecuteOrA;
+    handlers[0xB8] = ExecuteCpB;
+    handlers[0xB9] = ExecuteCpC;
+    handlers[0xBA] = ExecuteCpD;
+    handlers[0xBB] = ExecuteCpE;
+    handlers[0xBC] = ExecuteCpH;
+    handlers[0xBD] = ExecuteCpL;
+    handlers[0xBE] = ExecuteCpAFromIndirectHL;
+    handlers[0xBF] = ExecuteCpA;
 
     handlers[0xC1] = ExecutePopBC;
     handlers[0xC5] = ExecutePushBC;
