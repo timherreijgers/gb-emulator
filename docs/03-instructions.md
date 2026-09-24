@@ -160,6 +160,7 @@ Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) v
 |-----------|------------|----------------------------------------------------|----------------------------|
 | 0x90-0x95, 0x97 | `SUB r` | `ExecuteSubB`–`ExecuteSubL`, `ExecuteSubA` (via `mathetical_r.h`) | A = A - r (register operand) |
 | 0x96      | `SUB A, (HL)` | `ExecuteSubAFromIndirectHL`                      | A = A - value at HL                  |
+| 0xD6      | `SUB A, n` | `ExecuteSubAn8`                                    | A = A - n (immediate)                |
 
 #### Subtraction with Borrow
 
@@ -167,6 +168,7 @@ Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) v
 |-----------|----------|---------|-------------|
 | 0x98-0x9D, 0x9F | `SBC A, r` | `ExecuteSbcB`–`ExecuteSbcL`, `ExecuteSbcA` (via `mathetical_r.h`) | A = A - r - C flag |
 | 0x9E | `SBC A, (HL)` | `ExecuteSbcAFromIndirectHL` | A = A - value at HL - C flag |
+| 0xDE | `SBC A, n` | `ExecuteSbcAn8` | A = A - n - C flag |
 
 #### Compare
 
@@ -175,6 +177,7 @@ Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) v
 | 0xB8-0xBD | `CP A, r` | `ExecuteCpB`–`ExecuteCpL` | Set subtraction flags for A - r without modifying A |
 | 0xBE | `CP A, (HL)` | `ExecuteCpAFromIndirectHL` | Set subtraction flags for A - value at HL without modifying A |
 | 0xBF | `CP A, A` | `ExecuteCpA` | Set subtraction flags for A - A without modifying A |
+| 0xFE | `CP A, n` | `ExecuteCpAn8` | Set subtraction flags for A - n without modifying A |
 
 #### Logical AND
 
@@ -183,6 +186,7 @@ Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) v
 | 0xA0-0xA5 | `AND A, r` | `ExecuteAndB`–`ExecuteAndL` | A = A & r (register operand) |
 | 0xA6 | `AND A, (HL)` | `ExecuteAndAFromIndirectHL` | A = A & value at HL |
 | 0xA7 | `AND A, A` | `ExecuteAndA` | A = A & A |
+| 0xE6 | `AND A, n` | `ExecuteAndAn8` | A = A & n (immediate) |
 
 #### Logical XOR
 
@@ -191,6 +195,7 @@ Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) v
 | 0xA8-0xAD | `XOR A, r` | `ExecuteXorB`–`ExecuteXorL` | A = A ^ r (register operand) |
 | 0xAE | `XOR A, (HL)` | `ExecuteXorAFromIndirectHL` | A = A ^ value at HL |
 | 0xAF | `XOR A, A` | `ExecuteXorA` | A = A ^ A |
+| 0xEE | `XOR A, n` | `ExecuteXorAn8` | A = A ^ n (immediate) |
 
 All XOR forms set Zero only when the result is zero and clear Subtract, HalfCarry, and Carry.
 
@@ -201,6 +206,7 @@ All XOR forms set Zero only when the result is zero and clear Subtract, HalfCarr
 | 0xB0-0xB5 | `OR A, r` | `ExecuteOrB`–`ExecuteOrL` | A = A \| r (register operand) |
 | 0xB6 | `OR A, (HL)` | `ExecuteOrAFromIndirectHL` | A = A \| value at HL |
 | 0xB7 | `OR A, A` | `ExecuteOrA` | A = A \| A |
+| 0xF6 | `OR A, n` | `ExecuteOrAn8` | A = A \| n (immediate) |
 
 `OR A, (HL)` reads the operand, yields for one M-cycle, then updates A. All OR forms set Zero only when the result
 is zero and clear Subtract, HalfCarry, and Carry.

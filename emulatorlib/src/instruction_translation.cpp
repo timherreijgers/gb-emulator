@@ -201,20 +201,26 @@ namespace
 
     names[0xD1] = "POP_DE";
     names[0xD5] = "PUSH_DE";
+    names[0xD6] = "SubAn8";
+    names[0xDE] = "SbcAn8";
 
     names[0xE0] = "LoadIndirectA8FromA";
     names[0xE1] = "POP_HL";
     names[0xE5] = "PUSH_HL";
+    names[0xE6] = "AndAn8";
+    names[0xEE] = "XorAn8";
     names[0xE2] = "LoadIndirectCFromA";
     names[0xEA] = "LoadIndirectA16FromA";
 
     names[0xF0] = "LoadAFromIndirectA8";
     names[0xF1] = "POP_AF";
     names[0xF5] = "PUSH_AF";
+    names[0xF6] = "OrAn8";
     names[0xF2] = "LoadAFromIndirectC";
     names[0xF8] = "LoadHLFromSPPlusE";
     names[0xF9] = "Load_SP_HL";
     names[0xFA] = "LoadAFromIndirectA16";
+    names[0xFE] = "CpAn8";
 
     return names;
 }

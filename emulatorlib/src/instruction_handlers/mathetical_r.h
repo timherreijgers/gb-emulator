@@ -157,4 +157,37 @@ constexpr auto ExecuteCpE = ExecuteMathOperandR<RegisterE, decltype(UtilityLib::
 constexpr auto ExecuteCpH = ExecuteMathOperandR<RegisterH, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags), RegisterZ>;
 constexpr auto ExecuteCpL = ExecuteMathOperandR<RegisterL, decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags), RegisterZ>;
 
+template <MathOperand Operand, SetFlagFunction FlagFunction, ReturnsRegister8Bit AccumulatorRegister = RegisterA>
+constexpr auto ExecuteMathN8 = [](const AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
+    cpuRegisters.zRegister = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
+    co_yield std::monostate{};
+
+    const auto [result, carry] = [&] {
+        if constexpr (MathOperandWithoutRegisters<Operand>)
+        {
+            return Operand{}(cpuRegisters.accumulator.value, cpuRegisters.zRegister.value);
+        }
+
+        if constexpr (MathOperandWithRegisters<Operand>)
+        {
+            return Operand{}(cpuRegisters, cpuRegisters.accumulator.value, cpuRegisters.zRegister.value);
+        }
+    }();
+
+    AccumulatorRegister{}(cpuRegisters) = result;
+    FlagFunction{}(cpuRegisters, result, carry);
+
+    co_return;
+};
+
+constexpr auto ExecuteAddAn8 = ExecuteMathN8<decltype(UtilityLib::AddWithCarry), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteAdcAn8 = ExecuteMathN8<decltype(AdcWithCarryWrapper), decltype(ApplyAdditionFlags)>;
+constexpr auto ExecuteSubAn8 = ExecuteMathN8<decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags)>;
+constexpr auto ExecuteSbcAn8 = ExecuteMathN8<decltype(SbcWithBorrowWrapper), decltype(ApplySubtractionFlags)>;
+constexpr auto ExecuteAndAn8 = ExecuteMathN8<decltype(AndOperand), decltype(ApplyAndFlags)>;
+constexpr auto ExecuteOrAn8 = ExecuteMathN8<decltype(OrOperand), decltype(ApplyOrFlags)>;
+constexpr auto ExecuteXorAn8 = ExecuteMathN8<decltype(XorOperand), decltype(ApplyXorFlags)>;
+// TODO: Do we want to write to Z register as "sink" instead of actually ignoring the return value of the subtraction?
+constexpr auto ExecuteCpAn8 = ExecuteMathN8<decltype(UtilityLib::SubWithBorrow), decltype(ApplySubtractionFlags), RegisterZ>;
+
 } // namespace EmulatorLib
