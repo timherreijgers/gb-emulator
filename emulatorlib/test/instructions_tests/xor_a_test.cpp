@@ -19,7 +19,7 @@ protected:
     }
 };
 
-TEST_F(XorATest, ExecutingOpCode_SetsZeroFlagAndClearsOtherFlags)
+TEST_F(XorATest, ExecutingOpCode)
 {
     m_program.WriteProgram({0xAF_b, 0x00_b});
     m_cpu.Registers().flags = CpuFlags::Subtract.AsByte() | CpuFlags::HalfCarry.AsByte() | CpuFlags::Carry.AsByte();
