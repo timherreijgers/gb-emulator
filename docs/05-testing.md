@@ -71,18 +71,24 @@ Parameterized tests for each instruction family:
 | `sub_r_test.cpp` | `SUB r` |
 | `sub_a_test.cpp` | (alias for sub_r / SUB A) |
 | `sub_a_from_indirect_hl_test.cpp` | `SUB A, (HL)` |
+| `sub_a_n8_test.cpp` | `SUB A, n` |
 | `sbc_r_test.cpp` | `SBC A, r` |
 | `sbc_a_test.cpp` | `SBC A, A` |
 | `sbc_a_from_indirect_hl_test.cpp` | `SBC A, (HL)` |
+| `sbc_a_n8_test.cpp` | `SBC A, n` |
 | `cp_r_test.cpp` | `CP A, r` for register operands B, C, D, E, H, and L |
 | `cp_a_from_indirect_hl_test.cpp` | `CP A, (HL)` |
 | `cp_a_test.cpp` | `CP A, A` |
+| `cp_a_n8_test.cpp` | `CP A, n` |
 | `and_r_test.cpp` | `AND A, r` for register operands B, C, D, E, H, and L |
 | `and_a_from_indirect_hl_test.cpp` | `AND A, (HL)` |
 | `and_a_test.cpp` | `AND A, A` |
+| `and_a_n8_test.cpp` | `AND A, n` |
+| `xor_a_n8_test.cpp` | `XOR A, n` |
 | `or_r_test.cpp` | `OR A, r` for register operands B, C, D, E, H, and L |
 | `or_a_from_indirect_hl_test.cpp` | `OR A, (HL)` |
 | `or_a_test.cpp` | `OR A, A` |
+| `or_a_n8_test.cpp` | `OR A, n` |
 | `inc_r_test.cpp` | `INC r` |
 | `dec_r_test.cpp` | `DEC r` |
 | `load_hl_indirect_increment_a_test.cpp` | `LD A, (HL+)` |

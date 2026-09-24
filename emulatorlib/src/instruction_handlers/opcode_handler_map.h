@@ -5,16 +5,12 @@
 
 #pragma once
 
-#include "cp_a_from_indirect_hl.h"
 #include "emulatorlib/instruction_handler.h"
-#include "or_a_from_indirect_hl.h"
-#include "xor_a_from_indirect_hl.h"
 
 #include "instruction_handlers/adc_a_from_indirect_hl.h"
-#include "instruction_handlers/adc_a_n8.h"
 #include "instruction_handlers/add_a_from_indirect_hl.h"
-#include "instruction_handlers/add_a_n8.h"
 #include "instruction_handlers/and_a_from_indirect_hl.h"
+#include "instruction_handlers/cp_a_from_indirect_hl.h"
 #include "instruction_handlers/dec_r.h"
 #include "instruction_handlers/inc_r.h"
 #include "instruction_handlers/load_a16_sp.h"
@@ -31,10 +27,12 @@
 #include "instruction_handlers/load_rr_n16.h"
 #include "instruction_handlers/load_rr_rr.h"
 #include "instruction_handlers/mathetical_r.h"
+#include "instruction_handlers/or_a_from_indirect_hl.h"
 #include "instruction_handlers/pop_rr.h"
 #include "instruction_handlers/push_rr.h"
 #include "instruction_handlers/sbc_a_from_indirect_hl.h"
 #include "instruction_handlers/sub_a_from_indirect_hl.h"
+#include "instruction_handlers/xor_a_from_indirect_hl.h"
 
 #include <array>
 #include <stdexcept>
@@ -241,20 +239,26 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
 
     handlers[0xD1] = ExecutePopDE;
     handlers[0xD5] = ExecutePushDE;
+    handlers[0xD6] = ExecuteSubAn8;
+    handlers[0xDE] = ExecuteSbcAn8;
 
     handlers[0xE0] = ExecuteLoadIndirectA8FromA;
     handlers[0xE1] = ExecutePopHL;
-    handlers[0xE5] = ExecutePushHL;
     handlers[0xE2] = ExecuteLoadIndirectCFromA;
+    handlers[0xE5] = ExecutePushHL;
+    handlers[0xE6] = ExecuteAndAn8;
     handlers[0xEA] = ExecuteLoadIndirectA16FromA;
+    handlers[0xEE] = ExecuteXorAn8;
 
     handlers[0xF0] = ExecuteLoadAFromIndirectA8;
     handlers[0xF1] = ExecutePopAF;
-    handlers[0xF5] = ExecutePushAF;
     handlers[0xF2] = ExecuteLoadAFromIndirectC;
+    handlers[0xF5] = ExecutePushAF;
+    handlers[0xF6] = ExecuteOrAn8;
     handlers[0xF8] = ExecuteLoadSPFromHlPlusE8;
     handlers[0xF9] = ExecuteLoad_SP_HL;
     handlers[0xFA] = ExecuteLoadAFromIndirectA16;
+    handlers[0xFE] = ExecuteCpAn8;
 
     return handlers;
 }
