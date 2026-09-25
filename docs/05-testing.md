@@ -94,6 +94,9 @@ Parameterized tests for each instruction family:
 | `load_hl_indirect_increment_a_test.cpp` | `LD A, (HL+)` |
 | `load_hl_indirect_decrement_a_test.cpp` | `LD A, (HL-)` |
 | `load_indirect_8bit_test.cpp` | `LD (HL), n` |
+| `jump_a16_test.cpp` | `JP a16` |
+| `jump_cc_a16_test.cpp` | `JP cc, a16` |
+| `jump_hl_test.cpp` | `JP HL` |
 
 ### Test Pattern
 Instruction tests typically follow this pattern:

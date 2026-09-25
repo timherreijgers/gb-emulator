@@ -194,20 +194,26 @@ namespace
     names[0xBF] = "CpA";
 
     names[0xC1] = "POP_BC";
+    names[0xC2] = "JumpNotZeroA16";
+    names[0xC3] = "JP_A16";
     names[0xC5] = "PUSH_BC";
 
     names[0xC6] = "AddAn8";
+    names[0xCA] = "JumpZeroA16";
     names[0xCE] = "AdcAn8";
 
     names[0xD1] = "POP_DE";
+    names[0xD2] = "JumpNotCarryA16";
     names[0xD5] = "PUSH_DE";
     names[0xD6] = "SubAn8";
+    names[0xDA] = "JumpCarryA16";
     names[0xDE] = "SbcAn8";
 
     names[0xE0] = "LoadIndirectA8FromA";
     names[0xE1] = "POP_HL";
     names[0xE5] = "PUSH_HL";
     names[0xE6] = "AndAn8";
+    names[0xE9] = "JumpHL";
     names[0xEE] = "XorAn8";
     names[0xE2] = "LoadIndirectCFromA";
     names[0xEA] = "LoadIndirectA16FromA";

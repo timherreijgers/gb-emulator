@@ -6,6 +6,8 @@
 #pragma once
 
 #include "emulatorlib/instruction_handler.h"
+#include "jump_a16.h"
+#include "jump_hl.h"
 
 #include "instruction_handlers/adc_a_from_indirect_hl.h"
 #include "instruction_handlers/add_a_from_indirect_hl.h"
@@ -233,14 +235,19 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0xBF] = ExecuteCpA;
 
     handlers[0xC1] = ExecutePopBC;
+    handlers[0xC2] = ExecuteJumpNzA16;
+    handlers[0xC3] = ExecuteJumpA16;
     handlers[0xC5] = ExecutePushBC;
 
     handlers[0xC6] = ExecuteAddAn8;
+    handlers[0xCA] = ExecuteJumpZA16;
     handlers[0xCE] = ExecuteAdcAn8;
 
     handlers[0xD1] = ExecutePopDE;
+    handlers[0xD2] = ExecuteJumpNcA16;
     handlers[0xD5] = ExecutePushDE;
     handlers[0xD6] = ExecuteSubAn8;
+    handlers[0xDA] = ExecuteJumpCA16;
     handlers[0xDE] = ExecuteSbcAn8;
 
     handlers[0xE0] = ExecuteLoadIndirectA8FromA;
@@ -248,6 +255,7 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0xE2] = ExecuteLoadIndirectCFromA;
     handlers[0xE5] = ExecutePushHL;
     handlers[0xE6] = ExecuteAndAn8;
+    handlers[0xE9] = ExecuteJumpHl;
     handlers[0xEA] = ExecuteLoadIndirectA16FromA;
     handlers[0xEE] = ExecuteXorAn8;
 
