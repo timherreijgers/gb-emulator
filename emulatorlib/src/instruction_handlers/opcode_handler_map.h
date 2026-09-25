@@ -35,14 +35,15 @@
 #include "instruction_handlers/xor_a_from_indirect_hl.h"
 
 #include <array>
+#include <format>
 #include <stdexcept>
 
 namespace EmulatorLib
 {
 
-InstructionHandler UnimplementedOpcode(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRegisters*/)
+InstructionHandler UnimplementedOpcode(AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters)
 {
-    throw std::runtime_error("Unimplemented opcode");
+    throw std::runtime_error(std::format("Unimplemented opcode: {}", cpuRegisters.instructionRegister.value));
 }
 
 InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRegisters*/) noexcept
