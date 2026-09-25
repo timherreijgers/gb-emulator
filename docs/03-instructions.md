@@ -132,6 +132,24 @@ The ADC handlers use `AdcWithCarryWrapper` which extracts the carry flag via `Ca
 | 0xC1, 0xD1, 0xE1, 0xF1 | `POP rr`  | `ExecutePopRr`  | Pop 16-bit register from stack  |
 | 0xC5, 0xD5, 0xE5, 0xF5 | `PUSH rr` | `ExecutePushRr` | Push 16-bit register onto stack |
 
+### Jump Instructions
+
+| Opcode | Mnemonic | Handler | Description |
+|--------|----------|---------|-------------|
+| 0xC2 | `JP NZ, a16` | `ExecuteJumpNzA16` | Jump when the Zero flag is clear |
+| 0xC3 | `JP a16` | `ExecuteJumpA16` | Unconditionally jump to `a16` |
+| 0xCA | `JP Z, a16` | `ExecuteJumpZA16` | Jump when the Zero flag is set |
+| 0xD2 | `JP NC, a16` | `ExecuteJumpNcA16` | Jump when the Carry flag is clear |
+| 0xDA | `JP C, a16` | `ExecuteJumpCA16` | Jump when the Carry flag is set |
+| 0xE9 | `JP HL` | `ExecuteJumpHl` | Jump to the address in HL |
+
+The `a16` forms read a little-endian address operand. An unconditional jump and a taken conditional jump set the
+program counter to that address; an untaken conditional jump continues at the following instruction. The absolute
+jump forms are specified by `jump_a16_test.cpp` and `jump_cc_a16_test.cpp`.
+
+`JP HL` has no operand bytes and sets the program counter directly from HL. Its behavior is specified by
+`jump_hl_test.cpp`.
+
 ### Arithmetic Instructions
 
 #### Addition
@@ -222,7 +240,7 @@ is zero and clear Subtract, HalfCarry, and Carry.
 
 Major categories not yet implemented:
 
-- **Control flow**: JP, JR, CALL, RET, RST, DJNZ, STOP
+- **Control flow**: JR, CALL, RET, RST, DJNZ, STOP
 - **Logic**: CPL
 - **Shift/Rotate**: SLA, SRL, SLL, SLL, RL, RR, RLC, RRC
 - **Decimal adjustment**: DAA
