@@ -6,8 +6,6 @@
 #pragma once
 
 #include "emulatorlib/instruction_handler.h"
-#include "jump_a16.h"
-#include "jump_hl.h"
 
 #include "instruction_handlers/adc_a_from_indirect_hl.h"
 #include "instruction_handlers/add_a_from_indirect_hl.h"
@@ -15,6 +13,8 @@
 #include "instruction_handlers/cp_a_from_indirect_hl.h"
 #include "instruction_handlers/dec_r.h"
 #include "instruction_handlers/inc_r.h"
+#include "instruction_handlers/jump_a16.h"
+#include "instruction_handlers/jump_hl.h"
 #include "instruction_handlers/load_a16_sp.h"
 #include "instruction_handlers/load_a_from_indirect_address.h"
 #include "instruction_handlers/load_a_from_indirect_c.h"
