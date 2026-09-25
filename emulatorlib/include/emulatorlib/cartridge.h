@@ -5,8 +5,9 @@
 
 #pragma once
 
+#include "address_bus_addressable.h"
+
 #include <cstddef>
-#include <cstdint>
 #include <filesystem>
 #include <format>
 #include <stdexcept>
@@ -67,7 +68,7 @@ struct InvalidRomException : std::runtime_error
         : std::runtime_error(std::format("ROM file {} is invalid", romPath.string())) {}
 };
 
-class Cartridge
+class Cartridge : public AddressBusAddressable
 {
 public:
     Cartridge(std::filesystem::path romPath);
@@ -84,6 +85,9 @@ public:
 
     [[nodiscard]] auto RomData() const noexcept -> const std::vector<std::byte>&;
     [[nodiscard]] auto RomPath() const noexcept -> const std::filesystem::path&;
+
+    void WriteToAddress(uint16_t address, std::byte data) noexcept override;
+    [[nodiscard]] auto ReadFromAddress(uint16_t address) const noexcept -> std::byte override;
 
 private:
     std::filesystem::path m_romPath;

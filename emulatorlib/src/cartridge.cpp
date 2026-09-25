@@ -18,6 +18,7 @@ namespace
 {
 
 constexpr auto g_nintendoLogoRomOffset = 0x104;
+constexpr auto g_romEndAddress = 0x7FFF;
 
 constexpr std::array<std::byte, 4 * 12> g_nintendoLogoData = {
     0xCE_b, 0xED_b, 0x66_b, 0x66_b,
@@ -127,6 +128,19 @@ auto Cartridge::RomData() const noexcept -> const std::vector<std::byte>&
 auto Cartridge::RomPath() const noexcept -> const std::filesystem::path&
 {
     return m_romPath;
+}
+void Cartridge::WriteToAddress(uint16_t /*address*/, std::byte /*data*/) noexcept
+{
+}
+
+auto Cartridge::ReadFromAddress(uint16_t address) const noexcept -> std::byte
+{
+    if (address > g_romEndAddress)
+    {
+        return 0x00_b;
+    }
+
+    return m_romData[address];
 }
 
 } // namespace EmulatorLib

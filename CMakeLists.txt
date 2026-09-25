@@ -14,3 +14,5 @@ add_subdirectory(emulatorlib)
 add_subdirectory(utilitylib)
 
 add_executable(gb_emulator main.cpp)
+
+target_link_libraries(gb_emulator PRIVATE emulatorlib)

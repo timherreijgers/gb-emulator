@@ -81,4 +81,24 @@ TEST_F(CartridgeTest, RomPath_ReturnsCorrectPath)
     ASSERT_THAT(cartridge.RomPath(), ::testing::Eq(m_romPath));
 }
 
+TEST_F(CartridgeTest, ReadFromAddress_ReturnsCorrectRomData)
+{
+    constexpr auto rom = CreateRomOfSize<0x8000>();
+    WriteRomToDisk(rom);
+
+    Cartridge cartridge(m_romPath);
+
+    ASSERT_THAT(cartridge.ReadFromAddress(0x1000), ::testing::Eq(rom[0x1000]));
+}
+
+TEST_F(CartridgeTest, ReadFromAddress_OutsideBounds_ReturnsZero)
+{
+    constexpr auto rom = CreateRomOfSize<0x8000>();
+    WriteRomToDisk(rom);
+
+    Cartridge cartridge(m_romPath);
+
+    ASSERT_THAT(cartridge.ReadFromAddress(0x8000), ::testing::Eq(0x00_b));
+}
+
 } // namespace EmulatorLib::Test
