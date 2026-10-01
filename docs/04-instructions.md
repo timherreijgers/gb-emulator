@@ -95,7 +95,7 @@ Uses concepts to support two operand styles:
 | `CP` | `ApplySubtractionFlags` | `ExecuteCpA`, `ExecuteCpB`, `ExecuteCpC`, `ExecuteCpD`, `ExecuteCpE`, `ExecuteCpH`, `ExecuteCpL` |
 | `ADC` | `ApplyAdditionFlags` | `ExecuteAdcA`, `ExecuteAdcB`, `ExecuteAdcC`, `ExecuteAdcD`, `ExecuteAdcE`, `ExecuteAdcH`, `ExecuteAdcL` |
 | `OR` | `ApplyOrFlags` | `ExecuteOrA`, `ExecuteOrB`, `ExecuteOrC`, `ExecuteOrD`, `ExecuteOrE`, `ExecuteOrH`, `ExecuteOrL` |
-| `XOR` | `ApplyXorFlags` | `ExecuteXorA`, `ExecuteXorB`, `ExecuteXorC`, `ExecuteXorD`, `ExecuteXorE`, `ExecuteXorH`, `ExecuteXorL`, `ExecuteXorAFromIndirectHL` |
+| `XOR` | `ApplyXorFlags` | `ExecuteXorA`, `ExecuteXorB`, `ExecuteXorC`, `ExecuteXorD`, `ExecuteXorE`, `ExecuteXorH`, `ExecuteXorL` |
 
 The ADC handlers use `AdcWithCarryWrapper` which extracts the carry flag via `CarryIn()` before calling `UtilityLib::AddWithCarryIn()`.
 
@@ -145,7 +145,7 @@ The ADC handlers use `AdcWithCarryWrapper` which extracts the carry flag via `Ca
 
 The `a16` forms read a little-endian address operand. An unconditional jump and a taken conditional jump set the
 program counter to that address; an untaken conditional jump continues at the following instruction. The absolute
-jump forms are specified by `jump_a16_test.cpp` and `jump_cc_a16_test.cpp`.
+jump forms are specified by `jump_a16_test.cpp` and `jump_conditional_a16_test.cpp`.
 
 `JP HL` has no operand bytes and sets the program counter directly from HL. Its behavior is specified by
 `jump_hl_test.cpp`.
@@ -169,8 +169,9 @@ jump forms are specified by `jump_a16_test.cpp` and `jump_cc_a16_test.cpp`.
 | 0xCE      | `ADC A, n` | `ExecuteAdcAn8`                                      | A = A + n + C flag                      |
 
 Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) via `ExecuteAddAFromIndirectHL`,
-`ADC A,(HL)` (0x8E) via `ExecuteAdcAFromIndirectHL`, `SUB A,(HL)` (0x96) via `ExecuteSubAFromIndirectHL`, and
-`OR A,(HL)` (0xB6) via `ExecuteOrAFromIndirectHL`, and `CP A,(HL)` (0xBE) via `ExecuteCpAFromIndirectHL`.
+`ADC A,(HL)` (0x8E) via `ExecuteAdcAFromIndirectHL`, `SUB A,(HL)` (0x96) via `ExecuteSubAFromIndirectHL`,
+`XOR A,(HL)` (0xAE) via `ExecuteXorAFromIndirectHL`, `OR A,(HL)` (0xB6) via `ExecuteOrAFromIndirectHL`, and
+`CP A,(HL)` (0xBE) via `ExecuteCpAFromIndirectHL`.
 
 #### Subtraction
 
