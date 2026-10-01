@@ -42,10 +42,11 @@ For other configurations (RelWithDebInfo, Release), adjust the preset accordingl
 When working on this project:
 
 1. **Read the `docs/` folder first** — all documentation is numbered and should be read in order
-2. **Always make incremental changes** — small, focused commits
-3. **Always use TDD** — write the failing test first, then implement
-4. **Build and test frequently** — use `cmake --build --preset conan-debug` and `ctest --preset conan-debug`
-5. **Do not read toolchain/CMake toolchain code** unless explicitly asked — it is infrastructure and not part of the emulator logic
+2. **Before writing any C++ code, read `docs/01-coding-style.md`** — it contains mandatory coding conventions
+3. **Always make incremental changes** — small, focused commits
+4. **Always use TDD** — write the failing test first, then implement
+5. **Build and test frequently** — use `cmake --build --preset conan-debug` and `ctest --preset conan-debug`
+6. **Do not read toolchain/CMake toolchain code** unless explicitly asked — it is infrastructure and not part of the emulator logic
 
 ## Architecture Summary
 The emulator follows a device-interconnect model:

@@ -1,7 +1,7 @@
 # Testing
 
 ## Test Framework
-- Google Test (gtest 1.17.0) with Google Mock (gmock)
+- Google Test (gtest 1.18.0) with Google Mock (gmock)
 - All tests live in `*/test/` subdirectories
 
 ## Test Infrastructure
@@ -38,7 +38,7 @@ protected:
 | `cartridge_test.cpp` | ROM loading, data access |
 | `cartridge_header_test.cpp` | Nintendo logo, title, cartridge type, ROM size, checksum validation |
 | `masked_register_test.cpp` | Register mask enforcement, byte sub-register propagation |
-| `flag_helpers_test.cpp` | Addition, subtraction, AND, and OR flag calculations |
+| `flag_helpers_test.cpp` | Addition, subtraction, AND, OR, and XOR flag calculations |
 
 ### Instruction Tests (`emulatorlib/test/instructions_tests/`)
 Parameterized tests for each instruction family:
@@ -84,6 +84,9 @@ Parameterized tests for each instruction family:
 | `and_a_from_indirect_hl_test.cpp` | `AND A, (HL)` |
 | `and_a_test.cpp` | `AND A, A` |
 | `and_a_n8_test.cpp` | `AND A, n` |
+| `xor_r_test.cpp` | `XOR A, r` for register operands B, C, D, E, H, and L |
+| `xor_a_from_indirect_hl_test.cpp` | `XOR A, (HL)` |
+| `xor_a_test.cpp` | `XOR A, A` |
 | `xor_a_n8_test.cpp` | `XOR A, n` |
 | `or_r_test.cpp` | `OR A, r` for register operands B, C, D, E, H, and L |
 | `or_a_from_indirect_hl_test.cpp` | `OR A, (HL)` |
@@ -95,8 +98,16 @@ Parameterized tests for each instruction family:
 | `load_hl_indirect_decrement_a_test.cpp` | `LD A, (HL-)` |
 | `load_indirect_8bit_test.cpp` | `LD (HL), n` |
 | `jump_a16_test.cpp` | `JP a16` |
-| `jump_cc_a16_test.cpp` | `JP cc, a16` |
+| `jump_conditional_a16_test.cpp` | `JP cc, a16` |
 | `jump_hl_test.cpp` | `JP HL` |
+
+### Test Conventions
+
+- Put emulator tests in the `EmulatorLib::Test` namespace.
+- Name fixtures and test classes in PascalCase with a `Test` suffix, such as `JumpA16Test`.
+- Use `TEST_F` for fixture tests and `TEST_P` with `INSTANTIATE_TEST_SUITE_P` for parameterized instruction tests.
+- Name tests after the behavior under test in PascalCase; use underscores only to separate a scenario or expected outcome when that improves readability.
+- Derive parameterized instruction-test names from `OpCodeToInstructionName`; do not duplicate instruction names in test data.
 
 ### Test Pattern
 Instruction tests typically follow this pattern:
