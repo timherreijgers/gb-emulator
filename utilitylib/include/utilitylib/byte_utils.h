@@ -36,12 +36,12 @@
 template <>
 struct std::formatter<std::byte>
 {
-    constexpr auto parse(std::format_parse_context& ctx)
+    constexpr auto parse(std::format_parse_context& ctx) const noexcept
     {
         return ctx.begin();
     }
 
-    auto format(const std::byte& obj, std::format_context& ctx) const
+    auto format(const std::byte& obj, std::format_context& ctx) const noexcept
     {
         return std::format_to(ctx.out(), "0x{:02X}", static_cast<uint8_t>(obj));
     }

@@ -22,7 +22,7 @@ struct InstructionHandler
         std::suspend_always initial_suspend() noexcept { return {}; }
         std::suspend_always final_suspend() noexcept { return {}; }
         std::suspend_always yield_value(std::monostate) noexcept { return {}; }
-        void return_void() {}
+        void return_void() noexcept {}
         void unhandled_exception() noexcept { m_exception = std::current_exception(); }
     };
 

@@ -233,7 +233,7 @@ namespace
 
 } // namespace
 
-auto OpCodeToInstructionName(std::byte opcode) -> std::string_view
+[[nodiscard]] auto OpCodeToInstructionName(std::byte opcode) noexcept -> std::string_view
 {
     static constexpr auto opCodeLut = CreateOpCodeLut();
     return opCodeLut[static_cast<size_t>(opcode)];

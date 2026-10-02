@@ -26,6 +26,12 @@ right document for your context.
 conventions (naming, attributes, include order, modern C++ patterns) that apply to all code. Do not
 skip it. Do not infer conventions from examples. Follow it explicitly.
 
+**The existing codebase may contain deviations from the styleguide.** This is expected — the
+styleguide is aspirational and the codebase is a work in progress. **The styleguide is always
+leading.** When the existing code conflicts with the styleguide, the styleguide wins. Always
+write new code according to the styleguide, and when modifying existing code, correct any style
+guide violations you encounter.
+
 ## Incremental Changes & TDD
 
 **Always make small, incremental changes.** Never rewrite entire files or make large sweeping changes.
@@ -38,8 +44,9 @@ time. See the skill for the full workflow.
 **When creating or modifying C++ code, read and follow `docs/01-coding-style.md`** — it specifies
 mandatory conventions: `std::format`/`std::println` over `stringstream`/`cout`, `std::ranges`, concepts on
 template parameters, naming rules, include order, attribute usage (`[[nodiscard]]`, `constexpr`, `const`,
-`noexcept`), and the rule of 5. This is not optional, even if the existing codebase appears to
-occasionally bend these rules.
+`noexcept`), and the rule of 5. This is not optional. **If the existing codebase bends these rules,
+correct it.** The styleguide always wins over existing code — never accept a style violation because
+"that's how it's written."
 
 Keep each change focused and testable. This makes debugging easier and keeps the codebase stable as it grows.
 
