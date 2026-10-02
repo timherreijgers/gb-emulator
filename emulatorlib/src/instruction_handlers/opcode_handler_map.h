@@ -53,7 +53,7 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     co_return;
 }
 
-[[nodiscard]] constexpr auto CreateOpcodeHandlers() noexcept -> std::array<std::function<InstructionHandler(AddressBus&, CpuRegisters&)>, 256>
+[[nodiscard]] auto CreateOpcodeHandlers() noexcept -> std::array<std::function<InstructionHandler(AddressBus&, CpuRegisters&)>, 256>
 {
     std::array<std::function<InstructionHandler(AddressBus&, CpuRegisters&)>, 256> handlers{};
     handlers.fill(UnimplementedOpcode);
