@@ -95,7 +95,7 @@ struct Register
     }
 
     [[nodiscard]]
-    auto LowerByteAsRegister() const
+    auto LowerByteAsRegister() const noexcept
         -> Register<std::byte>
         requires std::same_as<T, std::uint16_t>
     {
@@ -103,7 +103,7 @@ struct Register
     }
 
     [[nodiscard]]
-    auto UpperByteAsRegister() const
+    auto UpperByteAsRegister() const noexcept
         -> Register<std::byte>
         requires std::same_as<T, std::uint16_t>
     {
