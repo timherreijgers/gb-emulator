@@ -10,6 +10,6 @@
 namespace EmulatorLib
 {
 
-[[nodiscard]] auto OpCodeToInstructionName(std::byte opcode) -> std::string_view;
+[[nodiscard]] auto OpCodeToInstructionName(std::byte opcode) noexcept -> std::string_view;
 
 } // namespace EmulatorLib

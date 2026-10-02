@@ -33,7 +33,7 @@ Cpu::Cpu(AddressBus& bus)
     m_registers.wzRegister = 0x0000;
 }
 
-void Cpu::Step()
+void Cpu::Step() noexcept
 {
     if (m_handler.HasException())
     {

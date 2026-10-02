@@ -25,7 +25,7 @@ public:
     Cpu(Cpu&&) = delete;
     Cpu& operator=(Cpu&&) = delete;
 
-    void Step();
+    void Step() noexcept;
 
     [[nodiscard]] auto Registers() noexcept -> CpuRegisters&;
     [[nodiscard]] auto Registers() const noexcept -> const CpuRegisters&;
