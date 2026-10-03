@@ -150,6 +150,17 @@ jump forms are specified by `jump_a16_test.cpp` and `jump_conditional_a16_test.c
 `JP HL` has no operand bytes and sets the program counter directly from HL. Its behavior is specified by
 `jump_hl_test.cpp`.
 
+### Interrupt Control Instructions
+
+| Opcode | Mnemonic | Handler | Description |
+|--------|----------|---------|-------------|
+| 0xF3 | `DI` | `ExecuteDi` | Disable the master interrupt state immediately |
+| 0xFB | `EI` | `ExecuteEi` | Request master-interrupt enable after one subsequent M-cycle |
+
+`EI` changes the master interrupt state to `PENDING`; CPU stepping promotes it to `ENABLED` after `EI` has advanced.
+This delay also applies when the following instruction requires multiple M-cycles. `DI` changes the state to
+`DISABLED` immediately and cancels a pending `EI` enable.
+
 | Opcode(s) | Mnemonic | Description |
 |-----------|----------|-------------|
 | 0x18 | `JR e8` | Unconditionally jump by a signed 8-bit relative offset |
@@ -255,7 +266,7 @@ Major categories not yet implemented:
 - **Logic**: CPL
 - **Shift/Rotate**: SLA, SRL, SLL, SLL, RL, RR, RLC, RRC
 - **Decimal adjustment**: DAA
-- **Special**: SCF, CCF, HALT, EI, DI
+- **Special**: SCF, CCF, HALT
 - **CB-prefixed**: All CB-prefixed instructions (bit operations, shifts, rotates)
 
 ## Opcode Reference Table

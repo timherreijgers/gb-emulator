@@ -42,6 +42,11 @@ void Cpu::Step()
 
     m_handler.m_handle.resume();
 
+    if (m_registers.instructionRegister.value != 0xFB_b && m_registers.masterInterruptState == MasterInterruptState::PENDING)
+    {
+        m_registers.masterInterruptState = MasterInterruptState::ENABLED;
+    }
+
     if (!m_handler.m_handle.done())
     {
         return;

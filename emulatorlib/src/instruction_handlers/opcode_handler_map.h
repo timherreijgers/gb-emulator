@@ -5,7 +5,9 @@
 
 #pragma once
 
+#include "disable_interrupts.h"
 #include "emulatorlib/instruction_handler.h"
+#include "enable_interrupts.h"
 
 #include "instruction_handlers/adc_a_from_indirect_hl.h"
 #include "instruction_handlers/add_a_from_indirect_hl.h"
@@ -267,11 +269,13 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0xF0] = ExecuteLoadAFromIndirectA8;
     handlers[0xF1] = ExecutePopAF;
     handlers[0xF2] = ExecuteLoadAFromIndirectC;
+    handlers[0xF3] = ExecuteDi;
     handlers[0xF5] = ExecutePushAF;
     handlers[0xF6] = ExecuteOrAn8;
     handlers[0xF8] = ExecuteLoadSPFromHlPlusE8;
     handlers[0xF9] = ExecuteLoad_SP_HL;
     handlers[0xFA] = ExecuteLoadAFromIndirectA16;
+    handlers[0xFB] = ExecuteEi;
     handlers[0xFE] = ExecuteCpAn8;
 
     return handlers;
