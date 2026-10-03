@@ -75,24 +75,29 @@ InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& /*cpuRe
     handlers[0x14] = ExecuteIncD;
     handlers[0x15] = ExecuteDecD;
     handlers[0x16] = ExecuteLoadDn8;
+    handlers[0x18] = ExecuteJumpRelativeE8;
     handlers[0x1A] = ExecuteLoadIndirectAFromDE;
     handlers[0x1C] = ExecuteIncE;
     handlers[0x1D] = ExecuteDecE;
     handlers[0x1E] = ExecuteLoadEn8;
 
+    handlers[0x20] = ExecuteJumpRelativeNzE8;
     handlers[0x21] = ExecuteLoadHLn16;
     handlers[0x22] = ExecuteLoadIndirectHLIncrementFromA;
     handlers[0x24] = ExecuteIncH;
     handlers[0x25] = ExecuteDecH;
     handlers[0x26] = ExecuteLoadHn8;
+    handlers[0x28] = ExecuteJumpRelativeZE8;
     handlers[0x2A] = ExecuteLoadIndirectAFromHLIncrement;
     handlers[0x2C] = ExecuteIncL;
     handlers[0x2D] = ExecuteDecL;
     handlers[0x2E] = ExecuteLoadLn8;
 
+    handlers[0x30] = ExecuteJumpRelativeNcE8;
     handlers[0x31] = ExecuteLoadSPn16;
     handlers[0x32] = ExecuteLoadIndirectHLDecrementFromA;
     handlers[0x36] = ExecuteLoadIndirectHlN8;
+    handlers[0x38] = ExecuteJumpRelativeCE8;
     handlers[0x3A] = ExecuteLoadIndirectAFromHLDecrement;
     handlers[0x3C] = ExecuteIncA;
     handlers[0x3D] = ExecuteDecA;
