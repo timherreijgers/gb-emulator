@@ -50,4 +50,4 @@ jobs:
         run: conan build -pr:a=clang-22-linux-x86_64 -s compiler.cppstd=26 -s build_type=${{matrix.BUILD_TYPE}} -c tools.cmake.cmaketoolchain:generator="Ninja" . --build=missing
 
       - name: Test
-        run: ctest --preset=conan-$BUILD_TYPE_LOWER
+        run: ctest --preset=conan-$BUILD_TYPE_LOWER --output-on-failure
