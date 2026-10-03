@@ -150,6 +150,16 @@ jump forms are specified by `jump_a16_test.cpp` and `jump_conditional_a16_test.c
 `JP HL` has no operand bytes and sets the program counter directly from HL. Its behavior is specified by
 `jump_hl_test.cpp`.
 
+| Opcode(s) | Mnemonic | Description |
+|-----------|----------|-------------|
+| 0x18 | `JR e8` | Unconditionally jump by a signed 8-bit relative offset |
+| 0x20, 0x28, 0x30, 0x38 | `JR cc, e8` | Jump by a signed 8-bit relative offset when the condition is met |
+
+`JR` reads its offset operand in M2. A taken jump uses M3 to add the offset to the low byte of the operand-end
+program counter and adjust the high byte for signed overflow, then fetches from WZ in M4. An untaken conditional
+jump fetches directly from the operand-end program counter in M3. The unconditional and conditional forms are
+specified by `jump_relative_e8_test.cpp` and `jump_relative_conditional_e8_test.cpp`, respectively.
+
 ### Arithmetic Instructions
 
 #### Addition
@@ -241,7 +251,7 @@ is zero and clear Subtract, HalfCarry, and Carry.
 
 Major categories not yet implemented:
 
-- **Control flow**: JR, CALL, RET, RST, DJNZ, STOP
+- **Control flow**: CALL, RET, RST, DJNZ, STOP
 - **Logic**: CPL
 - **Shift/Rotate**: SLA, SRL, SLL, SLL, RL, RR, RLC, RRC
 - **Decimal adjustment**: DAA

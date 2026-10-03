@@ -100,6 +100,8 @@ Parameterized tests for each instruction family:
 | `jump_a16_test.cpp` | `JP a16` |
 | `jump_conditional_a16_test.cpp` | `JP cc, a16` |
 | `jump_hl_test.cpp` | `JP HL` |
+| `jump_relative_e8_test.cpp` | `JR e8` |
+| `jump_relative_conditional_e8_test.cpp` | `JR cc, e8` |
 
 ### Test Conventions
 

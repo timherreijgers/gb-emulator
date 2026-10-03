@@ -63,4 +63,43 @@ constexpr auto ExecuteJumpNcA16 = ExecuteJump<decltype(NonCarry)>;
 constexpr auto ExecuteJumpZA16 = ExecuteJump<decltype(Zero)>;
 constexpr auto ExecuteJumpCA16 = ExecuteJump<decltype(Carry)>;
 
+template <CpuRegisterPredicate Predicate>
+constexpr auto ExecuteJumpRelative = [](AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
+    cpuRegisters.zRegister = addressBus.ReadFromAddress(cpuRegisters.programCounter++);
+    co_yield std::monostate{};
+
+    if (!Predicate{}(cpuRegisters))
+    {
+        co_return;
+    }
+
+    const auto zSign = static_cast<bool>(cpuRegisters.zRegister.value & UtilityLib::BitMask<7>);
+    const auto [result, carryPerBit] =
+        UtilityLib::AddWithCarry(cpuRegisters.zRegister.value,
+                                 static_cast<std::byte>(0xFF & cpuRegisters.programCounter.value));
+    cpuRegisters.zRegister = result;
+
+    const auto adj = [&] noexcept {
+        if ((carryPerBit & UtilityLib::BitMask<7>) > 0x00_b && !zSign)
+            return 0x01_b;
+
+        if ((carryPerBit & UtilityLib::BitMask<7>) == 0x00_b && zSign)
+            return static_cast<std::byte>(-1);
+
+        return 0x00_b;
+    }();
+
+    cpuRegisters.wRegister = static_cast<std::byte>(0xFF & (cpuRegisters.programCounter.value >> 8)) + adj;
+    co_yield std::monostate{};
+
+    cpuRegisters.programCounter = cpuRegisters.wzRegister.value;
+    co_return;
+};
+
+constexpr auto ExecuteJumpRelativeE8 = ExecuteJumpRelative<decltype(AlwaysTrue)>;
+constexpr auto ExecuteJumpRelativeNzE8 = ExecuteJumpRelative<decltype(NonZero)>;
+constexpr auto ExecuteJumpRelativeNcE8 = ExecuteJumpRelative<decltype(NonCarry)>;
+constexpr auto ExecuteJumpRelativeZE8 = ExecuteJumpRelative<decltype(Zero)>;
+constexpr auto ExecuteJumpRelativeCE8 = ExecuteJumpRelative<decltype(Carry)>;
+
 } // namespace EmulatorLib
