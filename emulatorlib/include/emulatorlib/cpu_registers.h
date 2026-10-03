@@ -11,6 +11,13 @@
 namespace EmulatorLib
 {
 
+enum class MasterInterruptState
+{
+    DISABLED,
+    PENDING,
+    ENABLED
+};
+
 struct CpuRegisters
 {
     CpuRegisters() = default;
@@ -45,6 +52,8 @@ struct CpuRegisters
 
     Register16Bit programCounter{backingProgramCounterRegister};
     Register16Bit stackPointer{backingStackPointerRegister};
+
+    MasterInterruptState masterInterruptState;
 
 private:
     std::byte backingInstructionRegister{};

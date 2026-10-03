@@ -225,12 +225,14 @@ namespace
 
     names[0xF0] = "LoadAFromIndirectA8";
     names[0xF1] = "POP_AF";
+    names[0xF3] = "DI";
     names[0xF5] = "PUSH_AF";
     names[0xF6] = "OrAn8";
     names[0xF2] = "LoadAFromIndirectC";
     names[0xF8] = "LoadHLFromSPPlusE";
     names[0xF9] = "Load_SP_HL";
     names[0xFA] = "LoadAFromIndirectA16";
+    names[0xFB] = "EI";
     names[0xFE] = "CpAn8";
 
     return names;
