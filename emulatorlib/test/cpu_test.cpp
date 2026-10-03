@@ -46,6 +46,8 @@ TEST_F(CpuTest, Initialization_InitializesRegistersCorrectly)
 
     ASSERT_THAT(registers.programCounter, ::testing::Eq(0x0100));
     ASSERT_THAT(registers.stackPointer, ::testing::Eq(0xFFFE));
+
+    ASSERT_THAT(registers.masterInterruptState, ::testing::Eq(MasterInterruptState::DISABLED));
 }
 
 TEST_F(CpuTest, FirstTick_ReadsFromCorretStartAddress)

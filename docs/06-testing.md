@@ -33,7 +33,7 @@ protected:
 ### Unit Tests (emulatorlib/test/)
 | File | Tests |
 |------|-------|
-| `cpu_test.cpp` | CPU initialization, PC increment, opcode fetching |
+| `cpu_test.cpp` | CPU initialization (including disabled master interrupts), PC increment, opcode fetching |
 | `address_bus_test.cpp` | Bus routing, OR-combining reads, write broadcasting |
 | `cartridge_test.cpp` | ROM loading, data access |
 | `cartridge_header_test.cpp` | Nintendo logo, title, cartridge type, ROM size, checksum validation |
@@ -102,6 +102,8 @@ Parameterized tests for each instruction family:
 | `jump_hl_test.cpp` | `JP HL` |
 | `jump_relative_e8_test.cpp` | `JR e8` |
 | `jump_relative_conditional_e8_test.cpp` | `JR cc, e8` |
+| `di_test.cpp` | `DI` immediate disable and cancellation of a pending `EI` enable |
+| `ei_test.cpp` | `EI` delayed enable, including the following multi-cycle instruction |
 
 ### Test Conventions
 
