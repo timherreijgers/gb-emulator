@@ -77,6 +77,8 @@ For each actionable section in the styleguide, run the corresponding checker aga
 | `Attributes and Specifiers` | Check for missing `[[nodiscard]]`, `constexpr`, `const`, or `noexcept` on functions that qualify (check function signatures in changed lines and nearby context for advisories) |
 | `Naming Conventions` | Check variable names, function names, class names, enum names against the correct case convention (`PascalCase`, `camelCase`, `m_camelCase`, `g_camelCase`, `SCREAMING_SNAKE_CASE`, `snake_case`) |
 | `Special Member Functions` | Check if a class declares some special member functions but not all five (requires nearby context check) |
+| `Casts` | Check for C-style casts: `(Type)expr` pattern (parenthesized type followed directly by expression), `reinterpret_cast`, `const_cast`; flag `reinterpret_cast` when `std::bit_cast` would work (advisory) |
+| `Ownership and Aliasing` | Check for raw pointer function parameters (`T*` or `T* const`) where a reference would express the same contract, and `std::shared_ptr` usage (prefer `std::unique_ptr` or references) |
 | `Comments and Documentation` | Check for emoji characters in comments, comments that state the obvious (repeating what the code does), or excessive comments |
 | `Function Design` | Check for function names containing "And" or "Or" (indicating multiple responsibilities) |
 
