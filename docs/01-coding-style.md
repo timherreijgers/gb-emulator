@@ -92,6 +92,27 @@ auto process(T value) { /* ... */ }
 
 Use concepts for all template parameters. Define project-specific concepts in the relevant header (see `register_concepts.h` for examples). Use standard library concepts (`std::integral`, `std::ranges::range`, `std::copyable`, etc.) when they apply.
 
+## Casts
+
+**Never use C-style casts.** Use the typed alternatives, which are checked, explicit, and easy to search for.
+
+| Instead of | Use |
+|-----------|-----|
+| `(T)expr` for numeric conversions | `static_cast<T>(expr)` |
+| `(T)ptr` / `(void*)ptr` pointer casts | `static_cast` (up/downcast) or `reinterpret_cast` (bit-level reinterpreting only) |
+| `(const T)expr` removing const | `const_cast<T>(expr)` (avoid; const-correct design preferred) |
+| `(T)expr` combining const removal + reinterpret | Separate `const_cast` + `reinterpret_cast` (avoid where possible) |
+
+For reinterpreting object representation between related types (e.g., `uint32_t` ↔ `float`, or extracting sub-objects from aligned storage), prefer `std::bit_cast` over `reinterpret_cast` — it is `constexpr`, well-defined, and never aliases.
+
+## Ownership and Aliasing
+
+**Use references over raw pointers for function parameters and non-owning access. Use `std::unique_ptr` over `std::shared_ptr`.**
+
+- Function parameters: `auto Foo(std::string_view name, AddressBus& bus)` — never `char*` or `AddressBus*` when a reference or `std::string_view` expresses the same non-null contract. Raw pointers are allowed only when a nullable pointer is genuinely part of the API, and prefer `std::optional` for that too.
+- Ownership: `std::unique_ptr` is the default for dynamically owned objects. Only reach for `std::shared_ptr` when ownership is genuinely shared across multiple owners with independent lifetimes — and say so in a comment. Prefer value semantics and RAII over both.
+- Non-owning pointers (e.g., `std::coroutine_handle::promise()`, observer pointers) are fine, but document that they do not own the pointee.
+
 ## Error Handling
 
 **Throw `std::runtime_error` or custom exception types for unrecoverable errors. Use `[[nodiscard]]` MathematicalResult-style types for operations that may fail but the caller should handle explicitly.**
