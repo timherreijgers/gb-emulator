@@ -65,3 +65,12 @@ ROM_ONLY (0x00), MBC1/1_RAM/1_RAM_BATTERY (0x01-0x03), MBC2/2_BATTERY (0x05-0x06
 ROM_RAM/ROM_RAM_BATTERY (0x08-0x09), MMM01 variants (0x0B-0x0D), MBC3 variants (0x0F-0x13), 
 MBC5 variants (0x19-0x1E), MBC6 (0x20), MBC7 variant (0x22), 
 POCKET_CAMERA (0xFC), BANDAI_TAMA5 (0xFD), HUC3 (0xFE), HUC1_RAM_BATTERY (0xFF)
+
+## Ram (`emulatorlib/include/emulatorlib/ram.h`, `emulatorlib/src/ram.cpp`)
+
+Provides the Game Boy's fixed 8 KiB work RAM without banking.
+
+- Address range: `0xC000–0xDFFF`
+- Initial contents: zero
+- Reads and writes outside the range are ignored; reads return `0x00`
+- Connected to the address bus by `main.cpp`
