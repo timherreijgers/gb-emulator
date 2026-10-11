@@ -53,6 +53,7 @@ The emulator follows a device-interconnect model:
 - **AddressBus** routes read/write operations to connected devices via `AddressBusAddressable` interface
 - **CPU** contains registers, opcode dispatch, and uses coroutines for multi-cycle instruction execution
 - **Cartridge** loads and parses ROM files (header validation, Nintendo logo check)
+- **Ram** provides the fixed 8 KiB work-RAM region at `0xC000–0xDFFF` (banking not yet implemented)
 - Instruction handlers are implemented as C++26 coroutines using `co_yield` for multi-cycle timing and `co_return` for completion
 
 ## Key Conventions

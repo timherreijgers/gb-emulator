@@ -1,6 +1,7 @@
 #include "emulatorlib/address_bus.h"
 #include "emulatorlib/cartridge.h"
 #include "emulatorlib/cpu.h"
+#include "emulatorlib/ram.h"
 #include "utilitylib/byte_utils.h"
 
 #include <iostream>
@@ -40,8 +41,9 @@ int main(int argc, char * argv[])
     const std::string romFilePath = argv[1];
 
     EmulatorLib::Cartridge cartridge(romFilePath);
+    EmulatorLib::Ram ram;
 
-    EmulatorLib::AddressBus addressBus{std::vector<std::reference_wrapper<EmulatorLib::AddressBusAddressable>>{std::ref(cartridge)}};
+    EmulatorLib::AddressBus addressBus{std::vector<std::reference_wrapper<EmulatorLib::AddressBusAddressable>>{std::ref(cartridge), std::ref(ram)}};
     EmulatorLib::Cpu cpu{addressBus};
 
     try

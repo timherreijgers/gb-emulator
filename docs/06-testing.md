@@ -37,6 +37,7 @@ protected:
 | `address_bus_test.cpp` | Bus routing, OR-combining reads, write broadcasting |
 | `cartridge_test.cpp` | ROM loading, data access |
 | `cartridge_header_test.cpp` | Nintendo logo, title, cartridge type, ROM size, checksum validation |
+| `ram_test.cpp` | Initial RAM contents and read/write access |
 | `masked_register_test.cpp` | Register mask enforcement, byte sub-register propagation |
 | `flag_helpers_test.cpp` | Addition, subtraction, AND, OR, and XOR flag calculations |
 
