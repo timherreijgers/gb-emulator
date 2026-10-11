@@ -136,13 +136,11 @@ For every `INSTANTIATE_TEST_SUITE_P`, derive the parameter name from
 
 ## Building & Running Tests
 ```bash
-cmake -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build
-ctest --test-dir build
+cmake --build --preset conan-debug
+ctest --test-dir build/Debug --output-on-failure
 ```
 
-Or use CMake's built-in target:
+To run one Google Test:
 ```bash
-cmake --build build --target gb_emulator_test
-cmake --build build --target utilitylib_test
+./build/Debug/emulatorlib/test/emulatorlibTest --gtest_filter='EiTest.*'
 ```

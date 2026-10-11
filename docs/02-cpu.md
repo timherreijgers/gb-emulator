@@ -15,7 +15,7 @@ The CPU is the central execution unit. It owns registers and dispatches opcodes 
   - `PC` = `0x0100` (start address)
   - `SP` = `0xFFFE`
   - Master interrupt state = `DISABLED`
-  - Interrupt dispatch, timing, and sound are not yet implemented
+  - Interrupt servicing and sound are not yet implemented
 
 ### Execution Model
 The CPU runs on a single public method: `Step()`
@@ -23,8 +23,8 @@ The CPU runs on a single public method: `Step()`
 ```
 Step() {
     1. Resume current coroutine (co_yield or co_return)
-    2. Promote a pending master-interrupt enable after EI has advanced
-    3. If coroutine not done → return (multi-cycle instruction)
+    2. If coroutine not done → return (multi-cycle instruction)
+    3. Promote a pending master-interrupt enable after the instruction following EI completes
     4. Read next opcode from memory at PC
     5. Increment PC
     6. Fetch next handler from opcode table
@@ -73,8 +73,8 @@ All CPU registers. Uses a layered design with backing storage and `Register<T>` 
   - `PENDING` — `EI` has requested enabling after its required delay
   - `ENABLED` — interrupt handling is enabled
 
-`EI` first sets the state to `PENDING`. `Cpu::Step()` promotes it to `ENABLED` after the `EI` opcode has advanced,
-so the effect is delayed by one subsequent M-cycle, including when that cycle belongs to a multi-cycle instruction.
+`EI` first sets the state to `PENDING`. `Cpu::Step()` promotes it to `ENABLED` after the complete subsequent instruction,
+including all M-cycles of a multi-cycle instruction.
 `DI` immediately sets the state to `DISABLED`, cancelling a pending `EI` enable.
 
 ## CpuFlags (`emulatorlib/include/emulatorlib/cpu_flags.h`, `emulatorlib/src/cpu_flags.cpp`)
