@@ -37,6 +37,24 @@ TEST_F(EiTest, EnablesMasterInterruptFlag_AfterNextInstruction)
     ASSERT_THAT(m_cpu.Registers().masterInterruptState, ::testing::Eq(MasterInterruptState::ENABLED));
 }
 
+TEST_F(EiTest, PromotesToEnabled_WhenAlreadyPending)
+{
+    m_cpu.Registers().masterInterruptState = MasterInterruptState::PENDING;
+
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0xFB_b));
+    ASSERT_THAT(m_cpu.Registers().masterInterruptState, ::testing::Eq(MasterInterruptState::ENABLED));
+}
+
+TEST_F(EiTest, PreservesEnabledState_WhenAlreadyEnabled)
+{
+    m_cpu.Registers().masterInterruptState = MasterInterruptState::ENABLED;
+
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0xFB_b));
+    ASSERT_THAT(m_cpu.Registers().masterInterruptState, ::testing::Eq(MasterInterruptState::ENABLED));
+}
+
 TEST_F(EiTest, EnablesMasterInterruptFlag_AfterNextMCylce_WithMultiCycleInstruction)
 {
     m_program.WriteProgram({0xFB_b, 0x06_b, 0xFF_b});
@@ -46,6 +64,10 @@ TEST_F(EiTest, EnablesMasterInterruptFlag_AfterNextMCylce_WithMultiCycleInstruct
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0xFB_b));
     ASSERT_THAT(m_cpu.Registers().masterInterruptState, ::testing::Eq(MasterInterruptState::DISABLED));
+
+
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().masterInterruptState, ::testing::Eq(MasterInterruptState::PENDING));
 
 
     m_cpu.Step();

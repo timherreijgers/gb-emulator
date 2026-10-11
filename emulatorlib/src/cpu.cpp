@@ -40,16 +40,17 @@ void Cpu::Step()
         std::rethrow_exception(m_handler.Exception());
     }
 
+    const auto interruptEnableWasPending = m_registers.masterInterruptState == MasterInterruptState::PENDING;
     m_handler.m_handle.resume();
-
-    if (m_registers.instructionRegister.value != 0xFB_b && m_registers.masterInterruptState == MasterInterruptState::PENDING)
-    {
-        m_registers.masterInterruptState = MasterInterruptState::ENABLED;
-    }
 
     if (!m_handler.m_handle.done())
     {
         return;
+    }
+
+    if (interruptEnableWasPending && m_registers.masterInterruptState == MasterInterruptState::PENDING)
+    {
+        m_registers.masterInterruptState = MasterInterruptState::ENABLED;
     }
 
     const auto instruction = m_bus.ReadFromAddress(m_registers.programCounter);

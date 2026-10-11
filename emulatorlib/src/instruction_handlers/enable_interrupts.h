@@ -13,7 +13,10 @@ namespace EmulatorLib
 
 inline auto ExecuteEi(const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) -> InstructionHandler
 {
-    cpuRegisters.masterInterruptState = MasterInterruptState::PENDING;
+    if (cpuRegisters.masterInterruptState == MasterInterruptState::DISABLED)
+    {
+        cpuRegisters.masterInterruptState = MasterInterruptState::PENDING;
+    }
     co_return;
 }
 

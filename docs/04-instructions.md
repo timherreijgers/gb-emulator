@@ -155,10 +155,10 @@ jump forms are specified by `jump_a16_test.cpp` and `jump_conditional_a16_test.c
 | Opcode | Mnemonic | Handler | Description |
 |--------|----------|---------|-------------|
 | 0xF3 | `DI` | `ExecuteDi` | Disable the master interrupt state immediately |
-| 0xFB | `EI` | `ExecuteEi` | Request master-interrupt enable after one subsequent M-cycle |
+| 0xFB | `EI` | `ExecuteEi` | Request master-interrupt enable after the next instruction |
 
-`EI` changes the master interrupt state to `PENDING`; CPU stepping promotes it to `ENABLED` after `EI` has advanced.
-This delay also applies when the following instruction requires multiple M-cycles. `DI` changes the state to
+`EI` changes the master interrupt state to `PENDING`; CPU stepping promotes it to `ENABLED` after the complete next
+instruction, including all of its M-cycles. `DI` changes the state to
 `DISABLED` immediately and cancels a pending `EI` enable.
 
 | Opcode(s) | Mnemonic | Description |

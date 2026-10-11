@@ -53,7 +53,7 @@ struct CpuRegisters
     Register16Bit programCounter{backingProgramCounterRegister};
     Register16Bit stackPointer{backingStackPointerRegister};
 
-    MasterInterruptState masterInterruptState;
+    MasterInterruptState masterInterruptState = MasterInterruptState::DISABLED;
 
 private:
     std::byte backingInstructionRegister{};

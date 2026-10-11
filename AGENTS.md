@@ -37,9 +37,9 @@ guide violations you encounter.
 **Always make small, incremental changes.** Never rewrite entire files or make large sweeping changes.
 
 **Always use TDD (Test-Driven Development).** When building a feature test-first, the `tdd-incremental` skill enforces a
-strict, one-test-at-a-time red-green-refactor cycle with detailed guidance — use it whenever the user asks to build
-something "using TDD," "test-first," wants tests written before code, or asks to add functionality one small test at a
-time. See the skill for the full workflow.
+strict, one-test-at-a-time red-green-refactor cycle with detailed guidance. Always use the `tdd-incremental` skill,
+unless
+asked otherwise.
 
 **When creating or modifying C++ code, read and follow `docs/01-coding-style.md`** — it specifies
 mandatory conventions: `std::format`/`std::println` over `stringstream`/`cout`, `std::ranges`, concepts on
