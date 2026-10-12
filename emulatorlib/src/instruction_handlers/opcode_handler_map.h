@@ -9,6 +9,7 @@
 #include "emulatorlib/cpu.h"
 #include "emulatorlib/instruction_handler.h"
 #include "enable_interrupts.h"
+#include "rst.h"
 
 #include "instruction_handlers/adc_a_from_indirect_hl.h"
 #include "instruction_handlers/add_a_from_indirect_hl.h"
@@ -277,7 +278,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0xC4] = {.name = "CALL NZ, a16", .handler = UnimplementedOpcode};
     handlers[0xC5] = {.name = "PUSH BC", .handler = ExecutePushBC};
     handlers[0xC6] = {.name = "ADD A, n", .handler = ExecuteAddAn8};
-    handlers[0xC7] = {.name = "RST $00", .handler = UnimplementedOpcode};
+    handlers[0xC7] = {.name = "RST $00", .handler = ExecuteRst00};
     handlers[0xC8] = {.name = "RET Z", .handler = UnimplementedOpcode};
     handlers[0xC9] = {.name = "RET", .handler = UnimplementedOpcode};
     handlers[0xCA] = {.name = "JP Z, a16", .handler = ExecuteJumpZA16};
@@ -285,7 +286,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0xCC] = {.name = "CALL Z, a16", .handler = UnimplementedOpcode};
     handlers[0xCD] = {.name = "CALL a16", .handler = UnimplementedOpcode};
     handlers[0xCE] = {.name = "ADC A, n", .handler = ExecuteAdcAn8};
-    handlers[0xCF] = {.name = "RST $08", .handler = UnimplementedOpcode};
+    handlers[0xCF] = {.name = "RST $08", .handler = ExecuteRst08};
 
     handlers[0xD0] = {.name = "RET NC", .handler = UnimplementedOpcode};
     handlers[0xD1] = {.name = "POP DE", .handler = ExecutePopDE};
@@ -294,7 +295,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0xD4] = {.name = "CALL NC, a16", .handler = UnimplementedOpcode};
     handlers[0xD5] = {.name = "PUSH DE", .handler = ExecutePushDE};
     handlers[0xD6] = {.name = "SUB n", .handler = ExecuteSubAn8};
-    handlers[0xD7] = {.name = "RST $10", .handler = UnimplementedOpcode};
+    handlers[0xD7] = {.name = "RST $10", .handler = ExecuteRst10};
     handlers[0xD8] = {.name = "RET C", .handler = UnimplementedOpcode};
     handlers[0xD9] = {.name = "RETI", .handler = UnimplementedOpcode};
     handlers[0xDA] = {.name = "JP C, a16", .handler = ExecuteJumpCA16};
@@ -302,7 +303,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0xDC] = {.name = "CALL C, a16", .handler = UnimplementedOpcode};
     handlers[0xDD] = {.name = "ILLEGAL", .handler = IllegalOpcode};
     handlers[0xDE] = {.name = "SBC A, n", .handler = ExecuteSbcAn8};
-    handlers[0xDF] = {.name = "RST $18", .handler = UnimplementedOpcode};
+    handlers[0xDF] = {.name = "RST $18", .handler = ExecuteRst18};
 
     handlers[0xE0] = {.name = "LDH (a8), A", .handler = ExecuteLoadIndirectA8FromA};
     handlers[0xE1] = {.name = "POP HL", .handler = ExecutePopHL};
@@ -311,7 +312,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0xE4] = {.name = "ILLEGAL", .handler = IllegalOpcode};
     handlers[0xE5] = {.name = "PUSH HL", .handler = ExecutePushHL};
     handlers[0xE6] = {.name = "AND n", .handler = ExecuteAndAn8};
-    handlers[0xE7] = {.name = "RST $20", .handler = UnimplementedOpcode};
+    handlers[0xE7] = {.name = "RST $20", .handler = ExecuteRst20};
     handlers[0xE8] = {.name = "ADD SP, e8", .handler = UnimplementedOpcode};
     handlers[0xE9] = {.name = "JP HL", .handler = ExecuteJumpHl};
     handlers[0xEA] = {.name = "LD (a16), A", .handler = ExecuteLoadIndirectA16FromA};
@@ -319,7 +320,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0xEC] = {.name = "ILLEGAL", .handler = IllegalOpcode};
     handlers[0xED] = {.name = "ILLEGAL", .handler = IllegalOpcode};
     handlers[0xEE] = {.name = "XOR n", .handler = ExecuteXorAn8};
-    handlers[0xEF] = {.name = "RST $28", .handler = UnimplementedOpcode};
+    handlers[0xEF] = {.name = "RST $28", .handler = ExecuteRst28};
 
     handlers[0xF0] = {.name = "LDH A, (a8)", .handler = ExecuteLoadAFromIndirectA8};
     handlers[0xF1] = {.name = "POP AF", .handler = ExecutePopAF};
@@ -328,7 +329,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0xF4] = {.name = "ILLEGAL", .handler = IllegalOpcode};
     handlers[0xF5] = {.name = "PUSH AF", .handler = ExecutePushAF};
     handlers[0xF6] = {.name = "OR n", .handler = ExecuteOrAn8};
-    handlers[0xF7] = {.name = "RST $30", .handler = UnimplementedOpcode};
+    handlers[0xF7] = {.name = "RST $30", .handler = ExecuteRst30};
     handlers[0xF8] = {.name = "LD HL, SP + e8", .handler = ExecuteLoadSPFromHlPlusE8};
     handlers[0xF9] = {.name = "LD SP, HL", .handler = ExecuteLoad_SP_HL};
     handlers[0xFA] = {.name = "LD A, (a16)", .handler = ExecuteLoadAFromIndirectA16};
@@ -336,7 +337,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0xFC] = {.name = "ILLEGAL", .handler = IllegalOpcode};
     handlers[0xFD] = {.name = "ILLEGAL", .handler = IllegalOpcode};
     handlers[0xFE] = {.name = "CP n", .handler = ExecuteCpAn8};
-    handlers[0xFF] = {.name = "RST $38", .handler = UnimplementedOpcode};
+    handlers[0xFF] = {.name = "RST $38", .handler = ExecuteRst38};
 
     return handlers;
 }

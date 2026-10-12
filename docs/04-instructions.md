@@ -150,6 +150,22 @@ jump forms are specified by `jump_a16_test.cpp` and `jump_conditional_a16_test.c
 `JP HL` has no operand bytes and sets the program counter directly from HL. Its behavior is specified by
 `jump_hl_test.cpp`.
 
+### Restart Instructions
+
+| Opcode | Mnemonic | Handler | Vector |
+|--------|----------|---------|--------|
+| 0xC7 | `RST $00` | `ExecuteRst00` | 0x0000 |
+| 0xCF | `RST $08` | `ExecuteRst08` | 0x0008 |
+| 0xD7 | `RST $10` | `ExecuteRst10` | 0x0010 |
+| 0xDF | `RST $18` | `ExecuteRst18` | 0x0018 |
+| 0xE7 | `RST $20` | `ExecuteRst20` | 0x0020 |
+| 0xEF | `RST $28` | `ExecuteRst28` | 0x0028 |
+| 0xF7 | `RST $30` | `ExecuteRst30` | 0x0030 |
+| 0xFF | `RST $38` | `ExecuteRst38` | 0x0038 |
+
+Each `RST` pushes the address of the next instruction onto the stack, then sets the program counter to its fixed
+vector.
+
 ### Interrupt Control Instructions
 
 | Opcode | Mnemonic | Handler | Description |
@@ -262,7 +278,7 @@ is zero and clear Subtract, HalfCarry, and Carry.
 
 Major categories not yet implemented:
 
-- **Control flow**: CALL, RET, RST, DJNZ, STOP
+- **Control flow**: CALL, RET, DJNZ, STOP
 - **Logic**: CPL
 - **Shift/Rotate**: SLA, SRL, SLL, SLL, RL, RR, RLC, RRC
 - **Decimal adjustment**: DAA
