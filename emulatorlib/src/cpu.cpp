@@ -16,7 +16,7 @@ namespace EmulatorLib
 Cpu::Cpu(AddressBus& bus)
     : m_bus(bus)
     , m_opcodeHandlers(CreateOpcodeHandlers())
-    , m_handler(m_opcodeHandlers[0x00](bus, m_registers))
+    , m_handler(m_opcodeHandlers[0x00].handler(bus, m_registers))
 {
     m_registers.instructionRegister = 0x00_b;
     m_registers.accumulator = 0x01_b;
@@ -57,7 +57,7 @@ void Cpu::Step()
     m_registers.instructionRegister = instruction;
     m_registers.programCounter++;
 
-    m_handler = m_opcodeHandlers[static_cast<uint8_t>(m_registers.instructionRegister.value)](m_bus, m_registers);
+    m_handler = m_opcodeHandlers[static_cast<uint8_t>(m_registers.instructionRegister.value)].handler(m_bus, m_registers);
 }
 
 auto Cpu::Registers() noexcept -> CpuRegisters&

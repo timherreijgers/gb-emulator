@@ -11,9 +11,16 @@
 
 #include <array>
 #include <functional>
+#include <string_view>
 
 namespace EmulatorLib
 {
+
+struct OpcodeHandler
+{
+    std::string_view name;
+    std::function<InstructionHandler(AddressBus&, CpuRegisters&)> handler;
+};
 
 class Cpu
 {
@@ -34,7 +41,7 @@ private:
     AddressBus& m_bus;
     CpuRegisters m_registers;
 
-    std::array<std::function<InstructionHandler(AddressBus&, CpuRegisters&)>, 256> m_opcodeHandlers;
+    std::array<OpcodeHandler, 256> m_opcodeHandlers;
     InstructionHandler m_handler;
 };
 
