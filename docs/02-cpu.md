@@ -33,9 +33,11 @@ Step() {
 ```
 
 ### Opcode Dispatch
-- `std::array<std::function<InstructionHandler(...)>, 256>` mapping opcode → coroutine factory
+- `std::array<OpcodeHandler, 256>` mapping each opcode to its mnemonic and coroutine factory
 - Created by `CreateOpcodeHandlers()` in `opcode_handler_map.h`
-- Unimplemented opcodes throw `std::runtime_error("Unimplemented opcode")`
+- Every opcode entry carries its mnemonic; unimplemented opcodes dispatch to `UnimplementedOpcode`, while illegal opcodes dispatch to `IllegalOpcode`
+- Illegal opcodes are `0xD3`, `0xDB`, `0xDD`, `0xE3`, `0xE4`, `0xEB`, `0xEC`, `0xED`, `0xF4`, `0xFC`, and `0xFD`
+- Both error messages include the current opcode value: `Unimplemented opcode: <value>` or `Illegal opcode: <value>`
 - 0x00 (NOP) is the only explicitly trivial handler
 
 ### Coroutine-Based Multi-Cycle Execution
