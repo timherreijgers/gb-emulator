@@ -9,9 +9,6 @@
 #include "emulatorlib/cpu_registers.h"
 #include "emulatorlib/instruction_handler.h"
 
-#include "instruction_handlers/flag_helpers.h"
-#include "utilitylib/sub_with_borrow.h"
-
 namespace EmulatorLib
 {
 
