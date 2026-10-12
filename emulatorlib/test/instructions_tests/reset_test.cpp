@@ -6,19 +6,12 @@
 #include "instruction_test_base.h"
 
 #include "emulatorlib/instruction_translation.h"
-#include "utilitylib/byte_utils.h"
 
 namespace EmulatorLib::Test
 {
 
 namespace
 {
-
-template <typename T>
-[[nodiscard]] auto FunctionWrapper16Bit() -> std::function<Register16Bit&(CpuRegisters&)>
-{
-    return T{};
-}
 
 struct InstructionPair
 {
