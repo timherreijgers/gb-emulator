@@ -21,7 +21,7 @@ struct InstructionPair
 
 } // namespace
 
-class ResetTest : public InstructionTestBase, public ::testing::WithParamInterface<InstructionPair>
+class RstTest : public InstructionTestBase, public ::testing::WithParamInterface<InstructionPair>
 {
 protected:
     void SetUp() override
@@ -32,7 +32,7 @@ protected:
     }
 };
 
-TEST_P(ResetTest, ExecuteOpCodeCorrectly)
+TEST_P(RstTest, ExecuteOpCodeCorrectly)
 {
     const auto& [instruction, targetAddress] = GetParam();
 
@@ -60,7 +60,7 @@ TEST_P(ResetTest, ExecuteOpCodeCorrectly)
     ASSERT_THAT(m_cpu.Registers().programCounter, ::testing::Eq(targetAddress + 1));
 }
 
-INSTANTIATE_TEST_SUITE_P(ResetTest, ResetTest,
+INSTANTIATE_TEST_SUITE_P(ResetTest, RstTest,
                          ::testing::Values(
                              InstructionPair{0xC7_b, 0x00},
                              InstructionPair{0xCF_b, 0x08},
@@ -70,7 +70,7 @@ INSTANTIATE_TEST_SUITE_P(ResetTest, ResetTest,
                              InstructionPair{0xEF_b, 0x28},
                              InstructionPair{0xF7_b, 0x30},
                              InstructionPair{0xFF_b, 0x38}),
-                         [](const testing::TestParamInfo<ResetTest::ParamType>& info) {
+                         [](const testing::TestParamInfo<RstTest::ParamType>& info) {
                              return std::string{OpCodeToInstructionName(info.param.instruction)};
                          });
 
