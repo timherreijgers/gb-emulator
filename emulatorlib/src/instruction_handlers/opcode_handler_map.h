@@ -12,6 +12,7 @@
 #include "instruction_handlers/adc_a_from_indirect_hl.h"
 #include "instruction_handlers/add_a_from_indirect_hl.h"
 #include "instruction_handlers/and_a_from_indirect_hl.h"
+#include "instruction_handlers/call_a16.h"
 #include "instruction_handlers/cp_a_from_indirect_hl.h"
 #include "instruction_handlers/dec_r.h"
 #include "instruction_handlers/enable_interrupts.h"
@@ -275,7 +276,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0xC1] = {.name = "POP BC", .handler = ExecutePopBC};
     handlers[0xC2] = {.name = "JP NZ, a16", .handler = ExecuteJumpNzA16};
     handlers[0xC3] = {.name = "JP a16", .handler = ExecuteJumpA16};
-    handlers[0xC4] = {.name = "CALL NZ, a16", .handler = UnimplementedOpcode};
+    handlers[0xC4] = {.name = "CALL NZ, a16", .handler = ExecuteCallNzA16};
     handlers[0xC5] = {.name = "PUSH BC", .handler = ExecutePushBC};
     handlers[0xC6] = {.name = "ADD A, n", .handler = ExecuteAddAn8};
     handlers[0xC7] = {.name = "RST $00", .handler = ExecuteRst00};
@@ -283,8 +284,8 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0xC9] = {.name = "RET", .handler = UnimplementedOpcode};
     handlers[0xCA] = {.name = "JP Z, a16", .handler = ExecuteJumpZA16};
     handlers[0xCB] = {.name = "PREFIX CB", .handler = UnimplementedOpcode};
-    handlers[0xCC] = {.name = "CALL Z, a16", .handler = UnimplementedOpcode};
-    handlers[0xCD] = {.name = "CALL a16", .handler = UnimplementedOpcode};
+    handlers[0xCC] = {.name = "CALL Z, a16", .handler = ExecuteCallZA16};
+    handlers[0xCD] = {.name = "CALL a16", .handler = ExecuteCallA16};
     handlers[0xCE] = {.name = "ADC A, n", .handler = ExecuteAdcAn8};
     handlers[0xCF] = {.name = "RST $08", .handler = ExecuteRst08};
 
@@ -292,7 +293,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0xD1] = {.name = "POP DE", .handler = ExecutePopDE};
     handlers[0xD2] = {.name = "JP NC, a16", .handler = ExecuteJumpNcA16};
     handlers[0xD3] = {.name = "ILLEGAL", .handler = IllegalOpcode};
-    handlers[0xD4] = {.name = "CALL NC, a16", .handler = UnimplementedOpcode};
+    handlers[0xD4] = {.name = "CALL NC, a16", .handler = ExecuteCallNcA16};
     handlers[0xD5] = {.name = "PUSH DE", .handler = ExecutePushDE};
     handlers[0xD6] = {.name = "SUB n", .handler = ExecuteSubAn8};
     handlers[0xD7] = {.name = "RST $10", .handler = ExecuteRst10};
@@ -300,7 +301,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0xD9] = {.name = "RETI", .handler = UnimplementedOpcode};
     handlers[0xDA] = {.name = "JP C, a16", .handler = ExecuteJumpCA16};
     handlers[0xDB] = {.name = "ILLEGAL", .handler = IllegalOpcode};
-    handlers[0xDC] = {.name = "CALL C, a16", .handler = UnimplementedOpcode};
+    handlers[0xDC] = {.name = "CALL C, a16", .handler = ExecuteCallCA16};
     handlers[0xDD] = {.name = "ILLEGAL", .handler = IllegalOpcode};
     handlers[0xDE] = {.name = "SBC A, n", .handler = ExecuteSbcAn8};
     handlers[0xDF] = {.name = "RST $18", .handler = ExecuteRst18};

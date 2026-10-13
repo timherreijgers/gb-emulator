@@ -150,6 +150,21 @@ jump forms are specified by `jump_a16_test.cpp` and `jump_conditional_a16_test.c
 `JP HL` has no operand bytes and sets the program counter directly from HL. Its behavior is specified by
 `jump_hl_test.cpp`.
 
+### Call Instructions
+
+| Opcode | Mnemonic | Handler |
+|--------|----------|---------|
+| 0xC4 | `CALL NZ, a16` | `ExecuteCallNzA16` |
+| 0xCC | `CALL Z, a16` | `ExecuteCallZA16` |
+| 0xCD | `CALL a16` | `ExecuteCallA16` |
+| 0xD4 | `CALL NC, a16` | `ExecuteCallNcA16` |
+| 0xDC | `CALL C, a16` | `ExecuteCallCA16` |
+
+Each `CALL` reads the little-endian `a16` target. Unconditional calls, and conditional calls whose condition is met,
+push the address following the operand onto the stack and set the program counter to the target. If a conditional
+call's condition is not met, execution continues after the operand without changing the stack. These behaviors are
+specified by `call_a16_test.cpp` and `call_conditional_a16_test.cpp`.
+
 ### Restart Instructions
 
 | Opcode | Mnemonic | Handler | Vector |
@@ -278,7 +293,7 @@ is zero and clear Subtract, HalfCarry, and Carry.
 
 Major categories not yet implemented:
 
-- **Control flow**: CALL, RET, DJNZ, STOP
+- **Control flow**: RET, DJNZ, STOP
 - **Logic**: CPL
 - **Shift/Rotate**: SLA, SRL, SLL, SLL, RL, RR, RLC, RRC
 - **Decimal adjustment**: DAA
