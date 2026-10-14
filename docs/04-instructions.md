@@ -318,4 +318,8 @@ Major categories not yet implemented:
 
 ## Opcode Reference Table
 
-See `instruction_translation.cpp` `CreateOpCodeLut()` for the complete mapping of implemented opcodes.
+The test project maintains the opcode-to-name table in
+`emulatorlib/test/instruction_translation.cpp`, declared by
+`emulatorlib/test/instruction_translation.h`. `CreateOpCodeLut()` is test support used to name
+parameterized instruction cases; the runtime dispatch table remains in
+`emulatorlib/src/instruction_handlers/opcode_handler_map.h`.

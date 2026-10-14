@@ -35,6 +35,7 @@ protected:
 |------|-------|
 | `cpu_test.cpp` | CPU initialization (including disabled master interrupts), PC increment, opcode fetching |
 | `instruction_handler_header_test.cpp` | Instruction handler header and coroutine support |
+| `instruction_translation.cpp` / `instruction_translation.h` | Test-only opcode-to-instruction-name mapping for parameterized tests |
 | `address_bus_test.cpp` | Bus routing, OR-combining reads, write broadcasting |
 | `cartridge_test.cpp` | ROM loading, data access |
 | `cartridge_header_test.cpp` | Nintendo logo, title, cartridge type, ROM size, checksum validation |

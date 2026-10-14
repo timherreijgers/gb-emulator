@@ -4,12 +4,13 @@
  */
 
 #pragma once
+
 #include <cstddef>
 #include <string_view>
 
-namespace EmulatorLib
+namespace EmulatorLib::Test
 {
 
 [[nodiscard]] auto OpCodeToInstructionName(std::byte opcode) noexcept -> std::string_view;
 
-} // namespace EmulatorLib
+} // namespace EmulatorLib::Test

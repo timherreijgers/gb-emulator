@@ -5,9 +5,9 @@
 
 #include "register_function_wrappers.h"
 
-#include "emulatorlib/instruction_translation.h"
-#include "instruction_handlers/register_io_helpers.h"
 #include "instruction_test_base.h"
+#include "instruction_translation.h"
+#include "instruction_handlers/register_io_helpers.h"
 
 namespace EmulatorLib::Test
 {
