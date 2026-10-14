@@ -14,6 +14,7 @@
 #include "instruction_handlers/call_a16.h"
 #include "instruction_handlers/cp_a_from_indirect_hl.h"
 #include "instruction_handlers/dec_r.h"
+#include "instruction_handlers/dec_rr.h"
 #include "instruction_handlers/disable_interrupts.h"
 #include "instruction_handlers/enable_interrupts.h"
 #include "instruction_handlers/inc_r.h"
@@ -83,7 +84,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0x08] = {.name = "LD (a16), SP", .handler = ExecuteLoadA16SP};
     handlers[0x09] = {.name = "ADD HL, BC", .handler = UnimplementedOpcode};
     handlers[0x0A] = {.name = "LD A, (BC)", .handler = ExecuteLoadIndirectAFromBC};
-    handlers[0x0B] = {.name = "DEC BC", .handler = UnimplementedOpcode};
+    handlers[0x0B] = {.name = "DEC BC", .handler = ExecuteDecBC};
     handlers[0x0C] = {.name = "INC C", .handler = ExecuteIncC};
     handlers[0x0D] = {.name = "DEC C", .handler = ExecuteDecC};
     handlers[0x0E] = {.name = "LD C, n", .handler = ExecuteLoadCn8};
@@ -100,7 +101,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0x18] = {.name = "JR e8", .handler = ExecuteJumpRelativeE8};
     handlers[0x19] = {.name = "ADD HL, DE", .handler = UnimplementedOpcode};
     handlers[0x1A] = {.name = "LD A, (DE)", .handler = ExecuteLoadIndirectAFromDE};
-    handlers[0x1B] = {.name = "DEC DE", .handler = UnimplementedOpcode};
+    handlers[0x1B] = {.name = "DEC DE", .handler = ExecuteDecDE};
     handlers[0x1C] = {.name = "INC E", .handler = ExecuteIncE};
     handlers[0x1D] = {.name = "DEC E", .handler = ExecuteDecE};
     handlers[0x1E] = {.name = "LD E, n", .handler = ExecuteLoadEn8};
@@ -117,7 +118,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0x28] = {.name = "JR Z, e8", .handler = ExecuteJumpRelativeZE8};
     handlers[0x29] = {.name = "ADD HL, HL", .handler = UnimplementedOpcode};
     handlers[0x2A] = {.name = "LD A, (HL+)", .handler = ExecuteLoadIndirectAFromHLIncrement};
-    handlers[0x2B] = {.name = "DEC HL", .handler = UnimplementedOpcode};
+    handlers[0x2B] = {.name = "DEC HL", .handler = ExecuteDecHL};
     handlers[0x2C] = {.name = "INC L", .handler = ExecuteIncL};
     handlers[0x2D] = {.name = "DEC L", .handler = ExecuteDecL};
     handlers[0x2E] = {.name = "LD L, n", .handler = ExecuteLoadLn8};
@@ -134,7 +135,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0x38] = {.name = "JR C, e8", .handler = ExecuteJumpRelativeCE8};
     handlers[0x39] = {.name = "ADD HL, SP", .handler = UnimplementedOpcode};
     handlers[0x3A] = {.name = "LD A, (HL-)", .handler = ExecuteLoadIndirectAFromHLDecrement};
-    handlers[0x3B] = {.name = "DEC SP", .handler = UnimplementedOpcode};
+    handlers[0x3B] = {.name = "DEC SP", .handler = ExecuteDecSP};
     handlers[0x3C] = {.name = "INC A", .handler = ExecuteIncA};
     handlers[0x3D] = {.name = "DEC A", .handler = ExecuteDecA};
     handlers[0x3E] = {.name = "LD A, n", .handler = ExecuteLoadAn8};

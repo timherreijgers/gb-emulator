@@ -107,7 +107,7 @@ cpuRegisters.flags.value |= (carry & UtilityLib::BitMask<7>) > 0x00_b ? CpuFlags
 A template wrapper `Register<T>` that applies a mask to selected operations:
 - `value` — reference to backing storage
 - `mask` — bits that are writable/readable
-- Assignment, `+=`, `&=`, and `|=` apply the mask; `+` returns masked arithmetic without carry-through
+- Assignment, `+=`, `-=`, `&=`, and `|=` apply the mask; `+` and `-` return masked arithmetic without carry or borrow through masked-out bits
 - Conversion to `T` returns `value & mask`
 - `LowerByteAsRegister()` / `UpperByteAsRegister()` — expose byte sub-registers (only for `Register16Bit`)
 - Post-increment/decrement and comparisons operate directly on backing values
