@@ -96,6 +96,7 @@ Parameterized tests for each instruction family:
 | `or_a_test.cpp` | `OR A, A` |
 | `or_a_n8_test.cpp` | `OR A, n` |
 | `inc_r_test.cpp` | `INC r` |
+| `inc_rr_test.cpp` | `INC rr` for BC, DE, HL, and SP |
 | `dec_r_test.cpp` | `DEC r` |
 | `load_hl_indirect_increment_a_test.cpp` | `LD A, (HL+)` |
 | `load_hl_indirect_decrement_a_test.cpp` | `LD A, (HL-)` |
