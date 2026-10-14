@@ -198,6 +198,7 @@ namespace
     names[0xBE] = "CpAFromIndirectHL";
     names[0xBF] = "CpA";
 
+    names[0xC0] = "RetNotZero";
     names[0xC1] = "POP_BC";
     names[0xC2] = "JumpNotZeroA16";
     names[0xC3] = "JP_A16";
@@ -205,18 +206,23 @@ namespace
     names[0xC5] = "PUSH_BC";
     names[0xC6] = "AddAn8";
     names[0xC7] = "Reset_0x00";
+    names[0xC8] = "RetZero";
+    names[0xC9] = "Ret";
     names[0xCA] = "JumpZeroA16";
     names[0xCC] = "CallZeroA16";
     names[0xCD] = "CallA16";
     names[0xCE] = "AdcAn8";
     names[0xCF] = "Reset_0x08";
 
+    names[0xD0] = "RetNotCarry";
     names[0xD1] = "POP_DE";
     names[0xD2] = "JumpNotCarryA16";
     names[0xD4] = "CallNotCarryA16";
     names[0xD5] = "PUSH_DE";
     names[0xD6] = "SubAn8";
     names[0xD7] = "Reset_0x10";
+    names[0xD8] = "RetCarry";
+    names[0xD9] = "RetI";
     names[0xDA] = "JumpCarryA16";
     names[0xDC] = "CallCarryA16";
     names[0xDE] = "SbcAn8";

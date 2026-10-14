@@ -2,13 +2,17 @@
 
 ## AddressBus (`emulatorlib/include/emulatorlib/address_bus.h`, `emulatorlib/src/address_bus.cpp`)
 
-The address bus connects the CPU to all addressable devices (ROM, RAM, I/O, etc.).
+The address bus connects the CPU to the registered `AddressBusAddressable` objects. The current project connects a
+cartridge and work RAM; it does not yet model the complete Game Boy address map or memory-mapped I/O.
 
 ### Design
 - Constructor takes `std::vector<std::reference_wrapper<AddressBusAddressable>> devices`
 - Multiple devices can respond to the same address
 - **Write**: broadcasts to ALL devices
 - **Read**: OR-combines results from all devices (`data |= device.ReadFromAddress(address)`)
+
+This is an implementation simplification, not Game Boy bus decoding or open-bus behavior. Each device is responsible
+for ignoring addresses it does not handle.
 
 ### Methods
 - `void WriteToAddress(uint16_t address, std::byte data) noexcept` — write to all devices
@@ -24,15 +28,14 @@ virtual auto ReadFromAddress(uint16_t address) const noexcept -> std::byte = 0;
 
 ## Cartridge (`emulatorlib/include/emulatorlib/cartridge.h`, `emulatorlib/src/cartridge.cpp`)
 
-Loads and exposes ROM data with header validation.
+Loads and exposes ROM data. ROM-size metadata is checked during construction; the separate logo and checksum methods
+report validation results but do not reject the ROM.
 
 ### Constructor
 - Takes `std::filesystem::path romPath`
 - Validates file size (0x150 ≤ size ≤ 0x800000)
-- Validates Nintendo logo at offset 0x104 (48 bytes)
-- Validates ROM size header byte at 0x148 (must be ≤ 8)
-- Verifies calculated ROM size matches actual file size
-- Validates header checksum at 0x134–0x14D
+- Requires an ordinary ROM-size code at `0x0148` no greater than 8 and checks that its computed size matches the file
+- Does not validate the Nintendo logo or header checksum in the constructor
 
 ### Exceptions
 - `InvalidRomException` — thrown for invalid ROM files (too small, bad size byte, etc.)
@@ -42,8 +45,8 @@ Loads and exposes ROM data with header validation.
 | Method | Returns | Description |
 |--------|---------|-------------|
 | `HasValidNintendoLogo()` | `bool` | Checks 48-byte logo at 0x104 |
-| `Title()` | `string_view` | 16-char title at offset 0x134 |
-| `CartridgeType()` | `CartridgeType` | MBC type at offset 0x147 |
+| `Title()` | `string_view` | Raw 16-byte view beginning at `0x0134`; no model-dependent title parsing |
+| `CartridgeType()` | `CartridgeType` | Enum value read from the cartridge-type byte at `0x0147` |
 | `RomSize()` | `size_t` | Computed ROM size from header byte at 0x148 |
 | `ValidHeaderChecksum()` | `bool` | Validates checksum at 0x14D |
 | `RomData()` | `const vector<byte>&` | Raw ROM data |
@@ -52,23 +55,21 @@ Loads and exposes ROM data with header validation.
 ### ROM Header Offsets
 | Offset | Field |
 |--------|-------|
-| 0x0100 | Reset vector (first opcode) |
-| 0x0104 | Nintendo logo (48 bytes) |
-| 0x0134 | Title (16 bytes) |
-| 0x0146 | Cartridge type (byte) |
-| 0x0147 | Cartridge type (extended) |
-| 0x0148 | ROM size (power-of-2, ≤ 8) |
-| 0x014D | Header checksum |
+| `0x0100` | Entry point area (not necessarily a single reset-vector opcode) |
+| `0x0104` | Nintendo logo (48 bytes; checked only by `HasValidNintendoLogo()`) |
+| `0x0134–0x0143` | Legacy title bytes returned by `Title()` |
+| `0x0146` | SGB support flag |
+| `0x0147` | Cartridge type |
+| `0x0148` | ROM size code |
+| `0x014D` | Header checksum byte; checked only by `ValidHeaderChecksum()` |
 
-### Cartridge Types (enum)
-ROM_ONLY (0x00), MBC1/1_RAM/1_RAM_BATTERY (0x01-0x03), MBC2/2_BATTERY (0x05-0x06), 
-ROM_RAM/ROM_RAM_BATTERY (0x08-0x09), MMM01 variants (0x0B-0x0D), MBC3 variants (0x0F-0x13), 
-MBC5 variants (0x19-0x1E), MBC6 (0x20), MBC7 variant (0x22), 
-POCKET_CAMERA (0xFC), BANDAI_TAMA5 (0xFD), HUC3 (0xFE), HUC1_RAM_BATTERY (0xFF)
+The enum recognizes the cartridge-type values listed in `cartridge.h`; it does not implement their mapper behavior.
+`Cartridge::ReadFromAddress()` exposes only the first 32 KiB of ROM directly, and writes are ignored. There is no
+bank switching, cartridge RAM, or special handling for nonstandard ROM-size codes.
 
 ## Ram (`emulatorlib/include/emulatorlib/ram.h`, `emulatorlib/src/ram.cpp`)
 
-Provides the Game Boy's fixed 8 KiB work RAM without banking.
+Provides a simplified fixed 8 KiB work-RAM region without banking or the Game Boy's echo-RAM mapping.
 
 - Address range: `0xC000–0xDFFF`
 - Initial contents: zero

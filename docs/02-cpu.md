@@ -6,8 +6,8 @@ The CPU is the central execution unit. It owns registers and dispatches opcodes 
 
 ### Construction
 - Takes a reference to `AddressBus`
-- Initializes registers to boot-state values (per [gbdev power-up docs](https://github.com/gbdev/pandocs/blob/master/src/Power_Up_Sequence.md)):
-  - `AF` = `0x0100` (A=0x01, flags masked to Zero)
+- Initializes a simplified starting state; it does not execute the Nintendo boot ROM and is not a model-accurate hardware power-up sequence:
+  - `AF` = `0x0180` (A=0x01, Zero flag set; the lower four flag bits are masked to zero)
   - `BC` = `0x0013`
   - `DE` = `0x00D8`
   - `HL` = `0x014D`
@@ -15,7 +15,8 @@ The CPU is the central execution unit. It owns registers and dispatches opcodes 
   - `PC` = `0x0100` (start address)
   - `SP` = `0xFFFE`
   - Master interrupt state = `DISABLED`
-  - Interrupt servicing and sound are not yet implemented
+  - The register values are selected by this implementation; actual post-boot values vary by Game Boy model
+  - Interrupt servicing, memory-mapped interrupt registers, and sound are not yet implemented
 
 ### Execution Model
 The CPU runs on a single public method: `Step()`
@@ -42,9 +43,9 @@ Step() {
 
 ### Coroutine-Based Multi-Cycle Execution
 - Each instruction is a coroutine (`InstructionHandler`)
-- `co_yield std::monostate{}` = "wait one M-cycle" (bus is busy)
+- `co_yield std::monostate{}` = advance one emulated M-cycle before the next coroutine resume
 - `co_return` = instruction complete, can fetch next opcode
-- Bus operations (read/write) must yield between them to respect timing
+- The coroutine scheduler delays opcode fetching until the current handler completes; this is a simplified timing model, not bus arbitration or a complete hardware bus model
 - Exception safety: coroutine stores `std::exception_ptr`, re-thrown in next `Step()`
 
 ## CpuRegisters (`emulatorlib/include/emulatorlib/cpu_registers.h`)
@@ -54,13 +55,13 @@ All CPU registers. Uses a layered design with backing storage and `Register<T>` 
 ### Register Pairs (16-bit)
 | Register | Backing        | Purpose          |
 |----------|---------------|------------------|
-| `af`     | `backingAf`   | A + Flags        |
-| `bc`     | `backingBc`   | General purpose  |
-| `de`     | `backingDe`   | General purpose  |
-| `hl`     | `backingHl`   | Memory addressing|
-| `wz`     | `backingWz`   | Internal (indirect) |
-| `PC`     | `backingPC`   | Program counter  |
-| `SP`     | `backingSP`   | Stack pointer    |
+| `afRegister` | `backingAfRegister` | A + Flags |
+| `bcRegister` | `backingBcRegister` | General purpose |
+| `deRegister` | `backingDeRegister` | General purpose |
+| `hlRegister` | `backingHlRegister` | Memory addressing |
+| `wzRegister` | `backingWzRegister` | Internal scratch pair; not an LR35902-visible register |
+| `programCounter` | `backingProgramCounterRegister` | Program counter |
+| `stackPointer` | `backingStackPointerRegister` | Stack pointer |
 
 ### Register Bytes (8-bit)
 - Each 16-bit register exposes `.UpperByteAsRegister()` and `.LowerByteAsRegister()` 
@@ -68,27 +69,29 @@ All CPU registers. Uses a layered design with backing storage and `Register<T>` 
 - E.g., `accumulator` references the upper byte of `afRegister`, `flags` references the lower byte
 
 ### Special Registers
-- `instructionRegister` (B) — holds current opcode being executed
-- `interruptEnableRegister` (IFF/IE) — currently unused but present
+- `instructionRegister` — internal latch for the current opcode; it is not the hardware `B` register
+- `interruptEnableRegister` — unused storage only; it is not the memory-mapped Game Boy `IE` register (and `IFF` is not LR35902 terminology)
 - `masterInterruptState` — master interrupt-enable state:
   - `DISABLED` — interrupt handling is disabled (the initial state)
   - `PENDING` — `EI` has requested enabling after its required delay
   - `ENABLED` — interrupt handling is enabled
 
 `EI` first sets the state to `PENDING`. `Cpu::Step()` promotes it to `ENABLED` after the complete subsequent instruction,
-including all M-cycles of a multi-cycle instruction.
+including all emulated cycles of a multi-cycle instruction. This models the EI delay only; interrupt requests and
+interrupt servicing are not implemented.
 `DI` immediately sets the state to `DISABLED`, cancelling a pending `EI` enable.
 
 ## CpuFlags (`emulatorlib/include/emulatorlib/cpu_flags.h`, `emulatorlib/src/cpu_flags.cpp`)
 
-Four CPU flags stored in bits 7, 6, 5, 4 of the flags register (bits 3-0 are always 1):
+Four CPU flags are stored in bits 7, 6, 5, and 4 of `F`. Bits 3-0 are unused and read as zero; `CpuRegisters` masks
+them off when writing the `AF` pair:
 
 | Flag        | Bit | Value  | Description                    |
 |-------------|-----|--------|--------------------------------|
 | Zero (Z)    | 7   | `0x80` | Result was zero                |
-| Subtract (N)| 6   | `0x40` | Previous operation was SUB/SBC |
-| Half Carry (H)| 5 | `0x20` | Carry/borrow from bit 3        |
-| Carry (C)   | 4   | `0x10` | Carry out from bit 7           |
+| Subtract (N)| 6   | `0x40` | Subtraction flag                |
+| Half Carry (H)| 5 | `0x20` | Carry/borrow between bits 3 and 4 for 8-bit arithmetic |
+| Carry (C)   | 4   | `0x10` | Carry/borrow out of bit 7 for 8-bit arithmetic |
 
 ### Usage Pattern
 Flags are combined via `operator|` and set as bytes:
@@ -101,11 +104,10 @@ cpuRegisters.flags.value |= (carry & UtilityLib::BitMask<7>) > 0x00_b ? CpuFlags
 
 ## Register Class (`emulatorlib/include/emulatorlib/register.h`)
 
-A template wrapper `Register<T>` that enforces a mask on all operations:
+A template wrapper `Register<T>` that applies a mask to selected operations:
 - `value` — reference to backing storage
 - `mask` — bits that are writable/readable
-- Assignment: `value = (t & mask)` — only masked bits are modified
-- Addition: masked arithmetic without carry-through
-- Conversion to `T`: returns `value & mask`
+- Assignment, `+=`, `&=`, and `|=` apply the mask; `+` returns masked arithmetic without carry-through
+- Conversion to `T` returns `value & mask`
 - `LowerByteAsRegister()` / `UpperByteAsRegister()` — expose byte sub-registers (only for `Register16Bit`)
-- Supports `operator<<=>` for comparison
+- Post-increment/decrement and comparisons operate directly on backing values
