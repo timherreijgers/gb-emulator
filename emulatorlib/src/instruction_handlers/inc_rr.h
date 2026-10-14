@@ -19,7 +19,7 @@ template <ReturnsRegister16Bit TargetRegister>
 constexpr auto ExecuteIncRR = [](const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     TargetRegister{}(cpuRegisters) += 1;
     co_yield std::monostate{};
-    
+
     co_return;
 };
 
