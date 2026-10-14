@@ -304,6 +304,11 @@ is zero and clear Subtract, HalfCarry, and Carry.
 |------------------------------------------|----------|---------------|-------------|
 | 0x04, 0x0C, 0x14, 0x1C, 0x24, 0x2C, 0x3C | `INC r`  | `ExecuteIncR` | r++         |
 | 0x05, 0x0D, 0x15, 0x1D, 0x25, 0x2D, 0x3D | `DEC r`  | `ExecuteDecR` | r--         |
+| 0x03, 0x13, 0x23, 0x33                    | `INC rr` | `ExecuteIncRR` | Increment 16-bit BC, DE, HL, or SP |
+
+The 16-bit `INC rr` instructions increment the selected register pair and do not modify CPU flags. They are
+implemented through `ExecuteIncRR`, instantiated as `ExecuteIncBC`, `ExecuteIncDE`, `ExecuteIncHL`, and
+`ExecuteIncSP`.
 
 ## Unimplemented Instructions
 
