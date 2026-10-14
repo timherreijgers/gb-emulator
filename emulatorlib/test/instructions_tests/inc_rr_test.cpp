@@ -47,7 +47,10 @@ TEST_P(IncRRTest, ExecutingOpCode)
     ASSERT_THAT(targetRegister(m_cpu.Registers()), ::testing::Eq(0x1234));
 
     m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(instruction));
     ASSERT_THAT(targetRegister(m_cpu.Registers()), ::testing::Eq(0x1235));
+
+    m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));
 }
 
