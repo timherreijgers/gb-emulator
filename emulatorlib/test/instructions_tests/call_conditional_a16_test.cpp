@@ -3,11 +3,10 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/cpu_flags.h"
 #include "instruction_test_base.h"
 
+#include "emulatorlib/cpu_flags.h"
 #include "emulatorlib/instruction_translation.h"
-#include "utilitylib/byte_utils.h"
 
 namespace EmulatorLib::Test
 {
@@ -37,7 +36,6 @@ protected:
 TEST_P(CallConditionalA16Test, JumpsWhenConditionIsMet)
 {
     const auto& [instruction, flagsWhenJumping, flagsWhenNotJumping] = GetParam();
-    static_cast<void>(flagsWhenNotJumping);
     m_cpu.Registers().flags = flagsWhenJumping;
 
     m_cpu.Step();
@@ -73,7 +71,6 @@ TEST_P(CallConditionalA16Test, JumpsWhenConditionIsMet)
 TEST_P(CallConditionalA16Test, ContinuesWhenConditionIsNotMet)
 {
     const auto& [instruction, flagsWhenJumping, flagsWhenNotJumping] = GetParam();
-    static_cast<void>(flagsWhenJumping);
     m_cpu.Registers().flags = flagsWhenNotJumping;
 
     m_cpu.Step();

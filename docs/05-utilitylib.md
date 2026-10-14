@@ -30,8 +30,8 @@ operator-(std::byte, integral) -> std::byte
 
 ## Numeric Limits (`numeric_limits.h`)
 
-Custom `UtilityLib::numeric_limits<T>` specializing `std::numeric_limits<std::byte>` to use `unsigned char` limits
-(since `std::byte` lacks numeric limits in C++26).
+`UtilityLib::numeric_limits<T>` inherits from `std::numeric_limits<T>` and specializes its own `std::byte` case by
+inheriting the limits for `unsigned char`.
 
 ## Mathematical Result (`mathematical_result.h`)
 
@@ -58,7 +58,7 @@ namespace UtilityLib {
 
 constexpr auto AddWithCarry = [](IntegralOrByte auto left, IntegralOrByte auto right) noexcept -> MathematicalResult<decltype(left)>;
 
-template <UnsignedIntegralOrByte T>
+template <IntegralOrByte T>
 [[nodiscard]] constexpr auto AddWithCarryIn(T left, T right, bool carryIn) noexcept -> MathematicalResult<T>;
 }
 ```
@@ -92,7 +92,8 @@ Compile-time bit mask constants:
 
 ```cpp
 namespace UtilityLib {
-template <uint8_t mask>    // mask must be 0-7
+template <uint8_t mask>
+    requires ValidBitMask<mask>  // mask must be 0-7
 constexpr auto BitMask = static_cast<std::byte>(1 << mask);
 }
 ```

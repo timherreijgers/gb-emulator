@@ -109,7 +109,7 @@ The ADC handlers use `AdcWithCarryWrapper` which extracts the carry flag via `Ca
 | 0x01, 0x11, 0x21, 0x31                   | `LD rr, nn`     | `ExecuteLoad*Rn16`                                 | Load 16-bit register with 16-bit immediate |
 | 0x06-0x0E, 0x16-0x1E, 0x26-0x2E, 0x3E    | `LD r, n`       | `ExecuteLoad*rn8`                                  | Load 8-bit register with 8-bit immediate   |
 | 0x40-0x7F (subset)                       | `LD r, r'`      | `ExecuteLoadRegReg`                                | Register-to-register transfer              |
-| 0x70-0x77, 0x77                          | `LD (HL), r`    | `ExecuteLoadIndirectFrom`                          | Store register at HL address               |
+| 0x70-0x75, 0x77                          | `LD (HL), r`    | `ExecuteLoadIndirectFrom`                          | Store register at HL address               |
 | 0x46, 0x4E, 0x56, 0x5E, 0x66, 0x6E, 0x7E | `LD r, (HL)`    | `ExecuteLoadRIndirectRr`                           | Load from HL address into register         |
 | 0x02, 0x12                               | `LD (BC/DE), A` | `ExecuteLoadIndirectFrom`                          | Store A at BC/DE address                   |
 | 0x0A, 0x1A                               | `LD A, (BC/DE)` | `ExecuteLoadRIndirectRr`                           | Load from BC/DE into A                     |
@@ -149,6 +149,22 @@ jump forms are specified by `jump_a16_test.cpp` and `jump_conditional_a16_test.c
 
 `JP HL` has no operand bytes and sets the program counter directly from HL. Its behavior is specified by
 `jump_hl_test.cpp`.
+
+### Return Instructions
+
+| Opcode | Mnemonic | Handler |
+|--------|----------|---------|
+| 0xC0 | `RET NZ` | `ExecuteRetNz` |
+| 0xC8 | `RET Z` | `ExecuteRetZ` |
+| 0xC9 | `RET` | `ExecuteRet` |
+| 0xD0 | `RET NC` | `ExecuteRetNc` |
+| 0xD8 | `RET C` | `ExecuteRetC` |
+| 0xD9 | `RETI` | `ExecuteRetI` |
+
+`RET` pops the little-endian return address from the stack into the program counter and increments the stack pointer
+twice. Conditional returns perform the pop only when their condition is met; otherwise, execution continues with the
+next instruction. `RETI` also enables the master interrupt state. These behaviors are covered by `ret_test.cpp`,
+`ret_conditional_test.cpp`, and `reti_test.cpp`.
 
 ### Call Instructions
 
@@ -293,9 +309,9 @@ is zero and clear Subtract, HalfCarry, and Carry.
 
 Major categories not yet implemented:
 
-- **Control flow**: RET, DJNZ, STOP
+- **Control flow**: STOP
 - **Logic**: CPL
-- **Shift/Rotate**: SLA, SRL, SLL, SLL, RL, RR, RLC, RRC
+- **Shift/Rotate**: SLA, SRA, SRL, SWAP, RL, RR, RLC, RRC
 - **Decimal adjustment**: DAA
 - **Special**: SCF, CCF, HALT
 - **CB-prefixed**: All CB-prefixed instructions (bit operations, shifts, rotates)
