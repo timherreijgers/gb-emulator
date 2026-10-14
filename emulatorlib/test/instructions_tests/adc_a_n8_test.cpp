@@ -3,9 +3,9 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/cpu_flags.h"
-#include "emulatorlib/instruction_translation.h"
 #include "instruction_test_base.h"
+
+#include "emulatorlib/cpu_flags.h"
 
 namespace EmulatorLib::Test
 {

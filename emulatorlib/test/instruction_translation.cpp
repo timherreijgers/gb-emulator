@@ -3,11 +3,11 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/instruction_translation.h"
+#include "instruction_translation.h"
 
 #include <array>
 
-namespace EmulatorLib
+namespace EmulatorLib::Test
 {
 
 namespace
@@ -264,4 +264,4 @@ namespace
     return opCodeLut[static_cast<size_t>(opcode)];
 }
 
-} // namespace EmulatorLib
+} // namespace EmulatorLib::Test

@@ -5,11 +5,9 @@
 
 #include "instruction_test_base.h"
 
-#include "emulatorlib/instruction_translation.h"
-#include "utilitylib/byte_utils.h"
+#include "instruction_translation.h"
 
 #include <cstddef>
-#include <cstdint>
 #include <format>
 
 namespace EmulatorLib::Test

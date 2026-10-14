@@ -2,7 +2,7 @@
 
 ## Documentation-First Workflow
 
-**Always read the `docs/` folder first** before exploring or modifying any code in this project.
+**Always read the relevant docs in the `docs/` folder first** before exploring or modifying any code in this project.
 
 The `docs/` folder contains structured documentation that summarizes the entire codebase:
 

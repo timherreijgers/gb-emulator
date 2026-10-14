@@ -12,7 +12,8 @@
 namespace EmulatorLib
 {
 
-constexpr auto ExecuteRet = [](const AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
+inline auto ExecuteRet(const AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler
+{
     cpuRegisters.zRegister = addressBus.ReadFromAddress(cpuRegisters.stackPointer++);
     co_yield std::monostate{};
 
@@ -23,6 +24,6 @@ constexpr auto ExecuteRet = [](const AddressBus& addressBus, CpuRegisters& cpuRe
     co_yield std::monostate{};
 
     co_return;
-};
+}
 
 } // namespace EmulatorLib
