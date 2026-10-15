@@ -99,6 +99,8 @@ Parameterized tests for each instruction family:
 | `inc_rr_test.cpp` | `INC rr` for BC, DE, HL, and SP |
 | `dec_r_test.cpp` | `DEC r` |
 | `dec_rr_test.cpp` | `DEC rr` for BC, DE, HL, and SP |
+| `cpl_test.cpp` | `CPL` accumulator complement and flags |
+| `ccf_test.cpp` | `CCF` carry toggling and preservation of the remaining flags |
 | `load_hl_indirect_increment_a_test.cpp` | `LD A, (HL+)` |
 | `load_hl_indirect_decrement_a_test.cpp` | `LD A, (HL-)` |
 | `load_indirect_8bit_test.cpp` | `LD (HL), n` |

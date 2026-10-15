@@ -58,6 +58,7 @@ namespace
     names[0x2C] = "IncL";
     names[0x2D] = "DecL";
     names[0x2E] = "LoadLn8";
+    names[0x2F] = "CPL";
 
     names[0x30] = "JR_NC";
     names[0x31] = "LoadSPn16";
@@ -70,6 +71,7 @@ namespace
     names[0x3C] = "IncA";
     names[0x3D] = "DecA";
     names[0x3E] = "LoadAn8";
+    names[0x3F] = "CCF";
 
     names[0x40] = "Load_B_B";
     names[0x41] = "Load_B_C";
