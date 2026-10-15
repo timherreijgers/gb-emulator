@@ -40,7 +40,7 @@ protected:
 | `cartridge_test.cpp` | ROM loading, data access |
 | `cartridge_header_test.cpp` | Nintendo logo, title, cartridge type, ROM size, checksum validation |
 | `ram_test.cpp` | Initial RAM contents and read/write access |
-| `masked_register_test.cpp` | Register mask enforcement, byte sub-register propagation |
+| `masked_register_test.cpp` | Register mask enforcement, including XOR assignment, and byte sub-register propagation |
 | `flag_helpers_test.cpp` | Addition, subtraction, AND, OR, and XOR flag calculations |
 
 ### Instruction Tests (`emulatorlib/test/instructions_tests/`)
@@ -100,7 +100,7 @@ Parameterized tests for each instruction family:
 | `dec_r_test.cpp` | `DEC r` |
 | `dec_rr_test.cpp` | `DEC rr` for BC, DE, HL, and SP |
 | `cpl_test.cpp` | `CPL` accumulator complement and flags |
-| `ccf_test.cpp` | `CCF` carry toggling and preservation of the remaining flags |
+| `ccf_test.cpp` | `CCF` carry toggling, Zero preservation, and Subtract/HalfCarry clearing |
 | `load_hl_indirect_increment_a_test.cpp` | `LD A, (HL+)` |
 | `load_hl_indirect_decrement_a_test.cpp` | `LD A, (HL-)` |
 | `load_indirect_8bit_test.cpp` | `LD (HL), n` |

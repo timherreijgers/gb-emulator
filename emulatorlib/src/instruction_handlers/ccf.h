@@ -15,7 +15,8 @@ namespace EmulatorLib
 
 inline auto ExecuteCcf(const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) -> InstructionHandler
 {
-    cpuRegisters.flags = cpuRegisters.flags.value ^ CpuFlags::Carry.AsByte();
+    cpuRegisters.flags &= (CpuFlags::Carry | CpuFlags::Zero).AsByte();
+    cpuRegisters.flags ^= CpuFlags::Carry.AsByte();
     co_return;
 }
 

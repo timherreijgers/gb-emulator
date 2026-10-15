@@ -317,10 +317,11 @@ handler updates its register pair, yields for one M-cycle, then completes. `Exec
 | Opcode | Mnemonic | Handler | Description |
 |--------|----------|---------|-------------|
 | 0x2F | `CPL` | `ExecuteCpl` | Complement every bit of A; set Subtract and HalfCarry, clear Zero and Carry |
-| 0x3F | `CCF` | `ExecuteCcf` | Toggle Carry while preserving Zero, Subtract, and HalfCarry |
+| 0x3F | `CCF` | `ExecuteCcf` | Toggle Carry, preserve Zero, and clear Subtract and HalfCarry |
 
 Both instructions complete in their first handler resume, so they do not add an emulated M-cycle after opcode fetch.
-`CPL` replaces A with its bitwise complement and writes `N | H` to F. `CCF` XORs F with the Carry flag mask.
+`CPL` replaces A with its bitwise complement and writes `N | H` to F. `CCF` first retains only Zero and Carry, then
+toggles Carry with the masked `Register::operator^=`.
 
 ## Unimplemented Instructions
 
