@@ -49,13 +49,13 @@ TEST_F(CcfTest, ExecuteOpCode_FlipsFrom1To0)
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));
 }
 
-TEST_F(CcfTest, ExecuteOpCode_OnlyFlipsCarry)
+TEST_F(CcfTest, ExecuteOpCode_OnlyFlipsCarryAndClearSubtractAndHalfCarry)
 {
     m_cpu.Registers().flags = (CpuFlags::Subtract | CpuFlags::HalfCarry | CpuFlags::Carry | CpuFlags::Zero).AsByte();
 
     m_cpu.Step();
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq((CpuFlags::Subtract | CpuFlags::HalfCarry | CpuFlags::Zero).AsByte()));
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq((CpuFlags::Zero).AsByte()));
 }
 
 } // namespace EmulatorLib::Test

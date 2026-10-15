@@ -112,6 +112,13 @@ struct Register
         return *this;
     }
 
+    constexpr auto operator^=(T other) noexcept -> Register<T>&
+    {
+        value ^= other;
+        value &= mask;
+        return *this;
+    }
+
     [[nodiscard]] constexpr auto operator<=>(const Register<T>& other) const noexcept
     {
         return value <=> other.value;

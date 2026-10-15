@@ -59,6 +59,16 @@ TEST(MaskedRegister8BitTest, Add_DoesNotCarryFromMaskedBits)
     ASSERT_THAT(backing, ::testing::Eq(0x00_b));
 }
 
+TEST(MaskedRegister8BitTest, Xor_AppliesMask)
+{
+    auto backing = 0xF5_b;
+    Register8Bit reg{backing, 0xF0_b};
+
+    reg ^= 0xFF_b;
+
+    ASSERT_THAT(backing, ::testing::Eq(0x00_b));
+}
+
 INSTANTIATE_TEST_SUITE_P(MaskedRegister8BitTest, MaskedRegister8BitTest, ::testing::Values(0xF0_b, 0x0F_b, 0xFF_b));
 
 class MaskedRegister16BitTest : public ::testing::TestWithParam<uint16_t>

@@ -110,7 +110,7 @@ named flag values remain defined in `cpu_flags.cpp`.
 A template wrapper `Register<T>` that applies a mask to selected operations:
 - `value` — reference to backing storage
 - `mask` — bits that are writable/readable
-- Assignment, `+=`, `-=`, `&=`, and `|=` apply the mask; `+` and `-` perform arithmetic on the masked current value, then mask the result
+- Assignment, `+=`, `-=`, `&=`, `|=`, and `^=` apply the mask; `+` and `-` perform arithmetic on the masked current value, then mask the result
 - Conversion to `T` returns `value & mask`
 - `LowerByteAsRegister()` / `UpperByteAsRegister()` — expose byte sub-registers (only for `Register16Bit`)
 - Post-increment/decrement and comparisons operate directly on backing values

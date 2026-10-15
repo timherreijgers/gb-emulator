@@ -16,7 +16,7 @@ namespace EmulatorLib
 inline auto ExecuteCpl(const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) -> InstructionHandler
 {
     cpuRegisters.accumulator = ~cpuRegisters.accumulator;
-    cpuRegisters.flags = (CpuFlags::Subtract | CpuFlags::HalfCarry).AsByte();
+    cpuRegisters.flags |= (CpuFlags::Subtract | CpuFlags::HalfCarry).AsByte();
     co_return;
 }
 
