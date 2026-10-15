@@ -312,15 +312,24 @@ handler updates its register pair, yields for one M-cycle, then completes. `Exec
 `ExecuteIncBC`, `ExecuteIncDE`, `ExecuteIncHL`, and `ExecuteIncSP`; `ExecuteDecRR` is instantiated as
 `ExecuteDecBC`, `ExecuteDecDE`, `ExecuteDecHL`, and `ExecuteDecSP`.
 
+### Accumulator and Carry-Flag Instructions
+
+| Opcode | Mnemonic | Handler | Description |
+|--------|----------|---------|-------------|
+| 0x2F | `CPL` | `ExecuteCpl` | Complement every bit of A; set Subtract and HalfCarry, clear Zero and Carry |
+| 0x3F | `CCF` | `ExecuteCcf` | Toggle Carry while preserving Zero, Subtract, and HalfCarry |
+
+Both instructions complete in their first handler resume, so they do not add an emulated M-cycle after opcode fetch.
+`CPL` replaces A with its bitwise complement and writes `N | H` to F. `CCF` XORs F with the Carry flag mask.
+
 ## Unimplemented Instructions
 
 Major categories not yet implemented:
 
 - **Control flow**: STOP
-- **Logic**: CPL
 - **Shift/Rotate**: SLA, SRA, SRL, SWAP, RL, RR, RLC, RRC
 - **Decimal adjustment**: DAA
-- **Special**: SCF, CCF, HALT
+- **Special**: SCF, HALT
 - **CB-prefixed**: All CB-prefixed instructions (bit operations, shifts, rotates)
 
 ## Opcode Reference Table

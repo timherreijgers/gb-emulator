@@ -102,6 +102,9 @@ cpuRegisters.flags.value |= (carry & UtilityLib::BitMask<3>) > 0x00_b ? CpuFlags
 cpuRegisters.flags.value |= (carry & UtilityLib::BitMask<7>) > 0x00_b ? CpuFlags::Carry.AsByte() : 0x00_b;
 ```
 
+`CpuFlags` keeps its byte conversion, dereference, and bitwise-OR operations inline and `constexpr`; its four
+named flag values remain defined in `cpu_flags.cpp`.
+
 ## Register Class (`emulatorlib/include/emulatorlib/register.h`)
 
 A template wrapper `Register<T>` that applies a mask to selected operations:
