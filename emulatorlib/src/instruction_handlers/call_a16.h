@@ -5,11 +5,10 @@
 
 #pragma once
 
-#include "flags_based_predicates.h"
-
 #include "emulatorlib/address_bus.h"
 #include "emulatorlib/cpu_registers.h"
 #include "emulatorlib/instruction_handler.h"
+#include "instruction_handlers/flags_based_predicates.h"
 
 namespace EmulatorLib
 {

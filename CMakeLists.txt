@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 4.2)
 
 project(gb_emulator VERSION 0.0.1)
 
-add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wsuggest-override -Wshadow -Wswitch-enum -Wswitch-default -Wconversion)
 enable_testing()
 
 find_package(GTest REQUIRED)
@@ -10,9 +10,16 @@ find_package(benchmark REQUIRED)
 
 include(cmake/ccache.cmake)
 
+set(CMAKE_VERIFY_INTERFACE_HEADER_SETS ON)
+set(CMAKE_VERIFY_PRIVATE_HEADER_SETS ON)
+
 add_subdirectory(emulatorlib)
 add_subdirectory(utilitylib)
 
 add_executable(gb_emulator main.cpp)
 
 target_link_libraries(gb_emulator PRIVATE emulatorlib)
+
+add_custom_target(run_all_header_verifications ALL
+        DEPENDS all_verify_header_sets
+)
