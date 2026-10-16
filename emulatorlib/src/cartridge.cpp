@@ -50,9 +50,9 @@ constexpr std::array<std::byte, 4 * 12> g_nintendoLogoData = {
         throw InvalidRomException(romPath);
     }
 
-    romData.resize(diskRomSize);
+    romData.resize(static_cast<size_t>(diskRomSize));
     romFile.seekg(0);
-    romFile.read(reinterpret_cast<char *>(romData.data()), romData.size());
+    romFile.read(reinterpret_cast<char *>(romData.data()), static_cast<ptrdiff_t>(romData.size()));
 
     if (romFile.fail() || romFile.gcount() != static_cast<std::streamsize>(romData.size()))
     {
