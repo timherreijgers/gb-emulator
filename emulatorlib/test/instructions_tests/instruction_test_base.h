@@ -1,7 +1,7 @@
 #pragma once
 
-#include "emulatorlib/address_bus.h"
-#include "emulatorlib/cpu.h"
+import emulatorlib.address_bus;
+import emulatorlib.cpu;
 #include "emulatorlib/test/address_bus_addressable_mock.h"
 #include "emulatorlib/test/program_stub.h"
 

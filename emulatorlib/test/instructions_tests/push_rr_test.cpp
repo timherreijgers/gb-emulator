@@ -5,7 +5,6 @@
 
 #include "instruction_test_base.h"
 
-#include "instruction_handlers/register_io_helpers.h"
 #include "instruction_translation.h"
 
 namespace EmulatorLib::Test

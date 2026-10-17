@@ -1,0 +1,44 @@
+/*
+ * Copyright © 2026. Tim Herreijgers
+ * Licensed using the MIT license
+ */
+
+module;
+
+#include <coroutine>
+#include <cstddef>
+#include <variant>
+
+module emulatorlib.cpu:load_indirect_r;
+
+import emulatorlib.cpu;
+import emulatorlib.address_bus;
+
+namespace EmulatorLib
+{
+
+template <ReturnsRegister16Bit RegisterDestinationAddress, ReturnsRegister8Bit ReadLocation, RegisterModifier Modifier = RegisterNoModifier>
+constexpr auto ExecuteLoadIndirectFrom = [](AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
+    const auto address = RegisterDestinationAddress{}(cpuRegisters).value;
+    Modifier{}(RegisterDestinationAddress{}(cpuRegisters));
+    addressBus.WriteToAddress(address, ReadLocation{}(cpuRegisters).value);
+    co_yield std::monostate{};
+
+    // We need this co_return here to make sure the execution of the opcode takes 2 M-cycles. We cannot read the next instruction at the same
+    // time we write something on the data bus.
+    co_return;
+};
+
+constexpr auto ExecuteLoadIndirectBCFromA = ExecuteLoadIndirectFrom<RegisterBC, RegisterA>;
+constexpr auto ExecuteLoadIndirectDEFromA = ExecuteLoadIndirectFrom<RegisterDE, RegisterA>;
+constexpr auto ExecuteLoadIndirectHLFromA = ExecuteLoadIndirectFrom<RegisterHL, RegisterA>;
+constexpr auto ExecuteLoadIndirectHLFromB = ExecuteLoadIndirectFrom<RegisterHL, RegisterB>;
+constexpr auto ExecuteLoadIndirectHLFromC = ExecuteLoadIndirectFrom<RegisterHL, RegisterC>;
+constexpr auto ExecuteLoadIndirectHLFromD = ExecuteLoadIndirectFrom<RegisterHL, RegisterD>;
+constexpr auto ExecuteLoadIndirectHLFromE = ExecuteLoadIndirectFrom<RegisterHL, RegisterE>;
+constexpr auto ExecuteLoadIndirectHLFromH = ExecuteLoadIndirectFrom<RegisterHL, RegisterH>;
+constexpr auto ExecuteLoadIndirectHLFromL = ExecuteLoadIndirectFrom<RegisterHL, RegisterL>;
+constexpr auto ExecuteLoadIndirectHLIncrementFromA = ExecuteLoadIndirectFrom<RegisterHL, RegisterA, Register16BitIncrement>;
+constexpr auto ExecuteLoadIndirectHLDecrementFromA = ExecuteLoadIndirectFrom<RegisterHL, RegisterA, Register16BitDecrement>;
+
+} // namespace EmulatorLib

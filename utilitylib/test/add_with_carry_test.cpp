@@ -3,7 +3,7 @@
  * Licensed using the MIT license
  */
 
-#include "utilitylib/add_with_carry.h"
+import utilitylib;
 
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>

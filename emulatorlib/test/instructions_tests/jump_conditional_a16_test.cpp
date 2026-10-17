@@ -6,7 +6,7 @@
 #include "instruction_test_base.h"
 
 #include "instruction_translation.h"
-#include "utilitylib/byte_utils.h"
+import utilitylib;
 
 namespace EmulatorLib::Test
 {

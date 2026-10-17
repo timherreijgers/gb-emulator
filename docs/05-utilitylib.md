@@ -2,7 +2,11 @@
 
 ## Overview
 
-Header-only utility library (`utilitylib/include/utilitylib/`) providing low-level byte operations for the emulator.
+Utility library providing low-level byte operations for the emulator.
+
+`UtilityLib` is exposed as the `utilitylib/src/utilitylib.cppm` named module interface and is consumed with
+`import utilitylib;`. The legacy headers in `utilitylib/include/utilitylib/` remain available for the emulator's
+existing include-based sources, but do not participate in the module interface.
 
 ## Integral Suffixes (`integral_suffixes.h`)
 
