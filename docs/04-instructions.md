@@ -21,13 +21,18 @@ auto Execute<Name>(AddressBus& addressBus, CpuRegisters& cpuRegisters) -> Instru
 - `cpuRegisters.programCounter++` — increment PC for fetching operands
 - `cpuRegisters.zRegister` / `cpuRegisters.wRegister` — temporary storage (used as scratch registers)
 
-## Register Helpers (`instruction_handlers/register_io_helpers.h`)
+## Register Helpers (`cpu/instruction_handler_support.cppm`)
 
-Lambda-based register accessors used with the template pattern:
+Stateless register accessor types used with the template pattern:
 
 ```cpp
-using RegisterA = decltype([](CpuRegisters& registers) -> Register8Bit& { return registers.accumulator; });
-using RegisterBC = decltype([](CpuRegisters& registers) -> Register16Bit& { return registers.bcRegister; });
+struct RegisterA
+{
+    constexpr auto operator()(CpuRegisters& registers) const noexcept -> Register8Bit&
+    {
+        return registers.accumulator;
+    }
+};
 ```
 
 All available: `RegisterA`, `RegisterB`, `RegisterC`, `RegisterD`, `RegisterE`, `RegisterH`, `RegisterL`,
@@ -36,12 +41,16 @@ All available: `RegisterA`, `RegisterB`, `RegisterC`, `RegisterD`, `RegisterE`, 
 ### 16-bit Modifiers
 
 ```cpp
-using Register16BitIncrement = decltype([](Register16Bit& reg) { reg.value++; });
-using Register16BitDecrement = decltype([](Register16Bit& reg) { reg.value--; });
-using RegisterNoModifier = decltype([](Register16Bit& /*reg*/) {});
+struct Register16BitIncrement
+{
+    constexpr auto operator()(Register16Bit& reg) const noexcept -> void
+    {
+        reg.value++;
+    }
+};
 ```
 
-## Register Concepts (`instruction_handlers/register_concepts.h`)
+## Register Concepts (`cpu/instruction_handler_support.cppm`)
 
 ```cpp
 template <typename T> concept ReturnsRegister8Bit  // T(registers) -> Register8Bit&
@@ -51,9 +60,9 @@ template <typename T> concept RegisterModifier16Bit // t(reg) -> void
 template <typename T> concept RegisterModifier      // either 8-bit or 16-bit modifier
 ```
 
-## Flag Helpers (`instruction_handlers/flag_helpers.h`)
+## Flag Helpers (`cpu/instruction_handler_support.cppm`)
 
-Lambda-based flag manipulation functions:
+Stateless flag helper callables:
 
 - `CarryIn(registers)` — reads the current Carry flag for instructions that consume it
 - `ApplyAdditionFlags(registers, result, carryPerBit)` — rebuilds Zero, HalfCarry, and Carry after 8-bit addition,
@@ -69,10 +78,12 @@ Lambda-based flag manipulation functions:
 `LD HL, SP+e8` only shares `CarryIn`; it clears Zero and derives its flags according to its distinct instruction
 rules.
 
-Each handler header directly includes every public emulator header needed by symbols it uses; it must not depend on an
-incidental include order.
+Instruction handlers are implementation partitions of `emulatorlib.cpu`. The opcode-map partition imports each handler
+partition, so template aliases remain next to their definitions while the opcode table stays centralized. Shared register
+accessors, concepts, flag helpers, and predicates are defined in `:instruction_handler_support` and exported through
+`emulatorlib.cpu` for instruction tests.
 
-## Generic Math Operand Template (`instruction_handlers/mathetical_r.h`)
+## Generic Math Operand Template (`instruction_handlers/mathetical_r.cpp`)
 
 A generic template pattern for register-to-register arithmetic instructions:
 
@@ -82,22 +93,24 @@ constexpr auto ExecuteMathOperandR = [](const AddressBus& /*addressBus*/, CpuReg
 ```
 
 Uses concepts to support two operand styles:
+
 - `MathOperandWithoutRegisters<T>` — callable as `T{}(left, right)` returning `MathematicalResult<T>`
 - `MathOperandWithRegisters<T>` — callable as `T{}(registers, left, right)` returning `MathematicalResult<T>`
 - `SetFlagFunction<T>` — callable as `T{}(registers, result, carry)` returning `void`
 
 ### Instantiated Handlers
 
-| Operation | Flags Function | Handlers |
-|-----------|---------------|----------|
-| `ADD` | `ApplyAdditionFlags` | `ExecuteAddA`, `ExecuteAddB`, `ExecuteAddC`, `ExecuteAddD`, `ExecuteAddE`, `ExecuteAddH`, `ExecuteAddL` |
-| `SUB` | `ApplySubtractionFlags` | `ExecuteSubA`, `ExecuteSubB`, `ExecuteSubC`, `ExecuteSubD`, `ExecuteSubE`, `ExecuteSubH`, `ExecuteSubL`, `ExecuteSubAFromIndirectHL` |
-| `CP` | `ApplySubtractionFlags` | `ExecuteCpA`, `ExecuteCpB`, `ExecuteCpC`, `ExecuteCpD`, `ExecuteCpE`, `ExecuteCpH`, `ExecuteCpL` |
-| `ADC` | `ApplyAdditionFlags` | `ExecuteAdcA`, `ExecuteAdcB`, `ExecuteAdcC`, `ExecuteAdcD`, `ExecuteAdcE`, `ExecuteAdcH`, `ExecuteAdcL` |
-| `OR` | `ApplyOrFlags` | `ExecuteOrA`, `ExecuteOrB`, `ExecuteOrC`, `ExecuteOrD`, `ExecuteOrE`, `ExecuteOrH`, `ExecuteOrL` |
-| `XOR` | `ApplyXorFlags` | `ExecuteXorA`, `ExecuteXorB`, `ExecuteXorC`, `ExecuteXorD`, `ExecuteXorE`, `ExecuteXorH`, `ExecuteXorL` |
+| Operation | Flags Function          | Handlers                                                                                                                             |
+|-----------|-------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `ADD`     | `ApplyAdditionFlags`    | `ExecuteAddA`, `ExecuteAddB`, `ExecuteAddC`, `ExecuteAddD`, `ExecuteAddE`, `ExecuteAddH`, `ExecuteAddL`                              |
+| `SUB`     | `ApplySubtractionFlags` | `ExecuteSubA`, `ExecuteSubB`, `ExecuteSubC`, `ExecuteSubD`, `ExecuteSubE`, `ExecuteSubH`, `ExecuteSubL`, `ExecuteSubAFromIndirectHL` |
+| `CP`      | `ApplySubtractionFlags` | `ExecuteCpA`, `ExecuteCpB`, `ExecuteCpC`, `ExecuteCpD`, `ExecuteCpE`, `ExecuteCpH`, `ExecuteCpL`                                     |
+| `ADC`     | `ApplyAdditionFlags`    | `ExecuteAdcA`, `ExecuteAdcB`, `ExecuteAdcC`, `ExecuteAdcD`, `ExecuteAdcE`, `ExecuteAdcH`, `ExecuteAdcL`                              |
+| `OR`      | `ApplyOrFlags`          | `ExecuteOrA`, `ExecuteOrB`, `ExecuteOrC`, `ExecuteOrD`, `ExecuteOrE`, `ExecuteOrH`, `ExecuteOrL`                                     |
+| `XOR`     | `ApplyXorFlags`         | `ExecuteXorA`, `ExecuteXorB`, `ExecuteXorC`, `ExecuteXorD`, `ExecuteXorE`, `ExecuteXorH`, `ExecuteXorL`                              |
 
-The ADC handlers use `AdcWithCarryWrapper` which extracts the carry flag via `CarryIn()` before calling `UtilityLib::AddWithCarryIn()`.
+The ADC handlers use `AdcWithCarryWrapper` which extracts the carry flag via `CarryIn()` before calling
+`UtilityLib::AddWithCarryIn()`.
 
 ## Implemented Instructions
 
@@ -134,14 +147,14 @@ The ADC handlers use `AdcWithCarryWrapper` which extracts the carry flag via `Ca
 
 ### Jump Instructions
 
-| Opcode | Mnemonic | Handler | Description |
-|--------|----------|---------|-------------|
-| 0xC2 | `JP NZ, a16` | `ExecuteJumpNzA16` | Jump when the Zero flag is clear |
-| 0xC3 | `JP a16` | `ExecuteJumpA16` | Unconditionally jump to `a16` |
-| 0xCA | `JP Z, a16` | `ExecuteJumpZA16` | Jump when the Zero flag is set |
-| 0xD2 | `JP NC, a16` | `ExecuteJumpNcA16` | Jump when the Carry flag is clear |
-| 0xDA | `JP C, a16` | `ExecuteJumpCA16` | Jump when the Carry flag is set |
-| 0xE9 | `JP HL` | `ExecuteJumpHl` | Jump to the address in HL |
+| Opcode | Mnemonic     | Handler            | Description                       |
+|--------|--------------|--------------------|-----------------------------------|
+| 0xC2   | `JP NZ, a16` | `ExecuteJumpNzA16` | Jump when the Zero flag is clear  |
+| 0xC3   | `JP a16`     | `ExecuteJumpA16`   | Unconditionally jump to `a16`     |
+| 0xCA   | `JP Z, a16`  | `ExecuteJumpZA16`  | Jump when the Zero flag is set    |
+| 0xD2   | `JP NC, a16` | `ExecuteJumpNcA16` | Jump when the Carry flag is clear |
+| 0xDA   | `JP C, a16`  | `ExecuteJumpCA16`  | Jump when the Carry flag is set   |
+| 0xE9   | `JP HL`      | `ExecuteJumpHl`    | Jump to the address in HL         |
 
 The `a16` forms read a little-endian address operand. An unconditional jump and a taken conditional jump set the
 program counter to that address; an untaken conditional jump continues at the following instruction. The absolute
@@ -152,14 +165,14 @@ jump forms are specified by `jump_a16_test.cpp` and `jump_conditional_a16_test.c
 
 ### Return Instructions
 
-| Opcode | Mnemonic | Handler |
-|--------|----------|---------|
-| 0xC0 | `RET NZ` | `ExecuteRetNz` |
-| 0xC8 | `RET Z` | `ExecuteRetZ` |
-| 0xC9 | `RET` | `ExecuteRet` |
-| 0xD0 | `RET NC` | `ExecuteRetNc` |
-| 0xD8 | `RET C` | `ExecuteRetC` |
-| 0xD9 | `RETI` | `ExecuteRetI` |
+| Opcode | Mnemonic | Handler        |
+|--------|----------|----------------|
+| 0xC0   | `RET NZ` | `ExecuteRetNz` |
+| 0xC8   | `RET Z`  | `ExecuteRetZ`  |
+| 0xC9   | `RET`    | `ExecuteRet`   |
+| 0xD0   | `RET NC` | `ExecuteRetNc` |
+| 0xD8   | `RET C`  | `ExecuteRetC`  |
+| 0xD9   | `RETI`   | `ExecuteRetI`  |
 
 `RET` pops the little-endian return address from the stack into the program counter and increments the stack pointer
 twice. Conditional returns perform the pop only when their condition is met; otherwise, execution continues with the
@@ -168,13 +181,13 @@ next instruction. `RETI` also enables the master interrupt state. These behavior
 
 ### Call Instructions
 
-| Opcode | Mnemonic | Handler |
-|--------|----------|---------|
-| 0xC4 | `CALL NZ, a16` | `ExecuteCallNzA16` |
-| 0xCC | `CALL Z, a16` | `ExecuteCallZA16` |
-| 0xCD | `CALL a16` | `ExecuteCallA16` |
-| 0xD4 | `CALL NC, a16` | `ExecuteCallNcA16` |
-| 0xDC | `CALL C, a16` | `ExecuteCallCA16` |
+| Opcode | Mnemonic       | Handler            |
+|--------|----------------|--------------------|
+| 0xC4   | `CALL NZ, a16` | `ExecuteCallNzA16` |
+| 0xCC   | `CALL Z, a16`  | `ExecuteCallZA16`  |
+| 0xCD   | `CALL a16`     | `ExecuteCallA16`   |
+| 0xD4   | `CALL NC, a16` | `ExecuteCallNcA16` |
+| 0xDC   | `CALL C, a16`  | `ExecuteCallCA16`  |
 
 Each `CALL` reads the little-endian `a16` target. Unconditional calls, and conditional calls whose condition is met,
 push the address following the operand onto the stack and set the program counter to the target. If a conditional
@@ -183,34 +196,34 @@ specified by `call_a16_test.cpp` and `call_conditional_a16_test.cpp`.
 
 ### Restart Instructions
 
-| Opcode | Mnemonic | Handler | Vector |
-|--------|----------|---------|--------|
-| 0xC7 | `RST $00` | `ExecuteRst00` | 0x0000 |
-| 0xCF | `RST $08` | `ExecuteRst08` | 0x0008 |
-| 0xD7 | `RST $10` | `ExecuteRst10` | 0x0010 |
-| 0xDF | `RST $18` | `ExecuteRst18` | 0x0018 |
-| 0xE7 | `RST $20` | `ExecuteRst20` | 0x0020 |
-| 0xEF | `RST $28` | `ExecuteRst28` | 0x0028 |
-| 0xF7 | `RST $30` | `ExecuteRst30` | 0x0030 |
-| 0xFF | `RST $38` | `ExecuteRst38` | 0x0038 |
+| Opcode | Mnemonic  | Handler        | Vector |
+|--------|-----------|----------------|--------|
+| 0xC7   | `RST $00` | `ExecuteRst00` | 0x0000 |
+| 0xCF   | `RST $08` | `ExecuteRst08` | 0x0008 |
+| 0xD7   | `RST $10` | `ExecuteRst10` | 0x0010 |
+| 0xDF   | `RST $18` | `ExecuteRst18` | 0x0018 |
+| 0xE7   | `RST $20` | `ExecuteRst20` | 0x0020 |
+| 0xEF   | `RST $28` | `ExecuteRst28` | 0x0028 |
+| 0xF7   | `RST $30` | `ExecuteRst30` | 0x0030 |
+| 0xFF   | `RST $38` | `ExecuteRst38` | 0x0038 |
 
 Each `RST` pushes the address of the next instruction onto the stack, then sets the program counter to its fixed
 vector.
 
 ### Interrupt Control Instructions
 
-| Opcode | Mnemonic | Handler | Description |
-|--------|----------|---------|-------------|
-| 0xF3 | `DI` | `ExecuteDi` | Disable the master interrupt state immediately |
-| 0xFB | `EI` | `ExecuteEi` | Request master-interrupt enable after the next instruction |
+| Opcode | Mnemonic | Handler     | Description                                                |
+|--------|----------|-------------|------------------------------------------------------------|
+| 0xF3   | `DI`     | `ExecuteDi` | Disable the master interrupt state immediately             |
+| 0xFB   | `EI`     | `ExecuteEi` | Request master-interrupt enable after the next instruction |
 
 `EI` changes the master interrupt state to `PENDING`; CPU stepping promotes it to `ENABLED` after the complete next
 instruction, including all of its M-cycles. `DI` changes the state to
 `DISABLED` immediately and cancels a pending `EI` enable.
 
-| Opcode(s) | Mnemonic | Description |
-|-----------|----------|-------------|
-| 0x18 | `JR e8` | Unconditionally jump by a signed 8-bit relative offset |
+| Opcode(s)              | Mnemonic    | Description                                                      |
+|------------------------|-------------|------------------------------------------------------------------|
+| 0x18                   | `JR e8`     | Unconditionally jump by a signed 8-bit relative offset           |
 | 0x20, 0x28, 0x30, 0x38 | `JR cc, e8` | Jump by a signed 8-bit relative offset when the condition is met |
 
 `JR` reads its offset operand in M2. A taken jump uses M3 to add the offset to the low byte of the operand-end
@@ -222,19 +235,19 @@ specified by `jump_relative_e8_test.cpp` and `jump_relative_conditional_e8_test.
 
 #### Addition
 
-| Opcode(s) | Mnemonic   | Handler                                            | Description                          |
-|-----------|------------|----------------------------------------------------|--------------------------------------|
-| 0x80-0x85, 0x87 | `ADD A, r` | `ExecuteAddB`–`ExecuteAddL`, `ExecuteAddA` (via `mathetical_r.h`) | A = A + r (register operand)     |
-| 0x86      | `ADD A, (HL)` | `ExecuteAddAFromIndirectHL`                      | A = A + value at HL                  |
-| 0xC6      | `ADD A, n` | `ExecuteAddAn8`                                    | A = A + n (immediate)                |
+| Opcode(s)       | Mnemonic      | Handler                                                           | Description                  |
+|-----------------|---------------|-------------------------------------------------------------------|------------------------------|
+| 0x80-0x85, 0x87 | `ADD A, r`    | `ExecuteAddB`–`ExecuteAddL`, `ExecuteAddA` (via `mathetical_r.cpp`) | A = A + r (register operand) |
+| 0x86            | `ADD A, (HL)` | `ExecuteAddAFromIndirectHL`                                       | A = A + value at HL          |
+| 0xC6            | `ADD A, n`    | `ExecuteAddAn8`                                                   | A = A + n (immediate)        |
 
 #### Addition with Carry
 
-| Opcode(s) | Mnemonic   | Handler                                            | Description                             |
-|-----------|------------|----------------------------------------------------|-----------------------------------------|
-| 0x88-0x8D, 0x8F | `ADC A, r` | `ExecuteAdcB`–`ExecuteAdcL`, `ExecuteAdcA` (via `mathetical_r.h`) | A = A + r + C flag (register operand) |
-| 0x8E      | `ADC A, (HL)` | `ExecuteAdcAFromIndirectHL`                      | A = A + value at HL + C flag            |
-| 0xCE      | `ADC A, n` | `ExecuteAdcAn8`                                      | A = A + n + C flag                      |
+| Opcode(s)       | Mnemonic      | Handler                                                           | Description                           |
+|-----------------|---------------|-------------------------------------------------------------------|---------------------------------------|
+| 0x88-0x8D, 0x8F | `ADC A, r`    | `ExecuteAdcB`–`ExecuteAdcL`, `ExecuteAdcA` (via `mathetical_r.cpp`) | A = A + r + C flag (register operand) |
+| 0x8E            | `ADC A, (HL)` | `ExecuteAdcAFromIndirectHL`                                       | A = A + value at HL + C flag          |
+| 0xCE            | `ADC A, n`    | `ExecuteAdcAn8`                                                   | A = A + n + C flag                    |
 
 Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) via `ExecuteAddAFromIndirectHL`,
 `ADC A,(HL)` (0x8E) via `ExecuteAdcAFromIndirectHL`, `SUB A,(HL)` (0x96) via `ExecuteSubAFromIndirectHL`,
@@ -243,69 +256,69 @@ Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) v
 
 #### Subtraction
 
-| Opcode(s) | Mnemonic   | Handler                                            | Description                |
-|-----------|------------|----------------------------------------------------|----------------------------|
-| 0x90-0x95, 0x97 | `SUB r` | `ExecuteSubB`–`ExecuteSubL`, `ExecuteSubA` (via `mathetical_r.h`) | A = A - r (register operand) |
-| 0x96      | `SUB A, (HL)` | `ExecuteSubAFromIndirectHL`                      | A = A - value at HL                  |
-| 0xD6      | `SUB A, n` | `ExecuteSubAn8`                                    | A = A - n (immediate)                |
+| Opcode(s)       | Mnemonic      | Handler                                                           | Description                  |
+|-----------------|---------------|-------------------------------------------------------------------|------------------------------|
+| 0x90-0x95, 0x97 | `SUB r`       | `ExecuteSubB`–`ExecuteSubL`, `ExecuteSubA` (via `mathetical_r.cpp`) | A = A - r (register operand) |
+| 0x96            | `SUB A, (HL)` | `ExecuteSubAFromIndirectHL`                                       | A = A - value at HL          |
+| 0xD6            | `SUB A, n`    | `ExecuteSubAn8`                                                   | A = A - n (immediate)        |
 
 #### Subtraction with Borrow
 
-| Opcode(s) | Mnemonic | Handler | Description |
-|-----------|----------|---------|-------------|
-| 0x98-0x9D, 0x9F | `SBC A, r` | `ExecuteSbcB`–`ExecuteSbcL`, `ExecuteSbcA` (via `mathetical_r.h`) | A = A - r - C flag |
-| 0x9E | `SBC A, (HL)` | `ExecuteSbcAFromIndirectHL` | A = A - value at HL - C flag |
-| 0xDE | `SBC A, n` | `ExecuteSbcAn8` | A = A - n - C flag |
+| Opcode(s)       | Mnemonic      | Handler                                                           | Description                  |
+|-----------------|---------------|-------------------------------------------------------------------|------------------------------|
+| 0x98-0x9D, 0x9F | `SBC A, r`    | `ExecuteSbcB`–`ExecuteSbcL`, `ExecuteSbcA` (via `mathetical_r.cpp`) | A = A - r - C flag           |
+| 0x9E            | `SBC A, (HL)` | `ExecuteSbcAFromIndirectHL`                                       | A = A - value at HL - C flag |
+| 0xDE            | `SBC A, n`    | `ExecuteSbcAn8`                                                   | A = A - n - C flag           |
 
 #### Compare
 
-| Opcode(s) | Mnemonic | Handler | Description |
-|-----------|----------|---------|-------------|
-| 0xB8-0xBD | `CP A, r` | `ExecuteCpB`–`ExecuteCpL` | Set subtraction flags for A - r without modifying A |
-| 0xBE | `CP A, (HL)` | `ExecuteCpAFromIndirectHL` | Set subtraction flags for A - value at HL without modifying A |
-| 0xBF | `CP A, A` | `ExecuteCpA` | Set subtraction flags for A - A without modifying A |
-| 0xFE | `CP A, n` | `ExecuteCpAn8` | Set subtraction flags for A - n without modifying A |
+| Opcode(s) | Mnemonic     | Handler                    | Description                                                   |
+|-----------|--------------|----------------------------|---------------------------------------------------------------|
+| 0xB8-0xBD | `CP A, r`    | `ExecuteCpB`–`ExecuteCpL`  | Set subtraction flags for A - r without modifying A           |
+| 0xBE      | `CP A, (HL)` | `ExecuteCpAFromIndirectHL` | Set subtraction flags for A - value at HL without modifying A |
+| 0xBF      | `CP A, A`    | `ExecuteCpA`               | Set subtraction flags for A - A without modifying A           |
+| 0xFE      | `CP A, n`    | `ExecuteCpAn8`             | Set subtraction flags for A - n without modifying A           |
 
 #### Logical AND
 
-| Opcode(s) | Mnemonic | Handler | Description |
-|-----------|----------|---------|-------------|
-| 0xA0-0xA5 | `AND A, r` | `ExecuteAndB`–`ExecuteAndL` | A = A & r (register operand) |
-| 0xA6 | `AND A, (HL)` | `ExecuteAndAFromIndirectHL` | A = A & value at HL |
-| 0xA7 | `AND A, A` | `ExecuteAndA` | A = A & A |
-| 0xE6 | `AND A, n` | `ExecuteAndAn8` | A = A & n (immediate) |
+| Opcode(s) | Mnemonic      | Handler                     | Description                  |
+|-----------|---------------|-----------------------------|------------------------------|
+| 0xA0-0xA5 | `AND A, r`    | `ExecuteAndB`–`ExecuteAndL` | A = A & r (register operand) |
+| 0xA6      | `AND A, (HL)` | `ExecuteAndAFromIndirectHL` | A = A & value at HL          |
+| 0xA7      | `AND A, A`    | `ExecuteAndA`               | A = A & A                    |
+| 0xE6      | `AND A, n`    | `ExecuteAndAn8`             | A = A & n (immediate)        |
 
 #### Logical XOR
 
-| Opcode(s) | Mnemonic | Handler | Description |
-|-----------|----------|---------|-------------|
-| 0xA8-0xAD | `XOR A, r` | `ExecuteXorB`–`ExecuteXorL` | A = A ^ r (register operand) |
-| 0xAE | `XOR A, (HL)` | `ExecuteXorAFromIndirectHL` | A = A ^ value at HL |
-| 0xAF | `XOR A, A` | `ExecuteXorA` | A = A ^ A |
-| 0xEE | `XOR A, n` | `ExecuteXorAn8` | A = A ^ n (immediate) |
+| Opcode(s) | Mnemonic      | Handler                     | Description                  |
+|-----------|---------------|-----------------------------|------------------------------|
+| 0xA8-0xAD | `XOR A, r`    | `ExecuteXorB`–`ExecuteXorL` | A = A ^ r (register operand) |
+| 0xAE      | `XOR A, (HL)` | `ExecuteXorAFromIndirectHL` | A = A ^ value at HL          |
+| 0xAF      | `XOR A, A`    | `ExecuteXorA`               | A = A ^ A                    |
+| 0xEE      | `XOR A, n`    | `ExecuteXorAn8`             | A = A ^ n (immediate)        |
 
 All XOR forms set Zero only when the result is zero and clear Subtract, HalfCarry, and Carry.
 
 #### Logical OR
 
-| Opcode(s) | Mnemonic | Handler | Description |
-|-----------|----------|---------|-------------|
-| 0xB0-0xB5 | `OR A, r` | `ExecuteOrB`–`ExecuteOrL` | A = A \| r (register operand) |
-| 0xB6 | `OR A, (HL)` | `ExecuteOrAFromIndirectHL` | A = A \| value at HL |
-| 0xB7 | `OR A, A` | `ExecuteOrA` | A = A \| A |
-| 0xF6 | `OR A, n` | `ExecuteOrAn8` | A = A \| n (immediate) |
+| Opcode(s) | Mnemonic     | Handler                    | Description                   |
+|-----------|--------------|----------------------------|-------------------------------|
+| 0xB0-0xB5 | `OR A, r`    | `ExecuteOrB`–`ExecuteOrL`  | A = A \| r (register operand) |
+| 0xB6      | `OR A, (HL)` | `ExecuteOrAFromIndirectHL` | A = A \| value at HL          |
+| 0xB7      | `OR A, A`    | `ExecuteOrA`               | A = A \| A                    |
+| 0xF6      | `OR A, n`    | `ExecuteOrAn8`             | A = A \| n (immediate)        |
 
 `OR A, (HL)` reads the operand, yields for one M-cycle, then updates A. All OR forms set Zero only when the result
 is zero and clear Subtract, HalfCarry, and Carry.
 
 #### Increment/Decrement
 
-| Opcode(s)                                | Mnemonic | Handler       | Description |
-|------------------------------------------|----------|---------------|-------------|
-| 0x04, 0x0C, 0x14, 0x1C, 0x24, 0x2C, 0x3C | `INC r`  | `ExecuteIncR` | r++         |
-| 0x05, 0x0D, 0x15, 0x1D, 0x25, 0x2D, 0x3D | `DEC r`  | `ExecuteDecR` | r--         |
-| 0x03, 0x13, 0x23, 0x33                    | `INC rr` | `ExecuteIncRR` | Increment 16-bit BC, DE, HL, or SP |
-| 0x0B, 0x1B, 0x2B, 0x3B                    | `DEC rr` | `ExecuteDecRR` | Decrement 16-bit BC, DE, HL, or SP |
+| Opcode(s)                                | Mnemonic | Handler        | Description                        |
+|------------------------------------------|----------|----------------|------------------------------------|
+| 0x04, 0x0C, 0x14, 0x1C, 0x24, 0x2C, 0x3C | `INC r`  | `ExecuteIncR`  | r++                                |
+| 0x05, 0x0D, 0x15, 0x1D, 0x25, 0x2D, 0x3D | `DEC r`  | `ExecuteDecR`  | r--                                |
+| 0x03, 0x13, 0x23, 0x33                   | `INC rr` | `ExecuteIncRR` | Increment 16-bit BC, DE, HL, or SP |
+| 0x0B, 0x1B, 0x2B, 0x3B                   | `DEC rr` | `ExecuteDecRR` | Decrement 16-bit BC, DE, HL, or SP |
 
 The 16-bit `INC rr` and `DEC rr` instructions modify the selected register pair and do not modify CPU flags. Each
 handler updates its register pair, yields for one M-cycle, then completes. `ExecuteIncRR` is instantiated as
@@ -314,10 +327,10 @@ handler updates its register pair, yields for one M-cycle, then completes. `Exec
 
 ### Accumulator and Carry-Flag Instructions
 
-| Opcode | Mnemonic | Handler | Description |
-|--------|----------|---------|-------------|
-| 0x2F | `CPL` | `ExecuteCpl` | Complement every bit of A; set Subtract and HalfCarry, preserve Zero and Carry |
-| 0x3F | `CCF` | `ExecuteCcf` | Toggle Carry, preserve Zero, and clear Subtract and HalfCarry |
+| Opcode | Mnemonic | Handler      | Description                                                                    |
+|--------|----------|--------------|--------------------------------------------------------------------------------|
+| 0x2F   | `CPL`    | `ExecuteCpl` | Complement every bit of A; set Subtract and HalfCarry, preserve Zero and Carry |
+| 0x3F   | `CCF`    | `ExecuteCcf` | Toggle Carry, preserve Zero, and clear Subtract and HalfCarry                  |
 
 Both instructions complete in their first handler resume, so they do not add an emulated M-cycle after opcode fetch.
 `CPL` replaces A with its bitwise complement, sets `N | H`, and preserves the existing Zero and Carry flags. `CCF`
@@ -339,4 +352,4 @@ The test project maintains the opcode-to-name table in
 `emulatorlib/test/instruction_translation.cpp`, declared by
 `emulatorlib/test/instruction_translation.h`. `CreateOpCodeLut()` is test support used to name
 parameterized instruction cases; the runtime dispatch table remains in
-`emulatorlib/src/instruction_handlers/opcode_handler_map.h`.
+`../emulatorlib/src/cpu/instruction_handlers`.
