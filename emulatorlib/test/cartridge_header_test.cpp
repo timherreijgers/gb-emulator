@@ -3,8 +3,8 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/cartridge.h"
-#include "utilitylib/byte_utils.h"
+import emulatorlib.cartridge;
+import utilitylib;
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

@@ -3,11 +3,7 @@
  * Licensed using the MIT license
  */
 
-#include "utilitylib/bit_mask.h"
-#include "utilitylib/byte_utils.h"
-
-#include <gmock/gmock-matchers.h>
-#include <gtest/gtest.h>
+import utilitylib;
 
 namespace UtilityLib::Test
 {

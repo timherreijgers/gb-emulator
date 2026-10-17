@@ -5,11 +5,10 @@
 
 #pragma once
 
-#include "emulatorlib/address_bus_addressable.h"
-#include "utilitylib/byte_utils.h"
+import emulatorlib.address_bus;
+import utilitylib;
 
 #include <cstddef>
-#include <cstdint>
 #include <initializer_list>
 #include <vector>
 

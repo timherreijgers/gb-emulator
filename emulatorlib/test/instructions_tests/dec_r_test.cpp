@@ -8,8 +8,7 @@
 #include "instruction_test_base.h"
 #include "instruction_translation.h"
 
-#include "emulatorlib/cpu_flags.h"
-#include "instruction_handlers/register_io_helpers.h"
+import emulatorlib.cpu;
 
 
 namespace EmulatorLib::Test

@@ -2,16 +2,17 @@ cmake_minimum_required(VERSION 4.2)
 
 project(gb_emulator VERSION 0.0.1)
 
-add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wsuggest-override -Wshadow -Wswitch-enum -Wswitch-default -Wconversion)
+add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wsuggest-override -Wshadow -Wswitch-enum -Wswitch-default -Wconversion -Wno-include-angled-in-module-purview)
 enable_testing()
 
 find_package(GTest REQUIRED)
 find_package(benchmark REQUIRED)
 
-include(cmake/ccache.cmake)
+#include(cmake/ccache.cmake)
 
-set(CMAKE_VERIFY_INTERFACE_HEADER_SETS ON)
-set(CMAKE_VERIFY_PRIVATE_HEADER_SETS ON)
+#set(MODULES ON)
+#set(CMAKE_VERIFY_INTERFACE_HEADER_SETS ON)
+#set(CMAKE_VERIFY_PRIVATE_HEADER_SETS ON)
 
 add_subdirectory(emulatorlib)
 add_subdirectory(utilitylib)

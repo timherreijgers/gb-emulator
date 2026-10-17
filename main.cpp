@@ -1,9 +1,11 @@
-#include "emulatorlib/address_bus.h"
-#include "emulatorlib/cartridge.h"
-#include "emulatorlib/cpu.h"
-#include "emulatorlib/ram.h"
-#include "utilitylib/byte_utils.h"
+import emulatorlib.address_bus;
+import emulatorlib.cartridge;
+import emulatorlib.ram;
+import emulatorlib.cpu;
 
+import utilitylib;
+
+#include <functional>
 #include <iostream>
 
 template <>

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "emulatorlib/address_bus_addressable.h"
+import emulatorlib.address_bus;
 
 #include <gmock/gmock.h>
 
