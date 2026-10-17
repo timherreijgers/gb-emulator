@@ -7,6 +7,7 @@ module;
 
 #include <array>
 #include <cstddef>
+#include <cstdint>
 
 export module emulatorlib.ram;
 

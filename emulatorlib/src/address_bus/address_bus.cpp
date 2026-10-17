@@ -5,6 +5,7 @@
 
 module;
 
+#include <cstdint>
 #include <vector>
 
 module emulatorlib.address_bus;

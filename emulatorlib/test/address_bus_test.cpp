@@ -6,7 +6,7 @@
 import emulatorlib.address_bus;
 import utilitylib;
 
-#include "emulatorlib/test/address_bus_addressable_mock.h"
+#include "mocks/address_bus_addressable_mock.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

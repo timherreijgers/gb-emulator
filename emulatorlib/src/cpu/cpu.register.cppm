@@ -7,6 +7,7 @@ module;
 
 #include <concepts>
 #include <cstddef>
+#include <cstdint>
 #include <type_traits>
 
 export module emulatorlib.cpu:registers;

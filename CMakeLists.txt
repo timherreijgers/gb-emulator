@@ -8,11 +8,7 @@ enable_testing()
 find_package(GTest REQUIRED)
 find_package(benchmark REQUIRED)
 
-#include(cmake/ccache.cmake)
-
-#set(MODULES ON)
-#set(CMAKE_VERIFY_INTERFACE_HEADER_SETS ON)
-#set(CMAKE_VERIFY_PRIVATE_HEADER_SETS ON)
+include(cmake/ccache.cmake)
 
 add_subdirectory(emulatorlib)
 add_subdirectory(utilitylib)
@@ -20,7 +16,3 @@ add_subdirectory(utilitylib)
 add_executable(gb_emulator main.cpp)
 
 target_link_libraries(gb_emulator PRIVATE emulatorlib)
-
-add_custom_target(run_all_header_verifications ALL
-        DEPENDS all_verify_header_sets
-)

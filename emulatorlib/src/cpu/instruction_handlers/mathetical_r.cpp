@@ -8,6 +8,7 @@ module;
 #include <concepts>
 #include <coroutine>
 #include <cstddef>
+#include <cstdint>
 #include <type_traits>
 #include <variant>
 
