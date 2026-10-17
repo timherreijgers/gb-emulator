@@ -7,6 +7,7 @@ import utilitylib;
 
 #include <functional>
 #include <iostream>
+#include <print>
 
 template <>
 struct std::formatter<EmulatorLib::CpuRegisters>

@@ -6,6 +6,7 @@
 module;
 
 #include <cstddef>
+#include <cstdint>
 #include <exception>
 
 module emulatorlib.cpu;

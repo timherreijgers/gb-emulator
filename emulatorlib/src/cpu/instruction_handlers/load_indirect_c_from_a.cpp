@@ -7,6 +7,7 @@ module;
 
 #include <coroutine>
 #include <cstddef>
+#include <cstdint>
 #include <variant>
 
 module emulatorlib.cpu:load_indirect_c_from_a;

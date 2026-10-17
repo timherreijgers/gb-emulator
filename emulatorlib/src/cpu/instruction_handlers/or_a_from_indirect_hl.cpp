@@ -7,6 +7,7 @@ module;
 
 #include <coroutine>
 #include <cstddef>
+#include <cstdint>
 #include <variant>
 
 module emulatorlib.cpu:or_a_from_indirect_hl;
