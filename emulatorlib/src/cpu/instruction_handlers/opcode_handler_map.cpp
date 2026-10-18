@@ -17,6 +17,7 @@ module;
 module emulatorlib.cpu:opcode_handler_map;
 
 import emulatorlib.cpu;
+import utilitylib;
 
 import :adc_a_from_indirect_hl;
 import :add_a_from_indirect_hl;

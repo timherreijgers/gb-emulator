@@ -7,7 +7,8 @@ module;
 
 #include <concepts>
 #include <cstddef>
-#include <print>
+#include <format>
+#include <limits>
 #include <utility>
 
 export module utilitylib:byte_utils;

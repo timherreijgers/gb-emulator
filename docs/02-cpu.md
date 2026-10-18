@@ -1,8 +1,12 @@
 # CPU Architecture
 
-## CPU Class (`emulatorlib/include/emulatorlib/cpu.h`, `../emulatorlib/src/cpu/cpu.cpp`)
+## CPU Class (`emulatorlib/src/cpu/cpu.cppm`, `emulatorlib/src/cpu/cpu.cpp`)
 
 The CPU is the central execution unit. It owns registers and dispatches opcodes via a lookup table.
+
+Import `emulatorlib.cpu` and link the `emulatorlib` target to use its public CPU, register, flag, and instruction-support
+types. `cpu.cppm` re-exports the `:registers`, `:cpu_registers`, `:cpu_flags`, and `:instruction_handler_support`
+partitions; instruction-handler partitions remain implementation details.
 
 ### Construction
 
@@ -39,7 +43,7 @@ Step() {
 ### Opcode Dispatch
 
 - `std::array<OpcodeHandler, 256>` mapping each opcode to its mnemonic and coroutine factory
-- Created by `CreateOpcodeHandlers()` in `opcode_handler_map.h`
+- Created by `CreateOpcodeHandlers()` in `emulatorlib/src/cpu/instruction_handlers/opcode_handler_map.cpp`
 - Every opcode entry carries its mnemonic; unimplemented opcodes dispatch to `UnimplementedOpcode`, while illegal
   opcodes dispatch to `IllegalOpcode`
 - Illegal opcodes are `0xD3`, `0xDB`, `0xDD`, `0xE3`, `0xE4`, `0xEB`, `0xEC`, `0xED`, `0xF4`, `0xFC`, and `0xFD`
@@ -53,9 +57,10 @@ Step() {
 - `co_return` = instruction complete, can fetch next opcode
 - The coroutine scheduler delays opcode fetching until the current handler completes; this is a simplified timing model,
   not bus arbitration or a complete hardware bus model
-- Exception safety: coroutine stores `std::exception_ptr`, re-thrown in next `Step()`
+- The coroutine captures exceptions in `std::exception_ptr`, which `Step()` checks before resuming. Exceptions thrown
+  during a resume can be lost if the completed coroutine is replaced by the next handler before that check runs again.
 
-## CpuRegisters (`emulatorlib/include/emulatorlib/cpu_registers.h`)
+## CpuRegisters (`emulatorlib/src/cpu/cpu.cpu_registers.cppm`)
 
 All CPU registers. Uses a layered design with backing storage and `Register<T>` wrappers.
 
@@ -93,7 +98,7 @@ including all emulated cycles of a multi-cycle instruction. This models the EI d
 interrupt servicing are not implemented.
 `DI` immediately sets the state to `DISABLED`, cancelling a pending `EI` enable.
 
-## CpuFlags (`emulatorlib/include/emulatorlib/cpu_flags.h`, `../emulatorlib/src/cpu/cpu_flags.cpp`)
+## CpuFlags (`emulatorlib/src/cpu/cpu.cpu_flags.cppm`, `emulatorlib/src/cpu/cpu_flags.cpp`)
 
 Four CPU flags are stored in bits 7, 6, 5, and 4 of `F`. Bits 3-0 are unused and read as zero; `CpuRegisters` masks
 them off when writing the `AF` pair:
@@ -119,7 +124,7 @@ cpuRegisters.flags.value |= (carry & UtilityLib::BitMask<7>) > 0x00_b ? CpuFlags
 `CpuFlags` keeps its byte conversion, dereference, and bitwise-OR operations inline and `constexpr`; its four
 named flag values remain defined in `cpu_flags.cpp`.
 
-## Register Class (`emulatorlib/include/emulatorlib/register.h`)
+## Register Class (`emulatorlib/src/cpu/cpu.register.cppm`)
 
 A template wrapper `Register<T>` that applies a mask to selected operations:
 

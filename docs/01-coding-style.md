@@ -95,9 +95,9 @@ template <typename T, std::enable_if_t<std::is_integral_v<T>, int> = 0>
 auto process(T value) { /* ... */ }
 ```
 
-Use concepts for all template parameters. Define project-specific concepts in the relevant header (see
-`register_concepts.h` for examples). Use standard library concepts (`std::integral`, `std::ranges::range`,
-`std::copyable`, etc.) when they apply.
+Use concepts for all template parameters. Define project-specific concepts in the relevant module interface or
+partition (see `emulatorlib/src/cpu/instruction_handler_support.cppm` for examples). Use standard library concepts
+(`std::integral`, `std::ranges::range`, `std::copyable`, etc.) when they apply.
 
 ## Casts
 
@@ -150,27 +150,28 @@ if (result.carryBits == 0x80_b) {
 ParseConfig("config.ini");  // compiler warning: ignored
 ```
 
-## Include Order
+## Includes and Imports
 
-**Order: header corresponding to the source file → local project headers → third-party headers → standard library
-headers. Leave one blank line between each section.**
+**Module units:** put standard-library and third-party `#include`s in the global module fragment (after `module;`),
+then declare the named module or partition, followed by its imports. Import each module whose declarations are used
+directly; imports in another partition do not make its private dependencies visible here. The old emulator and
+utility public headers were removed, so use named-module imports instead.
 
 ```cpp
-// File: emulatorlib/src/cpu.cpp
-#include "emulatorlib/cpu.h"          // corresponding header (1)
+// File: emulatorlib/src/cpu/instruction_handlers/opcode_handler_map.cpp
+module;
 
-#include "emulatorlib/cpu_registers.h"  // local project (2)
-#include "emulatorlib/cpu_flags.h"
-import emulatorlib.address_bus;
+#include <array>
+#include <format>
 
-#include <gtest/gtest.h>                // third-party (3)
-#include <gmock/gmock.h>
+module emulatorlib.cpu:opcode_handler_map;
 
-#include <array>                         // std library (4)
-#include <coroutine>
-#include <functional>
-#include <vector>
+import emulatorlib.cpu;
+import utilitylib; // std::byte formatter used by this partition
 ```
+
+For remaining header-based test helpers, group project headers, third-party headers, and standard-library headers,
+with a blank line between groups. Keep the imports those helpers require explicit.
 
 ## Attributes and Specifiers
 
@@ -205,7 +206,7 @@ auto Title() -> std::string_view { /* ... */ }  // missing constexpr, const, [[n
 | **Member variables**  | `m_camelCase`          | `m_addressableMock`, `m_backingHl`    |
 | **Global variables**  | `g_camelCase`          | `g_logger`                            |
 | **Namespaces**        | `PascalCase`           | `EmulatorLib`, `UtilityLib`           |
-| **Files / Paths**     | `snake_case`           | `cpu_registers.h`, `add_with_carry.h` |
+| **Files / Paths**     | `snake_case`           | `instruction_handler_support.cppm`, `bit_mask.cppm` |
 
 **No `p` prefix for pointers.** Use `m_` prefix for member variables and `g_` prefix for globals.
 

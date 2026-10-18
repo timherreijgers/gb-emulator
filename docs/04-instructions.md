@@ -21,7 +21,7 @@ auto Execute<Name>(AddressBus& addressBus, CpuRegisters& cpuRegisters) -> Instru
 - `cpuRegisters.programCounter++` — increment PC for fetching operands
 - `cpuRegisters.zRegister` / `cpuRegisters.wRegister` — temporary storage (used as scratch registers)
 
-## Register Helpers (`cpu/instruction_handler_support.cppm`)
+## Register Helpers (`emulatorlib/src/cpu/instruction_handler_support.cppm`)
 
 Stateless register accessor types used with the template pattern:
 
@@ -50,7 +50,7 @@ struct Register16BitIncrement
 };
 ```
 
-## Register Concepts (`cpu/instruction_handler_support.cppm`)
+## Register Concepts (`emulatorlib/src/cpu/instruction_handler_support.cppm`)
 
 ```cpp
 template <typename T> concept ReturnsRegister8Bit  // T(registers) -> Register8Bit&
@@ -60,7 +60,7 @@ template <typename T> concept RegisterModifier16Bit // t(reg) -> void
 template <typename T> concept RegisterModifier      // either 8-bit or 16-bit modifier
 ```
 
-## Flag Helpers (`cpu/instruction_handler_support.cppm`)
+## Flag Helpers (`emulatorlib/src/cpu/instruction_handler_support.cppm`)
 
 Stateless flag helper callables:
 
@@ -83,12 +83,13 @@ partition, so template aliases remain next to their definitions while the opcode
 accessors, concepts, flag helpers, and predicates are defined in `:instruction_handler_support` and exported through
 `emulatorlib.cpu` for instruction tests.
 
-## Generic Math Operand Template (`instruction_handlers/mathetical_r.cpp`)
+## Generic Math Operand Template (`emulatorlib/src/cpu/instruction_handlers/mathematical_r.cpp`)
 
 A generic template pattern for register-to-register arithmetic instructions:
 
 ```cpp
-template <ReturnsRegister8Bit TargetRegister, MathOperand Operand, SetFlagFunction FlagFunction>
+template <ReturnsRegister8Bit TargetRegister, MathOperand Operand, SetFlagFunction FlagFunction,
+          ReturnsRegister8Bit AccumulatorRegister = RegisterA>
 constexpr auto ExecuteMathOperandR = [](const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler
 ```
 
@@ -237,7 +238,7 @@ specified by `jump_relative_e8_test.cpp` and `jump_relative_conditional_e8_test.
 
 | Opcode(s)       | Mnemonic      | Handler                                                           | Description                  |
 |-----------------|---------------|-------------------------------------------------------------------|------------------------------|
-| 0x80-0x85, 0x87 | `ADD A, r`    | `ExecuteAddB`–`ExecuteAddL`, `ExecuteAddA` (via `mathetical_r.cpp`) | A = A + r (register operand) |
+| 0x80-0x85, 0x87 | `ADD A, r`    | `ExecuteAddB`–`ExecuteAddL`, `ExecuteAddA` (via `mathematical_r.cpp`) | A = A + r (register operand) |
 | 0x86            | `ADD A, (HL)` | `ExecuteAddAFromIndirectHL`                                       | A = A + value at HL          |
 | 0xC6            | `ADD A, n`    | `ExecuteAddAn8`                                                   | A = A + n (immediate)        |
 
@@ -245,7 +246,7 @@ specified by `jump_relative_e8_test.cpp` and `jump_relative_conditional_e8_test.
 
 | Opcode(s)       | Mnemonic      | Handler                                                           | Description                           |
 |-----------------|---------------|-------------------------------------------------------------------|---------------------------------------|
-| 0x88-0x8D, 0x8F | `ADC A, r`    | `ExecuteAdcB`–`ExecuteAdcL`, `ExecuteAdcA` (via `mathetical_r.cpp`) | A = A + r + C flag (register operand) |
+| 0x88-0x8D, 0x8F | `ADC A, r`    | `ExecuteAdcB`–`ExecuteAdcL`, `ExecuteAdcA` (via `mathematical_r.cpp`) | A = A + r + C flag (register operand) |
 | 0x8E            | `ADC A, (HL)` | `ExecuteAdcAFromIndirectHL`                                       | A = A + value at HL + C flag          |
 | 0xCE            | `ADC A, n`    | `ExecuteAdcAn8`                                                   | A = A + n + C flag                    |
 
@@ -258,7 +259,7 @@ Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) v
 
 | Opcode(s)       | Mnemonic      | Handler                                                           | Description                  |
 |-----------------|---------------|-------------------------------------------------------------------|------------------------------|
-| 0x90-0x95, 0x97 | `SUB r`       | `ExecuteSubB`–`ExecuteSubL`, `ExecuteSubA` (via `mathetical_r.cpp`) | A = A - r (register operand) |
+| 0x90-0x95, 0x97 | `SUB r`       | `ExecuteSubB`–`ExecuteSubL`, `ExecuteSubA` (via `mathematical_r.cpp`) | A = A - r (register operand) |
 | 0x96            | `SUB A, (HL)` | `ExecuteSubAFromIndirectHL`                                       | A = A - value at HL          |
 | 0xD6            | `SUB A, n`    | `ExecuteSubAn8`                                                   | A = A - n (immediate)        |
 
@@ -266,7 +267,7 @@ Note: Explicit `(HL)` variants are implemented and tested: `ADD A,(HL)` (0x86) v
 
 | Opcode(s)       | Mnemonic      | Handler                                                           | Description                  |
 |-----------------|---------------|-------------------------------------------------------------------|------------------------------|
-| 0x98-0x9D, 0x9F | `SBC A, r`    | `ExecuteSbcB`–`ExecuteSbcL`, `ExecuteSbcA` (via `mathetical_r.cpp`) | A = A - r - C flag           |
+| 0x98-0x9D, 0x9F | `SBC A, r`    | `ExecuteSbcB`–`ExecuteSbcL`, `ExecuteSbcA` (via `mathematical_r.cpp`) | A = A - r - C flag           |
 | 0x9E            | `SBC A, (HL)` | `ExecuteSbcAFromIndirectHL`                                       | A = A - value at HL - C flag |
 | 0xDE            | `SBC A, n`    | `ExecuteSbcAn8`                                                   | A = A - n - C flag           |
 
@@ -352,4 +353,4 @@ The test project maintains the opcode-to-name table in
 `emulatorlib/test/instruction_translation.cpp`, declared by
 `emulatorlib/test/instruction_translation.h`. `CreateOpCodeLut()` is test support used to name
 parameterized instruction cases; the runtime dispatch table remains in
-`../emulatorlib/src/cpu/instruction_handlers`.
+`emulatorlib/src/cpu/instruction_handlers/opcode_handler_map.cpp`.
