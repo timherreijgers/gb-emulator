@@ -29,7 +29,6 @@ public:
     [[nodiscard]] virtual auto ReadFromAddress(uint16_t address) const noexcept -> std::byte = 0;
 };
 
-
 class AddressBus
 {
 public:
