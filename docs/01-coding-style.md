@@ -96,7 +96,7 @@ auto process(T value) { /* ... */ }
 ```
 
 Use concepts for all template parameters. Define project-specific concepts in the relevant module interface or
-partition (see `emulatorlib/src/cpu/instruction_handler_support.cppm` for examples). Use standard library concepts
+partition (see `../emulatorlib/modules/cpu/instruction_handler_support.cppm` for examples). Use standard library concepts
 (`std::integral`, `std::ranges::range`, `std::copyable`, etc.) when they apply.
 
 ## Casts

@@ -1,6 +1,6 @@
 # CPU Architecture
 
-## CPU Class (`emulatorlib/src/cpu/cpu.cppm`, `emulatorlib/src/cpu/cpu.cpp`)
+## CPU Class (`../emulatorlib/modules/cpu/cpu.cppm`, `emulatorlib/src/cpu/cpu.cpp`)
 
 The CPU is the central execution unit. It owns registers and dispatches opcodes via a lookup table.
 
@@ -60,7 +60,7 @@ Step() {
 - The coroutine captures exceptions in `std::exception_ptr`, which `Step()` checks before resuming. Exceptions thrown
   during a resume can be lost if the completed coroutine is replaced by the next handler before that check runs again.
 
-## CpuRegisters (`emulatorlib/src/cpu/cpu.cpu_registers.cppm`)
+## CpuRegisters (`../emulatorlib/modules/cpu/cpu.cpu_registers.cppm`)
 
 All CPU registers. Uses a layered design with backing storage and `Register<T>` wrappers.
 
@@ -98,7 +98,7 @@ including all emulated cycles of a multi-cycle instruction. This models the EI d
 interrupt servicing are not implemented.
 `DI` immediately sets the state to `DISABLED`, cancelling a pending `EI` enable.
 
-## CpuFlags (`emulatorlib/src/cpu/cpu.cpu_flags.cppm`, `emulatorlib/src/cpu/cpu_flags.cpp`)
+## CpuFlags (`../emulatorlib/modules/cpu/cpu.cpu_flags.cppm`, `emulatorlib/src/cpu/cpu_flags.cpp`)
 
 Four CPU flags are stored in bits 7, 6, 5, and 4 of `F`. Bits 3-0 are unused and read as zero; `CpuRegisters` masks
 them off when writing the `AF` pair:

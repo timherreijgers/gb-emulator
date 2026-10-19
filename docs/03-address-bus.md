@@ -1,6 +1,6 @@
 # Address Bus & Devices
 
-## AddressBus (`emulatorlib/src/address_bus/address_bus.cppm`, `emulatorlib/src/address_bus/address_bus.cpp`)
+## AddressBus (`../emulatorlib/modules/address_bus/address_bus.cppm`, `emulatorlib/src/address_bus/address_bus.cpp`)
 
 The address bus connects the CPU to the registered `AddressBusAddressable` objects. The current project connects a
 cartridge and work RAM; it does not yet model the complete Game Boy address map or memory-mapped I/O.
@@ -22,7 +22,7 @@ for ignoring addresses it does not handle.
 - `void WriteToAddress(uint16_t address, std::byte data) noexcept` — write to all devices
 - `auto ReadFromAddress(uint16_t address) const noexcept -> std::byte` — OR-combine from all devices
 
-## AddressBusAddressable (`emulatorlib/src/address_bus/address_bus.cppm`)
+## AddressBusAddressable (`../emulatorlib/modules/address_bus/address_bus.cppm`)
 
 Pure virtual interface that all devices must implement:
 
@@ -31,7 +31,7 @@ virtual void WriteToAddress(uint16_t address, std::byte data) noexcept = 0;
 virtual auto ReadFromAddress(uint16_t address) const noexcept -> std::byte = 0;
 ```
 
-## Cartridge (`emulatorlib/src/cartridge/cartridge.cppm`, `emulatorlib/src/cartridge/cartridge.cpp`)
+## Cartridge (`../emulatorlib/modules/cartridge/cartridge.cppm`, `emulatorlib/src/cartridge/cartridge.cpp`)
 
 Loads and exposes ROM data. ROM-size metadata is checked during construction; the separate logo and checksum methods
 report validation results but do not reject the ROM.
@@ -79,7 +79,7 @@ The enum recognizes the cartridge-type values listed in `cartridge.cppm`; it doe
 `Cartridge::ReadFromAddress()` exposes only the first 32 KiB of ROM directly, and writes are ignored. There is no
 bank switching, cartridge RAM, or special handling for nonstandard ROM-size codes.
 
-## Ram (`emulatorlib/src/ram/ram.cppm`, `emulatorlib/src/ram/ram.cpp`)
+## Ram (`../emulatorlib/modules/ram/ram.cppm`, `emulatorlib/src/ram/ram.cpp`)
 
 Provides a simplified fixed 8 KiB work-RAM region without banking or the Game Boy's echo-RAM mapping.
 

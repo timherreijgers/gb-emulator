@@ -21,7 +21,7 @@ auto Execute<Name>(AddressBus& addressBus, CpuRegisters& cpuRegisters) -> Instru
 - `cpuRegisters.programCounter++` — increment PC for fetching operands
 - `cpuRegisters.zRegister` / `cpuRegisters.wRegister` — temporary storage (used as scratch registers)
 
-## Register Helpers (`emulatorlib/src/cpu/instruction_handler_support.cppm`)
+## Register Helpers (`../emulatorlib/modules/cpu/instruction_handler_support.cppm`)
 
 Stateless register accessor types used with the template pattern:
 
@@ -50,7 +50,7 @@ struct Register16BitIncrement
 };
 ```
 
-## Register Concepts (`emulatorlib/src/cpu/instruction_handler_support.cppm`)
+## Register Concepts (`../emulatorlib/modules/cpu/instruction_handler_support.cppm`)
 
 ```cpp
 template <typename T> concept ReturnsRegister8Bit  // T(registers) -> Register8Bit&
@@ -60,7 +60,7 @@ template <typename T> concept RegisterModifier16Bit // t(reg) -> void
 template <typename T> concept RegisterModifier      // either 8-bit or 16-bit modifier
 ```
 
-## Flag Helpers (`emulatorlib/src/cpu/instruction_handler_support.cppm`)
+## Flag Helpers (`../emulatorlib/modules/cpu/instruction_handler_support.cppm`)
 
 Stateless flag helper callables:
 
