@@ -158,7 +158,7 @@ directly; imports in another partition do not make its private dependencies visi
 utility public headers were removed, so use named-module imports instead.
 
 ```cpp
-// File: emulatorlib/src/cpu/instruction_handlers/opcode_handler_map.cpp
+// File: emulatorlib/src/cpu/instruction_handlers/opcode_handler_map.cppm
 module;
 
 #include <array>

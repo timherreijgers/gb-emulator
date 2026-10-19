@@ -13,9 +13,9 @@ module;
 export module emulatorlib.cpu:instruction_handler_support;
 
 import utilitylib;
+import :register_;
 import :registers;
-import :cpu_registers;
-import :cpu_flags;
+import :flags;
 
 export namespace EmulatorLib
 {

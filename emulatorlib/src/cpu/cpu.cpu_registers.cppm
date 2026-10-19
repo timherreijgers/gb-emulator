@@ -8,9 +8,10 @@ module;
 #include <cstddef>
 #include <cstdint>
 
-export module emulatorlib.cpu:cpu_registers;
+export module emulatorlib.cpu:registers;
 
-import :registers;
+import :register_;
+import utilitylib;
 
 export namespace EmulatorLib
 {

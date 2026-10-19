@@ -14,9 +14,9 @@ module;
 
 export module emulatorlib.cpu;
 
+export import :register_;
 export import :registers;
-export import :cpu_registers;
-export import :cpu_flags;
+export import :flags;
 export import :instruction_handler_support;
 
 import emulatorlib.address_bus;

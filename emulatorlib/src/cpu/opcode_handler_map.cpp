@@ -14,9 +14,8 @@ module;
 #include <stdexcept>
 #include <variant>
 
-module emulatorlib.cpu:opcode_handler_map;
+module emulatorlib.cpu;
 
-import emulatorlib.cpu;
 import utilitylib;
 
 import :adc_a_from_indirect_hl;

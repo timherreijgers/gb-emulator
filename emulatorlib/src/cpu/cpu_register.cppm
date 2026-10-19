@@ -10,7 +10,7 @@ module;
 #include <cstdint>
 #include <type_traits>
 
-export module emulatorlib.cpu:registers;
+export module emulatorlib.cpu:register_;
 
 import utilitylib;
 

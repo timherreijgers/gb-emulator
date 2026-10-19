@@ -43,7 +43,7 @@ Step() {
 ### Opcode Dispatch
 
 - `std::array<OpcodeHandler, 256>` mapping each opcode to its mnemonic and coroutine factory
-- Created by `CreateOpcodeHandlers()` in `emulatorlib/src/cpu/instruction_handlers/opcode_handler_map.cpp`
+- Created by `CreateOpcodeHandlers()` in `../emulatorlib/src/cpu/opcode_handler_map.cppm`
 - Every opcode entry carries its mnemonic; unimplemented opcodes dispatch to `UnimplementedOpcode`, while illegal
   opcodes dispatch to `IllegalOpcode`
 - Illegal opcodes are `0xD3`, `0xDB`, `0xDD`, `0xE3`, `0xE4`, `0xEB`, `0xEC`, `0xED`, `0xF4`, `0xFC`, and `0xFD`
