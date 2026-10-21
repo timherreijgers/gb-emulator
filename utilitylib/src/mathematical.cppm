@@ -3,13 +3,9 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <concepts>
-#include <cstddef>
-#include <typeinfo>
-
 export module utilitylib:mathematical;
+
+import std;
 
 import :byte_utils;
 

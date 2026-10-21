@@ -3,8 +3,6 @@
  * Licensed using the MIT license
  */
 
-module;
-
 export module utilitylib;
 
 export import :bit_mask;
