@@ -3,18 +3,9 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <array>
-#include <coroutine>
-#include <cstddef>
-#include <format>
-#include <functional>
-#include <new>
-#include <stdexcept>
-#include <variant>
-
 module emulatorlib.cpu;
+
+import std;
 
 import utilitylib;
 

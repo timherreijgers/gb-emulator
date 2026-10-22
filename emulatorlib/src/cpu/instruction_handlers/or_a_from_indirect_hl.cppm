@@ -3,17 +3,14 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <coroutine>
-#include <cstddef>
-#include <cstdint>
-#include <variant>
-
 module emulatorlib.cpu:or_a_from_indirect_hl;
+
+import std;
 
 import emulatorlib.cpu;
 import emulatorlib.address_bus;
+
+using std::uint8_t;
 
 namespace EmulatorLib
 {

@@ -3,15 +3,13 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <array>
-#include <cstddef>
-#include <cstdint>
-
 export module emulatorlib.ram;
 
+import std;
+
 import emulatorlib.address_bus;
+
+using std::uint16_t;
 
 export namespace EmulatorLib
 {

@@ -6,6 +6,10 @@
 #include "instruction_test_base.h"
 
 import emulatorlib.cpu;
+import std;
+
+using std::uint16_t;
+
 
 namespace EmulatorLib::Test
 {

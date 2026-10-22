@@ -3,12 +3,11 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <cstddef>
-#include <cstdint>
-
 module emulatorlib.ram;
+
+import std;
+
+using std::uint16_t;
 
 namespace EmulatorLib
 {

@@ -5,9 +5,7 @@ import emulatorlib.cpu;
 
 import utilitylib;
 
-#include <functional>
-#include <iostream>
-#include <print>
+import std;
 
 template <>
 struct std::formatter<EmulatorLib::CpuRegisters>

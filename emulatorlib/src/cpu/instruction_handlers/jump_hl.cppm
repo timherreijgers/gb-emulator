@@ -3,14 +3,9 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <concepts>
-#include <coroutine>
-#include <cstddef>
-#include <variant>
-
 module emulatorlib.cpu:jump_hl;
+
+import std;
 
 import emulatorlib.cpu;
 import emulatorlib.address_bus;

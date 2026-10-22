@@ -3,17 +3,14 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <coroutine>
-#include <cstddef>
-#include <cstdint>
-#include <variant>
-
 module emulatorlib.cpu:rst;
+
+import std;
 
 import emulatorlib.cpu;
 import emulatorlib.address_bus;
+
+using std::uint16_t;
 
 namespace EmulatorLib
 {

@@ -3,16 +3,13 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <concepts>
-#include <cstddef>
-#include <cstdint>
-#include <type_traits>
-
 export module emulatorlib.cpu:register_;
 
+import std;
+
 import utilitylib;
+
+using std::uint16_t;
 
 export namespace EmulatorLib
 {

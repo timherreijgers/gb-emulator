@@ -3,11 +3,9 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <array>
-
 export module emulatorlib.cpu:opcode_handler_map;
+
+import std;
 
 import emulatorlib.cpu;
 

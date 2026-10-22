@@ -3,18 +3,14 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <cstddef>
-#include <filesystem>
-#include <format>
-#include <stdexcept>
-#include <string_view>
-#include <vector>
-
 export module emulatorlib.cartridge;
 
+import std;
+
 import emulatorlib.address_bus;
+
+using std::uint16_t;
+using std::size_t;
 
 export namespace EmulatorLib
 {

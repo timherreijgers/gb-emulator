@@ -3,13 +3,9 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <coroutine>
-#include <cstddef>
-#include <variant>
-
 module emulatorlib.cpu:disable_interrupts;
+
+import std;
 
 import emulatorlib.cpu;
 import emulatorlib.address_bus;

@@ -3,6 +3,10 @@
  * Licensed using the MIT license
  */
 
+import std;
+
+using std::uint16_t;
+
 #include "register_function_wrappers.h"
 
 #include "instruction_test_base.h"

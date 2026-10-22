@@ -3,14 +3,13 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <cstdint>
-#include <vector>
-
 module emulatorlib.address_bus;
 
+import std;
+
 import utilitylib;
+
+using std::uint16_t;
 
 namespace EmulatorLib
 {

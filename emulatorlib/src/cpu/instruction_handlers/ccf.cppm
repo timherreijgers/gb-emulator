@@ -3,13 +3,9 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <coroutine>
-#include <cstddef>
-#include <variant>
-
 module emulatorlib.cpu:ccf;
+
+import std;
 
 import emulatorlib.cpu;
 import emulatorlib.address_bus;

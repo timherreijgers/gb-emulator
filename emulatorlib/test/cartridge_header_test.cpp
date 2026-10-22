@@ -6,14 +6,12 @@
 import emulatorlib.cartridge;
 import utilitylib;
 
+import std;
+
+using std::size_t;
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-
-#include <array>
-#include <filesystem>
-#include <fstream>
-#include <stdexcept>
-#include <thread>
 
 namespace EmulatorLib::Test
 {

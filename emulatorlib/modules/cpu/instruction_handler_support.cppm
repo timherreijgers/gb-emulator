@@ -3,14 +3,9 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <concepts>
-#include <cstddef>
-#include <functional>
-#include <type_traits>
-
 export module emulatorlib.cpu:instruction_handler_support;
+
+import std;
 
 import utilitylib;
 import :register_;

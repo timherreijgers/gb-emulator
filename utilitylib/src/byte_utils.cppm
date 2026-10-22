@@ -7,6 +7,8 @@ export module utilitylib:byte_utils;
 
 import std;
 
+using std::uint8_t;
+
 export [[nodiscard]] constexpr auto operator-(const std::byte left, const std::byte right) -> std::byte
 {
     return static_cast<std::byte>(std::to_underlying(left) - std::to_underlying(right));

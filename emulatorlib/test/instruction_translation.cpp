@@ -3,9 +3,11 @@
  * Licensed using the MIT license
  */
 
-#include "instruction_translation.h"
+import std;
 
-#include <array>
+using std::size_t;
+
+#include "instruction_translation.h"
 
 namespace EmulatorLib::Test
 {

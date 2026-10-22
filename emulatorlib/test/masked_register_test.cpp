@@ -5,6 +5,10 @@
 
 import emulatorlib.cpu;
 import utilitylib;
+import std;
+
+using std::uint16_t;
+
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

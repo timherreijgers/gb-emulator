@@ -3,16 +3,9 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <array>
-#include <coroutine>
-#include <exception>
-#include <functional>
-#include <string_view>
-#include <variant>
-
 export module emulatorlib.cpu;
+
+import std;
 
 export import :register_;
 export import :registers;

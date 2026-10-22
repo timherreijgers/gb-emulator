@@ -3,20 +3,15 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <concepts>
-#include <coroutine>
-#include <cstddef>
-#include <cstdint>
-#include <type_traits>
-#include <variant>
-
 module emulatorlib.cpu:mathetical_r;
+
+import std;
 
 import emulatorlib.cpu;
 import emulatorlib.address_bus;
 import utilitylib;
+
+using std::uint8_t;
 
 namespace EmulatorLib
 {

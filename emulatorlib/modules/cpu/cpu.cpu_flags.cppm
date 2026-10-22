@@ -3,12 +3,11 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <cstddef>
-#include <cstdint>
-
 export module emulatorlib.cpu:flags;
+
+import std;
+
+using std::uint8_t;
 
 export namespace EmulatorLib
 {

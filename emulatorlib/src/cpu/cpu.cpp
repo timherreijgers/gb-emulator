@@ -3,16 +3,14 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <cstddef>
-#include <cstdint>
-#include <exception>
-
 module emulatorlib.cpu;
+
+import std;
 
 import :opcode_handler_map;
 import utilitylib;
+
+using std::uint8_t;
 
 namespace EmulatorLib
 {

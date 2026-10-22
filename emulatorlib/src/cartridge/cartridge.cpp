@@ -3,17 +3,15 @@
  * Licensed using the MIT license
  */
 
-module;
-
-#include <array>
-#include <filesystem>
-#include <format>
-#include <fstream>
-#include <utility>
-
 module emulatorlib.cartridge;
 
+import std;
+
 import utilitylib;
+
+using std::uint16_t;
+using std::size_t;
+using std::ptrdiff_t;
 
 namespace EmulatorLib
 {

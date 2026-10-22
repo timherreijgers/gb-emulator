@@ -21,6 +21,10 @@ partitions. Each module unit imports its direct dependencies explicitly: a priva
 automatically visible in another. For example, the opcode-map partition imports `utilitylib` for its `std::byte`
 formatter.
 
+Standard-library dependencies in `.cpp` and `.cppm` units use `import std;` instead of standard-header includes. This
+does not expose global C aliases such as `uint16_t`; retain unqualified spellings only with targeted declarations such
+as `using std::uint16_t;`.
+
 ## Build and Test
 
 Conan generates the CMake presets referenced by `CMakeUserPresets.json` under `build/Debug`, `build/Release`, and

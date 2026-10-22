@@ -3,6 +3,10 @@
  * Licensed using the MIT license
  */
 
+import std;
+
+using std::uint16_t;
+
 #include "instruction_test_base.h"
 
 #include "instruction_translation.h"
