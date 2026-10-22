@@ -3,8 +3,12 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/register.h"
-#include "utilitylib/byte_utils.h"
+import emulatorlib.cpu;
+import utilitylib;
+import std;
+
+using std::uint16_t;
+
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

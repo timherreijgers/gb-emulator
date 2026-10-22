@@ -3,12 +3,11 @@
  * Licensed using the MIT license
  */
 
+import std;
+
 #include "instruction_test_base.h"
 
 #include "instruction_translation.h"
-
-#include <cstddef>
-#include <format>
 
 namespace EmulatorLib::Test
 {

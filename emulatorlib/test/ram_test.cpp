@@ -3,8 +3,12 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/ram.h"
-#include "utilitylib/byte_utils.h"
+import emulatorlib.ram;
+import utilitylib;
+import std;
+
+using std::uint16_t;
+
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

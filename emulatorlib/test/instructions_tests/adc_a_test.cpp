@@ -3,7 +3,7 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/cpu_flags.h"
+import emulatorlib.cpu;
 #include "instruction_test_base.h"
 
 namespace EmulatorLib::Test

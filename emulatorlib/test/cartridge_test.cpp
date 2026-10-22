@@ -3,16 +3,15 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/cartridge.h"
-#include "utilitylib/byte_utils.h"
+import emulatorlib.cartridge;
+import utilitylib;
+
+import std;
+
+using std::size_t;
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-
-#include <array>
-#include <filesystem>
-#include <fstream>
-#include <thread>
 
 namespace EmulatorLib::Test
 {

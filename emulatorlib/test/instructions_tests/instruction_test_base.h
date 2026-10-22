@@ -1,9 +1,10 @@
 #pragma once
 
-#include "emulatorlib/address_bus.h"
-#include "emulatorlib/cpu.h"
-#include "emulatorlib/test/address_bus_addressable_mock.h"
-#include "emulatorlib/test/program_stub.h"
+import emulatorlib.address_bus;
+import emulatorlib.cpu;
+
+#include "mocks/address_bus_addressable_mock.h"
+#include "mocks/program_stub.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

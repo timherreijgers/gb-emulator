@@ -3,9 +3,8 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/cpu_flags.h"
-#include "emulatorlib/cpu_registers.h"
-#include "instruction_handlers/flag_helpers.h"
+import emulatorlib.cpu;
+import utilitylib;
 
 #include <gmock/gmock.h>
 

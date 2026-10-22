@@ -2,9 +2,17 @@
 
 ## Overview
 
-Header-only utility library (`utilitylib/include/utilitylib/`) providing low-level byte operations for the emulator.
+Utility library providing low-level byte operations for the emulator.
 
-## Integral Suffixes (`integral_suffixes.h`)
+`UtilityLib` is exposed as the `utilitylib/src/utilitylib.cppm` named module interface and is consumed with
+`import utilitylib;`. The former `utilitylib/include/utilitylib/` headers and their public include path were removed
+in the module migration. This is a breaking API change: include-based consumers must migrate to `import utilitylib;`
+and link against the `utilitylib` CMake target.
+
+Module dependencies are not automatically re-exported by other modules. Import `utilitylib` directly in a module
+partition that uses its declarations or the `std::byte` formatter, even if another partition imports it.
+
+## Integral Suffixes (`src/integral_suffixes.cppm`)
 
 User-defined literals for explicit type-safe byte/integer literals:
 
@@ -17,7 +25,7 @@ User-defined literals for explicit type-safe byte/integer literals:
 // ... also _u32, _s32, _u64, _s64
 ```
 
-## Byte Utilities (`byte_utils.h`)
+## Byte Utilities (`src/byte_utils.cppm`)
 
 Overloads for `+` and `-` on `std::byte`:
 
@@ -28,12 +36,12 @@ operator-(std::byte, std::byte) -> std::byte
 operator-(std::byte, integral) -> std::byte
 ```
 
-## Numeric Limits (`numeric_limits.h`)
+## Numeric Limits (`src/byte_utils.cppm`)
 
 `UtilityLib::numeric_limits<T>` inherits from `std::numeric_limits<T>` and specializes its own `std::byte` case by
 inheriting the limits for `unsigned char`.
 
-## Mathematical Result (`mathematical_result.h`)
+## Mathematical Result (`src/mathematical.cppm`)
 
 Common result struct for mathematical operations:
 
@@ -51,7 +59,7 @@ struct [[nodiscard]] MathematicalResult {
 }
 ```
 
-## Add With Carry (`add_with_carry.h`)
+## Add With Carry (`src/mathematical.cppm`)
 
 ```cpp
 namespace UtilityLib {
@@ -67,9 +75,9 @@ template <IntegralOrByte T>
 - `AddWithCarryIn` — adds an explicit one-bit carry-in to two operands (delegates to `AddWithCarry`)
 - Accepts only unsigned integral types or `std::byte` (via `IntegralOrByte` concept)
 - Carry bits use bitmask positions (bit 3 for half-carry, bit 7 for carry)
-- The `IntegralOrByte` concept is defined in `mathematical_result.h`
+- The `IntegralOrByte` concept is defined in `src/mathematical.cppm`
 
-## Sub With Borrow (`sub_with_borrow.h`)
+## Sub With Borrow (`src/mathematical.cppm`)
 
 ```cpp
 namespace UtilityLib {
@@ -83,10 +91,10 @@ constexpr auto SubWithBorrowIn = [](IntegralOrByte auto left, IntegralOrByte aut
 - Implemented using Borrow-Lookahead subtractor algorithm
 - `SubWithBorrowIn` subtracts an explicit one-bit borrow-in and combines the borrow masks from both subtraction steps
 - Returns a `MathematicalResult<T>` (same struct as `AddWithCarry`) with `result` and `carryBits`
-- Uses the `IntegralOrByte` concept from `mathematical_result.h`
+- Uses the `IntegralOrByte` concept from `src/mathematical.cppm`
 - Used for `SUB`/`SBC` flag computation
 
-## Bit Mask (`bit_mask.h`)
+## Bit Mask (`src/bit_mask.cppm`)
 
 Compile-time bit mask constants:
 

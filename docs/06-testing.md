@@ -6,7 +6,7 @@
 
 ## Test Infrastructure
 
-### Mock Objects (`emulatorlib/include/emulatorlib/test/`)
+### Mock Objects (`emulatorlib/test/mocks/`)
 - **`AddressBusAddressableMock`** — Google Mock of `AddressBusAddressable` interface
   - `MOCK_METHOD(void, WriteToAddress, (uint16_t, std::byte), (override, noexcept))`
   - `MOCK_METHOD(std::byte, ReadFromAddress, (uint16_t), (const, override, noexcept))`
@@ -34,7 +34,6 @@ protected:
 | File | Tests |
 |------|-------|
 | `cpu_test.cpp` | CPU initialization (including disabled master interrupts), PC increment, opcode fetching |
-| `instruction_handler_header_test.cpp` | Instruction handler header and coroutine support |
 | `instruction_translation.cpp` / `instruction_translation.h` | Test-only opcode-to-instruction-name mapping for parameterized tests |
 | `address_bus_test.cpp` | Bus routing, OR-combining reads, write broadcasting |
 | `cartridge_test.cpp` | ROM loading, data access |
@@ -107,6 +106,8 @@ Parameterized tests for each instruction family:
 | `jump_a16_test.cpp` | `JP a16` |
 | `jump_conditional_a16_test.cpp` | `JP cc, a16` |
 | `jump_hl_test.cpp` | `JP HL` |
+| `call_a16_test.cpp` | `CALL a16` |
+| `call_conditional_a16_test.cpp` | `CALL cc, a16` |
 | `ret_test.cpp` | `RET` |
 | `ret_conditional_test.cpp` | `RET cc` taken and untaken behavior |
 | `reti_test.cpp` | `RETI` return and interrupt-enable behavior |
@@ -148,7 +149,7 @@ For every `INSTANTIATE_TEST_SUITE_P`, derive the parameter name from
 ## Building & Running Tests
 ```bash
 cmake --build --preset conan-debug
-ctest --test-dir build/Debug --output-on-failure
+ctest --preset conan-debug --output-on-failure
 ```
 
 To run one Google Test:

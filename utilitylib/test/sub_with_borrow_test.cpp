@@ -3,7 +3,11 @@
  * Licensed using the MIT license
  */
 
-#include "utilitylib/sub_with_borrow.h"
+import utilitylib;
+import std;
+
+using std::uint8_t;
+
 
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>

@@ -3,9 +3,9 @@
  * Licensed using the MIT license
  */
 
-#include "instruction_test_base.h"
+import std;
 
-#include <format>
+#include "instruction_test_base.h"
 
 namespace EmulatorLib::Test
 {
