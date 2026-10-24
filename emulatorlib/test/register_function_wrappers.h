@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include "emulatorlib/cpu_registers.h"
-#include "emulatorlib/register.h"
+import emulatorlib.cpu;
 
 #include <functional>
 

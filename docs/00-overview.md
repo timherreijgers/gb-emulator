@@ -13,11 +13,10 @@ gb-emulator/
 ├── conanfile.py                # Conan package manager config
 ├── cmake/                      # CMake helper scripts (ccache)
 ├── emulatorlib/                # Core emulator library
-│   ├── include/emulatorlib/    # Public headers
-│   ├── src/                    # Source files + instruction handlers
+│   ├── src/                    # Named modules, partitions, and implementations
 │   └── test/                   # Tests
-├── utilitylib/                 # Utility library (header-only)
-│   ├── include/utilitylib/     # Public headers
+├── utilitylib/                 # Utility library (C++ module)
+│   ├── src/                    # Named module and partitions
 │   └── test/                   # Tests
 └── docs/                       # This documentation
 ```
@@ -29,7 +28,11 @@ gb-emulator/
 - **C++ Standard**: C++26
 - **Testing**: Google Test + Google Mock
 - **Benchmarking**: Google Benchmark
-- **Compiler flags**: `-Wall -Wextra -Wpedantic -Werror`
+- **Compiler flags**: `-Wall -Wextra -Wpedantic -Werror`, `-Wsuggest-override`, `-Wshadow`, `-Wswitch-enum`,
+  `-Wswitch-default`, and `-Wconversion`; `-Wno-include-angled-in-module-purview` suppresses a warning for the current
+  C++ module implementation
+
+See [C++ Modules and Build System](07-modules.md) for module targets and presets.
 
 ## Building
 
@@ -58,6 +61,8 @@ When working on this project:
 The emulator follows a device-interconnect model:
 
 - **AddressBus** routes read/write operations to connected devices via `AddressBusAddressable` interface
+- **Modules**: consumers import `emulatorlib.address_bus`, `emulatorlib.cartridge`, `emulatorlib.ram`,
+  `emulatorlib.cpu`, or `utilitylib` and link their CMake targets; the former public headers are not available
 - **CPU** contains registers, opcode dispatch, and uses coroutines to sequence instruction cycles; only a subset of DMG
   instructions is implemented
 - **Cartridge** loads ROM bytes and checks ROM-size metadata; logo and header-checksum checks are separate queries, and
@@ -68,7 +73,7 @@ The emulator follows a device-interconnect model:
 
 ## Key Conventions
 
-- C++ source and header files use the MIT license header: `Copyright © 2026. Tim Herreijgers`
+- C++ source, module interface, and header files use the MIT license header: `Copyright © 2026. Tim Herreijgers`
 - Namespace: `EmulatorLib` for emulator code, `UtilityLib` for utilities
 - Byte literals: use `_b` suffix (e.g., `0x00_b`)
 - Integer literals: use `_u8`, `_u16`, `_s8`, `_s16` suffixes

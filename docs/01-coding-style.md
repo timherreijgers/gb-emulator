@@ -2,7 +2,8 @@
 
 ## C++ Standard
 
-**C++26.** All C++26 features are available and should be used when appropriate. Do not write C++11, C++14, or C++17 code when a modern C++26 alternative exists.
+**C++26.** All C++26 features are available and should be used when appropriate. Do not write C++11, C++14, or C++17
+code when a modern C++26 alternative exists.
 
 ### Formatting and Output
 
@@ -19,7 +20,8 @@ ss << "Register AF = 0x" << std::hex << std::setw(4) << std::setfill('0')
    << static_cast<int>(cpuRegisters.afRegister.value);
 ```
 
-Use `std::println` for log/debug output and `std::format` when you need the string as a value. Use `std::println` instead of `std::cout`, and do not use `<sstream>` for application formatting.
+Use `std::println` for log/debug output and `std::format` when you need the string as a value. Use `std::println`
+instead of `std::cout`, and do not use `<sstream>` for application formatting.
 
 ### Ranges
 
@@ -45,11 +47,13 @@ for (size_t i = 0; i < instructions.size(); ++i) {
 }
 ```
 
-Use `std::ranges::find_if`, `std::ranges::for_each`, `std::views::filter`, `std::views::transform`, `std::views::take`, etc. Prefer range-based algorithms over manual loops.
+Use `std::ranges::find_if`, `std::ranges::for_each`, `std::views::filter`, `std::views::transform`, `std::views::take`,
+etc. Prefer range-based algorithms over manual loops.
 
 ### Layout
 
-Use four spaces for indentation and place opening braces on the line following a declaration or control statement. Do not rely on an editor's default formatting; preserve these conventions until a project formatter is configured.
+Use four spaces for indentation and place opening braces on the line following a declaration or control statement. Do
+not rely on an editor's default formatting; preserve these conventions until a project formatter is configured.
 
 ```cpp
 class Cartridge
@@ -72,7 +76,8 @@ Prefer trailing return types for nontrivial function declarations and definition
 
 ### Concepts
 
-**Always constrain template parameters with concepts. Never use SFINAE with `std::enable_if` or unconstrained `auto` in templates.**
+**Always constrain template parameters with concepts. Never use SFINAE with `std::enable_if` or unconstrained `auto` in
+templates.**
 
 ```cpp
 // Preferred: explicit, readable, great error messages
@@ -90,32 +95,43 @@ template <typename T, std::enable_if_t<std::is_integral_v<T>, int> = 0>
 auto process(T value) { /* ... */ }
 ```
 
-Use concepts for all template parameters. Define project-specific concepts in the relevant header (see `register_concepts.h` for examples). Use standard library concepts (`std::integral`, `std::ranges::range`, `std::copyable`, etc.) when they apply.
+Use concepts for all template parameters. Define project-specific concepts in the relevant module interface or
+partition (see `../emulatorlib/modules/cpu/instruction_handler_support.cppm` for examples). Use standard library concepts
+(`std::integral`, `std::ranges::range`, `std::copyable`, etc.) when they apply.
 
 ## Casts
 
 **Never use C-style casts.** Use the typed alternatives, which are checked, explicit, and easy to search for.
 
-| Instead of | Use |
-|-----------|-----|
-| `(T)expr` for numeric conversions | `static_cast<T>(expr)` |
-| `(T)ptr` / `(void*)ptr` pointer casts | `static_cast` (up/downcast) or `reinterpret_cast` (bit-level reinterpreting only) |
-| `(const T)expr` removing const | `const_cast<T>(expr)` (avoid; const-correct design preferred) |
-| `(T)expr` combining const removal + reinterpret | Separate `const_cast` + `reinterpret_cast` (avoid where possible) |
+| Instead of                                      | Use                                                                               |
+|-------------------------------------------------|-----------------------------------------------------------------------------------|
+| `(T)expr` for numeric conversions               | `static_cast<T>(expr)`                                                            |
+| `(T)ptr` / `(void*)ptr` pointer casts           | `static_cast` (up/downcast) or `reinterpret_cast` (bit-level reinterpreting only) |
+| `(const T)expr` removing const                  | `const_cast<T>(expr)` (avoid; const-correct design preferred)                     |
+| `(T)expr` combining const removal + reinterpret | Separate `const_cast` + `reinterpret_cast` (avoid where possible)                 |
 
-For reinterpreting object representation between related types (e.g., `uint32_t` ↔ `float`, or extracting sub-objects from aligned storage), prefer `std::bit_cast` over `reinterpret_cast` — it is `constexpr`, well-defined, and never aliases.
+For reinterpreting object representation between related types (e.g., `uint32_t` ↔ `float`, or extracting sub-objects
+from aligned storage), prefer `std::bit_cast` over `reinterpret_cast` — it is `constexpr`, well-defined, and never
+aliases.
 
 ## Ownership and Aliasing
 
-**Use references over raw pointers for function parameters and non-owning access. Use `std::unique_ptr` over `std::shared_ptr`.**
+**Use references over raw pointers for function parameters and non-owning access. Use `std::unique_ptr` over
+`std::shared_ptr`.**
 
-- Function parameters: `auto Foo(std::string_view name, AddressBus& bus)` — never `char*` or `AddressBus*` when a reference or `std::string_view` expresses the same non-null contract. Raw pointers are allowed only when a nullable pointer is genuinely part of the API, and prefer `std::optional` for that too.
-- Ownership: `std::unique_ptr` is the default for dynamically owned objects. Only reach for `std::shared_ptr` when ownership is genuinely shared across multiple owners with independent lifetimes — and say so in a comment. Prefer value semantics and RAII over both.
-- Non-owning pointers (e.g., `std::coroutine_handle::promise()`, observer pointers) are fine, but document that they do not own the pointee.
+- Function parameters: `auto Foo(std::string_view name, AddressBus& bus)` — never `char*` or `AddressBus*` when a
+  reference or `std::string_view` expresses the same non-null contract. Raw pointers are allowed only when a nullable
+  pointer is genuinely part of the API, and prefer `std::optional` for that too.
+- Ownership: `std::unique_ptr` is the default for dynamically owned objects. Only reach for `std::shared_ptr` when
+  ownership is genuinely shared across multiple owners with independent lifetimes — and say so in a comment. Prefer
+  value semantics and RAII over both.
+- Non-owning pointers (e.g., `std::coroutine_handle::promise()`, observer pointers) are fine, but document that they do
+  not own the pointee.
 
 ## Error Handling
 
-**Throw `std::runtime_error` or custom exception types for unrecoverable errors. Use `[[nodiscard]]` MathematicalResult-style types for operations that may fail but the caller should handle explicitly.**
+**Throw `std::runtime_error` or custom exception types for unrecoverable errors. Use `[[nodiscard]]`
+MathematicalResult-style types for operations that may fail but the caller should handle explicitly.**
 
 ```cpp
 // Preferred: unrecoverable error
@@ -134,26 +150,28 @@ if (result.carryBits == 0x80_b) {
 ParseConfig("config.ini");  // compiler warning: ignored
 ```
 
-## Include Order
+## Includes and Imports
 
-**Order: header corresponding to the source file → local project headers → third-party headers → standard library headers. Leave one blank line between each section.**
+**Module units:** put standard-library and third-party `#include`s in the global module fragment (after `module;`),
+then declare the named module or partition, followed by its imports. Import each module whose declarations are used
+directly; imports in another partition do not make its private dependencies visible here. The old emulator and
+utility public headers were removed, so use named-module imports instead.
 
 ```cpp
-// File: emulatorlib/src/cpu.cpp
-#include "emulatorlib/cpu.h"          // corresponding header (1)
+// File: emulatorlib/src/cpu/instruction_handlers/opcode_handler_map.cppm
+module;
 
-#include "emulatorlib/cpu_registers.h"  // local project (2)
-#include "emulatorlib/cpu_flags.h"
-#include "emulatorlib/address_bus.h"
+#include <array>
+#include <format>
 
-#include <gtest/gtest.h>                // third-party (3)
-#include <gmock/gmock.h>
+module emulatorlib.cpu:opcode_handler_map;
 
-#include <array>                         // std library (4)
-#include <coroutine>
-#include <functional>
-#include <vector>
+import emulatorlib.cpu;
+import utilitylib; // std::byte formatter used by this partition
 ```
+
+For remaining header-based test helpers, group project headers, third-party headers, and standard-library headers,
+with a blank line between groups. Keep the imports those helpers require explicit.
 
 ## Attributes and Specifiers
 
@@ -178,23 +196,24 @@ auto Title() -> std::string_view { /* ... */ }  // missing constexpr, const, [[n
 
 ## Naming Conventions
 
-| Kind | Convention | Example |
-|------|-----------|---------|
-| **Functions** | `PascalCase` | `ReadFromAddress`, `ExecuteAddA` |
-| **Classes / Structs** | `PascalCase` | `CpuRegisters`, `Cartridge` |
-| **Enums** | `PascalCase` | `CartridgeType` |
-| **Enum values** | `SCREAMING_SNAKE_CASE` | `ROM_ONLY`, `MBC1` |
-| **Variables (local)** | `camelCase` | `address`, `data`, `result` |
-| **Member variables** | `m_camelCase` | `m_addressableMock`, `m_backingHl` |
-| **Global variables** | `g_camelCase` | `g_logger` |
-| **Namespaces** | `PascalCase` | `EmulatorLib`, `UtilityLib` |
-| **Files / Paths** | `snake_case` | `cpu_registers.h`, `add_with_carry.h` |
+| Kind                  | Convention             | Example                               |
+|-----------------------|------------------------|---------------------------------------|
+| **Functions**         | `PascalCase`           | `ReadFromAddress`, `ExecuteAddA`      |
+| **Classes / Structs** | `PascalCase`           | `CpuRegisters`, `Cartridge`           |
+| **Enums**             | `PascalCase`           | `CartridgeType`                       |
+| **Enum values**       | `SCREAMING_SNAKE_CASE` | `ROM_ONLY`, `MBC1`                    |
+| **Variables (local)** | `camelCase`            | `address`, `data`, `result`           |
+| **Member variables**  | `m_camelCase`          | `m_addressableMock`, `m_backingHl`    |
+| **Global variables**  | `g_camelCase`          | `g_logger`                            |
+| **Namespaces**        | `PascalCase`           | `EmulatorLib`, `UtilityLib`           |
+| **Files / Paths**     | `snake_case`           | `instruction_handler_support.cppm`, `bit_mask.cppm` |
 
 **No `p` prefix for pointers.** Use `m_` prefix for member variables and `g_` prefix for globals.
 
 ## Special Member Functions
 
-**Prefer zero user-declared special member functions. If a type manages a resource and declares any of destructor, copy/move constructor, or copy/move assignment operator, declare or delete all five (Rule of 5).**
+**Prefer zero user-declared special member functions. If a type manages a resource and declares any of destructor,
+copy/move constructor, or copy/move assignment operator, declare or delete all five (Rule of 5).**
 
 ```cpp
 // Preferred: rule of zero, no custom special members
@@ -222,13 +241,15 @@ class BadPartiallyDefined {
 };
 ```
 
-Prefer `std::unique_ptr`, `std::shared_ptr`, and value semantics. Delete (don't just omit) copy operations when a type should be non-copyable.
+Prefer `std::unique_ptr`, `std::shared_ptr`, and value semantics. Delete (don't just omit) copy operations when a type
+should be non-copyable.
 
 ## Comments and Documentation
 
 **The code is self-documenting. Comments must only be added when the intent is not clear from reading the code alone.**
 
-Comments must explain the **why** and the **how**, never the **what**. The what is already in the code — repeating it in a comment is noise.
+Comments must explain the **why** and the **how**, never the **what**. The what is already in the code — repeating it in
+a comment is noise.
 
 Do not use emoji characters in documentation or source code.
 
@@ -250,7 +271,8 @@ auto result = AddWithCarry(a, b);  // add a and b
 
 **Functions must do one thing. The function name must describe that one thing exactly.**
 
-A function name like `DoSomethingAndSomething` is doing too much and must be split. If you need the word "and" in a function name, it is doing more than one thing.
+A function name like `DoSomethingAndSomething` is doing too much and must be split. If you need the word "and" in a
+function name, it is doing more than one thing.
 
 ```cpp
 // Preferred: single responsibility, name describes the action
@@ -264,4 +286,6 @@ auto ExecuteAddAFromIndirectHlOrRegister(...);
 void ParseHeaderAndValidateChecksumAndStoreTitle();
 ```
 
-Rule of thumb: **if a function name contains "and" or "or", it likely violates single responsibility.** Split it. Prefer small, composable functions that each do one thing and have a name that makes their purpose obvious without needing to read their body.
+Rule of thumb: **if a function name contains "and" or "or", it likely violates single responsibility.** Split it. Prefer
+small, composable functions that each do one thing and have a name that makes their purpose obvious without needing to
+read their body.

@@ -6,7 +6,7 @@
 #include "instruction_test_base.h"
 #include "instruction_translation.h"
 
-#include "emulatorlib/cpu_flags.h"
+import emulatorlib.cpu;
 
 namespace EmulatorLib::Test
 {
