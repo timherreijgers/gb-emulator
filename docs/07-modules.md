@@ -33,3 +33,6 @@ ctest --preset conan-debug --output-on-failure
 
 The other configurations use the corresponding `conan-release` or `conan-relwithdebinfo` preset. The tests are
 registered as `EmulatorLibTest` and `UtilityLibTest`.
+
+On Windows, `bootstrap_windows.sh` installs Conan dependencies for the Release, RelWithDebInfo, and Debug
+configurations using the `clang-22-win-x86_64` profile and Ninja generator. Run it from the project root before building.

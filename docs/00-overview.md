@@ -28,7 +28,9 @@ gb-emulator/
 - **C++ Standard**: C++26
 - **Testing**: Google Test + Google Mock
 - **Benchmarking**: Google Benchmark
-- **Compiler flags**: `-Wall -Wextra -Wpedantic -Werror`
+- **Compiler flags**: `-Wall -Wextra -Wpedantic -Werror`, `-Wsuggest-override`, `-Wshadow`, `-Wswitch-enum`,
+  `-Wswitch-default`, and `-Wconversion`; `-Wno-include-angled-in-module-purview` suppresses a warning for the current
+  C++ module implementation
 
 See [C++ Modules and Build System](07-modules.md) for module targets and presets.
 
