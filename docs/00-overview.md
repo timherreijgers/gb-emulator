@@ -15,6 +15,7 @@ gb-emulator/
 ├── emulatorlib/                # Core emulator library
 │   ├── include/emulatorlib/    # Public headers
 │   ├── src/                    # Source files + instruction handlers
+│   ├── mocks/                  # Test mocks library
 │   └── test/                   # Tests
 ├── utilitylib/                 # Utility library (header-only)
 │   ├── include/utilitylib/     # Public headers
@@ -29,7 +30,18 @@ gb-emulator/
 - **C++ Standard**: C++26
 - **Testing**: Google Test + Google Mock
 - **Benchmarking**: Google Benchmark
-- **Compiler flags**: `-Wall -Wextra -Wpedantic -Werror`
+- **Compiler flags**: `-Wall -Wextra -Wpedantic -Werror -Wsuggest-override -Wshadow -Wswitch-enum -Wswitch-default -Wconversion`
+- **Header checks**: CMake verifies public interface and private header file sets during the default build
+
+## Documentation Index
+
+- [Coding style](01-coding-style.md)
+- [CPU](02-cpu.md)
+- [Address bus](03-address-bus.md)
+- [Instructions](04-instructions.md)
+- [Utility library](05-utilitylib.md)
+- [Testing](06-testing.md)
+- [CMake build system](07-cmake.md)
 
 ## Building
 
