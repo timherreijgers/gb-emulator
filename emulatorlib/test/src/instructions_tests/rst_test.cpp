@@ -5,7 +5,7 @@
 
 #include "instruction_test_base.h"
 
-#include "emulatorlib/test/src/instruction_translation.h"
+#include "instruction_translation.h"
 namespace EmulatorLib::Test
 {
 

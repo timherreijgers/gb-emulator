@@ -1,6 +1,17 @@
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS arc/*.cpp src/*.h)
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
+file(GLOB_RECURSE PRIVATE_HEADERS CONFIGURE_DEPENDS src/*.h)
 
-add_executable(emulatorlibTest ${SOURCES})
+add_executable(emulatorlibTest)
+
+target_sources(emulatorlibTest
+        PRIVATE
+        ${SOURCES}
+
+        PRIVATE
+        FILE_SET private_headers
+        TYPE HEADERS
+        BASE_DIRS src
+        FILES ${PRIVATE_HEADERS})
 
 target_link_libraries(emulatorlibTest
         PUBLIC
