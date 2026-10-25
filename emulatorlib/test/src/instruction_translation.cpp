@@ -3,7 +3,7 @@
  * Licensed using the MIT license
  */
 
-#include "../instruction_translation.h"
+#include "emulatorlib/test/src/instruction_translation.h"
 
 #include <array>
 

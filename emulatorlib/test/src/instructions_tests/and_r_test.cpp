@@ -3,9 +3,9 @@
  * Licensed using the MIT license
  */
 
-#include "../src/register_function_wrappers.h"
+#include "emulatorlib/test/src/register_function_wrappers.h"
 
-#include "../src/instruction_translation.h"
+#include "emulatorlib/test/src/instruction_translation.h"
 #include "instruction_test_base.h"
 
 #include "emulatorlib/cpu_flags.h"
