@@ -5,8 +5,8 @@
 
 #include "emulatorlib/test/src/register_function_wrappers.h"
 
-#include "emulatorlib/test/src/instruction_translation.h"
 #include "instruction_test_base.h"
+#include "instruction_translation.h"
 
 #include "instruction_handlers/register_io_helpers.h"
 
