@@ -3,7 +3,7 @@
  * Licensed using the MIT license
  */
 
-#include "../../mocks/include/emulatorlib/test/address_bus_addressable_mock.h"
+#include "emulatorlib/mocks/include/emulatorlib/test/address_bus_addressable_mock.h"
 #include "emulatorlib/address_bus.h"
 #include "utilitylib/byte_utils.h"
 
