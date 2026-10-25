@@ -1,10 +1,11 @@
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS *.cpp src/*.h)
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS arc/*.cpp src/*.h)
 
 add_executable(emulatorlibTest ${SOURCES})
 
 target_link_libraries(emulatorlibTest
         PUBLIC
         emulatorlib
+        emulatorlibMocks
         PRIVATE
         GTest::gmock
         GTest::gmock_main)
