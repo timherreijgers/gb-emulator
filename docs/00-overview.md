@@ -25,12 +25,13 @@ gb-emulator/
 
 ## Build System
 
-- **CMake** (≥ 4.2) with Conan package manager
+- **CMake** (≥ 4.3) with Conan package manager
 - **Compiler**: Clang 22
 - **C++ Standard**: C++26
 - **Testing**: Google Test + Google Mock
 - **Benchmarking**: Google Benchmark
-- **Compiler flags**: `-Wall -Wextra -Wpedantic -Werror -Wsuggest-override -Wshadow -Wswitch-enum -Wswitch-default -Wconversion`
+- **Compiler flags**:
+  `-Wall -Wextra -Wpedantic -Werror -Wsuggest-override -Wshadow -Wswitch-enum -Wswitch-default -Wconversion`
 - **Header checks**: CMake verifies public interface and private header file sets during the default build
 
 ## Documentation Index
