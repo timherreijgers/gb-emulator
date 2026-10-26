@@ -1,3 +1,6 @@
+#  Copyright © 2026. Tim Herreijgers
+#  Licensed using the MIT license
+
 from conan import ConanFile
 from conan.tools.cmake import cmake_layout, CMake
 
@@ -12,7 +15,7 @@ class GBEmulatorRecipe(ConanFile):
 
     def build_requirements(self):
         self.tool_requires("llvm-toolchain/22.1.8")
-        self.tool_requires("cmake/[>=4.2.0]")
+        self.tool_requires("cmake/[>=4.3.0]")
 
     def build(self):
         cmake = CMake(self)
