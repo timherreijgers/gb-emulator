@@ -25,12 +25,14 @@ namespace
     names[0x04] = "IncB";
     names[0x05] = "DecB";
     names[0x06] = "LoadBn8";
+    names[0x07] = "Rlca";
     names[0x08] = "LoadA16SP";
     names[0x0A] = "LoadAFromIndirectBC";
     names[0x0B] = "DecBC";
     names[0x0C] = "IncC";
     names[0x0D] = "DecC";
     names[0x0E] = "LoadCn8";
+    names[0x0F] = "Rrca";
 
     names[0x11] = "LoadDEn16";
     names[0x12] = "LoadIndirectDEFromA";
@@ -38,12 +40,14 @@ namespace
     names[0x14] = "IncD";
     names[0x15] = "DecD";
     names[0x16] = "LoadDn8";
+    names[0x17] = "Rla";
     names[0x18] = "JR";
     names[0x1A] = "LoadAFromIndirectDE";
     names[0x1B] = "DecDe";
     names[0x1C] = "IncE";
     names[0x1D] = "DecE";
     names[0x1E] = "LoadEn8";
+    names[0x1F] = "Rra";
 
     names[0x21] = "LoadHLn16";
     names[0x22] = "LoadIndirectHLIncrementFromA";
