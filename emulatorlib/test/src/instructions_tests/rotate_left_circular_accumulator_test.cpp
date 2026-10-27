@@ -19,12 +19,6 @@ struct RlcaTestParam
     bool carryFlagIsSet;
 };
 
-[[nodiscard]] constexpr auto CalculateExpectedValue(std::byte val) noexcept -> std::byte
-{
-    const auto bit7Set = static_cast<bool>(val & 0x80_b);
-    return static_cast<std::byte>((static_cast<std::uint16_t>(val) << 1) | bit7Set);
-}
-
 } // namespace
 
 class RlcaTest : public InstructionTestBase, public ::testing::WithParamInterface<RlcaTestParam>
@@ -52,6 +46,11 @@ TEST_P(RlcaTest, ExecutingOpCode)
     ASSERT_THAT(m_cpu.Registers().flags, carryFlagIsSet ? CpuFlags::Carry.AsByte() : 0x00_b);
 }
 
-INSTANTIATE_TEST_SUITE_P(RlcaTest, RlcaTest, ::testing::Values(RlcaTestParam{0x07_b, CalculateExpectedValue(0x07_b), false}, RlcaTestParam{0xFF_b, 0xFF_b, true}, RlcaTestParam{0xF0_b, CalculateExpectedValue(0xF0_b), true}, RlcaTestParam{0x0F_b, CalculateExpectedValue(0x0F_b), false}));
+INSTANTIATE_TEST_SUITE_P(RlcaTest, RlcaTest,
+                         ::testing::Values(
+                             RlcaTestParam{0x07_b, 0x0E_b, false},
+                             RlcaTestParam{0xFF_b, 0xFF_b, true},
+                             RlcaTestParam{0xF0_b, 0xE1_b, true},
+                             RlcaTestParam{0x0F_b, 0x1E_b, false}));
 
 } // namespace EmulatorLib::Test

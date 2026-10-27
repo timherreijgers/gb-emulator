@@ -316,10 +316,17 @@ handler updates its register pair, yields for one M-cycle, then completes. `Exec
 
 | Opcode | Mnemonic | Handler | Description |
 |--------|----------|---------|-------------|
+| 0x07 | `RLCA` | `ExecuteRlca` | Rotate A left circularly; bit 7 moves to bit 0 and Carry |
+| 0x17 | `RLA` | `ExecuteRla` | Rotate A left through Carry; old Carry moves to bit 0 |
+| 0x0F | `RRCA` | `ExecuteRrca` | Rotate A right circularly; bit 0 moves to bit 7 and Carry |
+| 0x1F | `RRA` | `ExecuteRra` | Rotate A right through Carry; old Carry moves to bit 7 |
 | 0x2F | `CPL` | `ExecuteCpl` | Complement every bit of A; set Subtract and HalfCarry, preserve Zero and Carry |
 | 0x3F | `CCF` | `ExecuteCcf` | Toggle Carry, preserve Zero, and clear Subtract and HalfCarry |
 
-Both instructions complete in their first handler resume, so they do not add an emulated M-cycle after opcode fetch.
+These instructions complete in their first handler resume, so they do not add an emulated M-cycle after opcode fetch.
+The accumulator rotate instructions clear Zero, Subtract, and HalfCarry; Carry receives the bit shifted out of A. For
+`RLA` and `RRA`, the previous Carry value is rotated into A. For `RLCA` and `RRCA`, the shifted-out bit wraps around
+into A instead.
 `CPL` replaces A with its bitwise complement, sets `N | H`, and preserves the existing Zero and Carry flags. `CCF`
 first retains only Zero and Carry, then toggles Carry with the masked `Register::operator^=`.
 
@@ -328,7 +335,7 @@ first retains only Zero and Carry, then toggles Carry with the masked `Register:
 Major categories not yet implemented:
 
 - **Control flow**: STOP
-- **Shift/Rotate**: SLA, SRA, SRL, SWAP, RL, RR, RLC, RRC
+- **Shift/Rotate**: SLA, SRA, SRL, SWAP, and the non-accumulator forms of RL, RR, RLC, RRC
 - **Decimal adjustment**: DAA
 - **Special**: SCF, HALT
 - **CB-prefixed**: All CB-prefixed instructions (bit operations, shifts, rotates)

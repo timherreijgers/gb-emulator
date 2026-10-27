@@ -43,7 +43,9 @@
 #include "instruction_handlers/ret.h"
 #include "instruction_handlers/ret_conditional.h"
 #include "instruction_handlers/reti.h"
+#include "instruction_handlers/rla.h"
 #include "instruction_handlers/rlca.h"
+#include "instruction_handlers/rra.h"
 #include "instruction_handlers/rrca.h"
 #include "instruction_handlers/rst.h"
 #include "instruction_handlers/sbc_a_from_indirect_hl.h"
@@ -101,7 +103,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0x14] = {.name = "INC D", .handler = ExecuteIncD};
     handlers[0x15] = {.name = "DEC D", .handler = ExecuteDecD};
     handlers[0x16] = {.name = "LD D, n", .handler = ExecuteLoadDn8};
-    handlers[0x17] = {.name = "RLA", .handler = UnimplementedOpcode};
+    handlers[0x17] = {.name = "RLA", .handler = ExecuteRla};
     handlers[0x18] = {.name = "JR e8", .handler = ExecuteJumpRelativeE8};
     handlers[0x19] = {.name = "ADD HL, DE", .handler = UnimplementedOpcode};
     handlers[0x1A] = {.name = "LD A, (DE)", .handler = ExecuteLoadIndirectAFromDE};
@@ -109,7 +111,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0x1C] = {.name = "INC E", .handler = ExecuteIncE};
     handlers[0x1D] = {.name = "DEC E", .handler = ExecuteDecE};
     handlers[0x1E] = {.name = "LD E, n", .handler = ExecuteLoadEn8};
-    handlers[0x1F] = {.name = "RRA", .handler = UnimplementedOpcode};
+    handlers[0x1F] = {.name = "RRA", .handler = ExecuteRra};
 
     handlers[0x20] = {.name = "JR NZ, e8", .handler = ExecuteJumpRelativeNzE8};
     handlers[0x21] = {.name = "LD HL, nn", .handler = ExecuteLoadHLn16};
