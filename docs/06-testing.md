@@ -108,6 +108,7 @@ Parameterized tests for each instruction family:
 | `cpl_test.cpp` | `CPL` accumulator complement and flags |
 | `ccf_test.cpp` | `CCF` carry toggling, Zero preservation, and Subtract/HalfCarry clearing |
 | `daa_test.cpp` | `DAA` decimal adjustment with Subtract clear and set |
+| `scf_test.cpp` | `SCF` Carry setting, Zero preservation, and Subtract/HalfCarry clearing |
 | `load_hl_indirect_increment_a_test.cpp` | `LD A, (HL+)` |
 | `load_hl_indirect_decrement_a_test.cpp` | `LD A, (HL-)` |
 | `load_indirect_8bit_test.cpp` | `LD (HL), n` |

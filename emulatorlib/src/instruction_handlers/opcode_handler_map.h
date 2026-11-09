@@ -51,6 +51,7 @@
 #include "instruction_handlers/rrca.h"
 #include "instruction_handlers/rst.h"
 #include "instruction_handlers/sbc_a_from_indirect_hl.h"
+#include "instruction_handlers/scf.h"
 #include "instruction_handlers/sub_a_from_indirect_hl.h"
 #include "instruction_handlers/xor_a_from_indirect_hl.h"
 
@@ -79,7 +80,6 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
 [[nodiscard]] inline auto CreateOpcodeHandlers() noexcept -> std::array<OpcodeHandler, 256>
 {
     std::array<OpcodeHandler, 256> handlers{};
-    handlers.fill(OpcodeHandler{.name = "UNIMPLEMENTED", .handler = UnimplementedOpcode});
 
     handlers[0x00] = {.name = "NOOP", .handler = ExecuteNoop};
     handlers[0x01] = {.name = "LD BC, nn", .handler = ExecuteLoadBCn16};
@@ -139,7 +139,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0x34] = {.name = "INC (HL)", .handler = UnimplementedOpcode};
     handlers[0x35] = {.name = "DEC (HL)", .handler = UnimplementedOpcode};
     handlers[0x36] = {.name = "LD (HL), n", .handler = ExecuteLoadIndirectHlN8};
-    handlers[0x37] = {.name = "SCF", .handler = UnimplementedOpcode};
+    handlers[0x37] = {.name = "SCF", .handler = ExecuteScf};
     handlers[0x38] = {.name = "JR C, e8", .handler = ExecuteJumpRelativeCE8};
     handlers[0x39] = {.name = "ADD HL, SP", .handler = ExecuteAddHlSP};
     handlers[0x3A] = {.name = "LD A, (HL-)", .handler = ExecuteLoadIndirectAFromHLDecrement};
