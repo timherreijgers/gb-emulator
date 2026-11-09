@@ -33,6 +33,18 @@
     return static_cast<std::byte>(std::to_underlying(lhs) + rhs);
 }
 
+constexpr auto operator+=(std::byte& lhs, const std::byte rhs) -> std::byte&
+{
+    lhs = static_cast<std::byte>(std::to_underlying(lhs) + std::to_underlying(rhs));
+    return lhs;
+}
+
+constexpr auto operator+=(std::byte& lhs, std::integral auto rhs) -> std::byte&
+{
+    lhs = static_cast<std::byte>(std::to_underlying(lhs) + rhs);
+    return lhs;
+}
+
 template <>
 struct std::formatter<std::byte>
 {

@@ -1,23 +1,26 @@
 # Testing
 
 ## Test Framework
+
 - Google Test (gtest 1.18.0) with Google Mock (gmock)
 - All tests live in `*/test/` subdirectories
 
 ## Test Infrastructure
 
 ### Mock Objects (`emulatorlib/include/emulatorlib/test/`)
+
 - **`AddressBusAddressableMock`** — Google Mock of `AddressBusAddressable` interface
-  - `MOCK_METHOD(void, WriteToAddress, (uint16_t, std::byte), (override, noexcept))`
-  - `MOCK_METHOD(std::byte, ReadFromAddress, (uint16_t), (const, override, noexcept))`
+    - `MOCK_METHOD(void, WriteToAddress, (uint16_t, std::byte), (override, noexcept))`
+    - `MOCK_METHOD(std::byte, ReadFromAddress, (uint16_t), (const, override, noexcept))`
 
 - **`ProgramStub`** — Simulates ROM/memory for instruction testing
-  - Implements `AddressBusAddressable`
-  - `WriteProgram({bytes...})` — loads program bytes
-  - `ReadFromAddress(addr)` — returns byte from stored program at `addr - offset`
-  - Returns `0x00_b` for out-of-bounds addresses
+    - Implements `AddressBusAddressable`
+    - `WriteProgram({bytes...})` — loads program bytes
+    - `ReadFromAddress(addr)` — returns byte from stored program at `addr - offset`
+    - Returns `0x00_b` for out-of-bounds addresses
 
 ### Instruction Test Base (`emulatorlib/test/instructions_tests/instruction_test_base.h`)
+
 ```cpp
 class InstructionTestBase : public ::testing::Test {
 protected:
@@ -31,21 +34,23 @@ protected:
 ## Test Files
 
 ### Unit Tests (emulatorlib/test/)
-| File | Tests |
-|------|-------|
-| `cpu_test.cpp` | CPU initialization (including disabled master interrupts), PC increment, opcode fetching |
-| `instruction_handler_header_test.cpp` | Instruction handler header and coroutine support |
-| `instruction_translation.cpp` / `instruction_translation.h` | Test-only opcode-to-instruction-name mapping for parameterized tests |
-| `address_bus_test.cpp` | Bus routing, OR-combining reads, write broadcasting |
-| `cartridge_test.cpp` | ROM loading, data access |
-| `cartridge_header_test.cpp` | Nintendo logo, title, cartridge type, ROM size, checksum validation |
-| `ram_test.cpp` | Initial RAM contents and read/write access |
-| `masked_register_test.cpp` | Register mask enforcement, including XOR assignment, and byte sub-register propagation |
-| `flag_helpers_test.cpp` | Addition, subtraction, AND, OR, and XOR flag calculations |
+
+| File                                                        | Tests                                                                                    |
+|-------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| `cpu_test.cpp`                                              | CPU initialization (including disabled master interrupts), PC increment, opcode fetching |
+| `instruction_handler_header_test.cpp`                       | Instruction handler header and coroutine support                                         |
+| `instruction_translation.cpp` / `instruction_translation.h` | Test-only opcode-to-instruction-name mapping for parameterized tests                     |
+| `address_bus_test.cpp`                                      | Bus routing, OR-combining reads, write broadcasting                                      |
+| `cartridge_test.cpp`                                        | ROM loading, data access                                                                 |
+| `cartridge_header_test.cpp`                                 | Nintendo logo, title, cartridge type, ROM size, checksum validation                      |
+| `ram_test.cpp`                                              | Initial RAM contents and read/write access                                               |
+| `masked_register_test.cpp`                                  | Register mask enforcement, including XOR assignment, and byte sub-register propagation   |
+| `flag_helpers_test.cpp`                                     | Addition, subtraction, AND, OR, and XOR flag calculations                                |
 
 ### Instruction Tests (`emulatorlib/test/instructions_tests/`)
+
 Parameterized tests for each instruction family:
-| File | Instruction(s) |
+| File | Instruction (s) |
 |------|---------------|
 | `load_r_r_test.cpp` | `LD r, r'` (all combinations) |
 | `load_reg_n8_test.cpp` | `LD r, n` |
@@ -102,6 +107,7 @@ Parameterized tests for each instruction family:
 | `dec_rr_test.cpp` | `DEC rr` for BC, DE, HL, and SP |
 | `cpl_test.cpp` | `CPL` accumulator complement and flags |
 | `ccf_test.cpp` | `CCF` carry toggling, Zero preservation, and Subtract/HalfCarry clearing |
+| `daa_test.cpp` | `DAA` decimal adjustment with Subtract clear and set |
 | `load_hl_indirect_increment_a_test.cpp` | `LD A, (HL+)` |
 | `load_hl_indirect_decrement_a_test.cpp` | `LD A, (HL-)` |
 | `load_indirect_8bit_test.cpp` | `LD (HL), n` |
@@ -122,8 +128,10 @@ Parameterized tests for each instruction family:
 - Put emulator tests in the `EmulatorLib::Test` namespace.
 - Name fixtures and test classes in PascalCase with a `Test` suffix, such as `JumpA16Test`.
 - Use `TEST_F` for fixture tests and `TEST_P` with `INSTANTIATE_TEST_SUITE_P` for parameterized instruction tests.
-- Name tests after the behavior under test in PascalCase; use underscores only to separate a scenario or expected outcome when that improves readability.
-- Derive parameterized instruction-test names from `OpCodeToInstructionName`; do not duplicate instruction names in test data.
+- Name tests after the behavior under test in PascalCase; use underscores only to separate a scenario or expected
+  outcome when that improves readability.
+- Derive parameterized instruction-test names from `OpCodeToInstructionName`; do not duplicate instruction names in test
+  data.
 
 ### Instruction Test Pattern
 
@@ -148,19 +156,22 @@ For every `INSTANTIATE_TEST_SUITE_P`, derive the parameter name from
 `instruction_translation.cpp`; do not duplicate a name in the test parameter data.
 
 ### Utility Tests (`utilitylib/test/`)
-| File | Tests |
-|------|-------|
-| `add_with_carry_test.cpp` | AddWithCarry function |
+
+| File                       | Tests                                       |
+|----------------------------|---------------------------------------------|
+| `add_with_carry_test.cpp`  | AddWithCarry function                       |
 | `sub_with_borrow_test.cpp` | SubWithBorrow and SubWithBorrowIn functions |
-| `bit_mask_test.cpp` | BitMask constexpr |
+| `bit_mask_test.cpp`        | BitMask constexpr                           |
 
 ## Building & Running Tests
+
 ```bash
 cmake --build --preset conan-debug
 ctest --test-dir build/Debug --output-on-failure
 ```
 
 To run one Google Test:
+
 ```bash
 ./build/Debug/emulatorlib/test/emulatorlibTest --gtest_filter='EiTest.*'
 ```
