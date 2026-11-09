@@ -51,13 +51,14 @@ namespace
     names[0x1E] = "LoadEn8";
     names[0x1F] = "Rra";
 
+    names[0x20] = "JR_NZ";
     names[0x21] = "LoadHLn16";
     names[0x22] = "LoadIndirectHLIncrementFromA";
     names[0x23] = "IncHL";
     names[0x24] = "IncH";
     names[0x25] = "DecH";
     names[0x26] = "LoadHn8";
-    names[0x20] = "JR_NZ";
+    names[0x27] = "Daa";
     names[0x28] = "JR_Z";
     names[0x29] = "AddHlHL";
     names[0x2A] = "LoadAFromIndirectHLIncrement";

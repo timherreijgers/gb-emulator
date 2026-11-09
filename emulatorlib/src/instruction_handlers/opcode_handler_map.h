@@ -16,6 +16,7 @@
 #include "instruction_handlers/ccf.h"
 #include "instruction_handlers/cp_a_from_indirect_hl.h"
 #include "instruction_handlers/cpl.h"
+#include "instruction_handlers/daa.h"
 #include "instruction_handlers/dec_r.h"
 #include "instruction_handlers/dec_rr.h"
 #include "instruction_handlers/disable_interrupts.h"
@@ -121,7 +122,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0x24] = {.name = "INC H", .handler = ExecuteIncH};
     handlers[0x25] = {.name = "DEC H", .handler = ExecuteDecH};
     handlers[0x26] = {.name = "LD H, n", .handler = ExecuteLoadHn8};
-    handlers[0x27] = {.name = "DAA", .handler = UnimplementedOpcode};
+    handlers[0x27] = {.name = "DAA", .handler = ExecuteDaa};
     handlers[0x28] = {.name = "JR Z, e8", .handler = ExecuteJumpRelativeZE8};
     handlers[0x29] = {.name = "ADD HL, HL", .handler = ExecuteAddHlHL};
     handlers[0x2A] = {.name = "LD A, (HL+)", .handler = ExecuteLoadIndirectAFromHLIncrement};
