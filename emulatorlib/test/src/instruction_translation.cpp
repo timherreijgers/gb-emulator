@@ -75,6 +75,7 @@ namespace
     names[0x38] = "JR_C";
     names[0x39] = "AddHlSP";
     names[0x36] = "LoadHlN8";
+    names[0x37] = "Scf";
     names[0x3A] = "LoadAFromIndirectHLDecrement";
     names[0x3B] = "DecSP";
     names[0x3C] = "IncA";

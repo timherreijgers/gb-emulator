@@ -19,7 +19,8 @@ User-defined literals for explicit type-safe byte/integer literals:
 
 ## Byte Utilities (`byte_utils.h`)
 
-Overloads for `+` and `-` on `std::byte`:
+Overloads for `+`, `-`, and `+=` on `std::byte`. The compound-addition overload accepts either a `std::byte` or an
+integral right-hand operand and returns the updated left-hand byte.
 
 ```cpp
 operator+(std::byte, std::byte) -> std::byte

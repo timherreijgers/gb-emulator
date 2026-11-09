@@ -335,6 +335,7 @@ handler updates its register pair, yields for one M-cycle, then completes. `Exec
 | 0x1F   | `RRA`    | `ExecuteRra`  | Rotate A right through Carry; old Carry moves to bit 7                                |
 | 0x27   | `DAA`    | `ExecuteDaa`  | Decimal-adjust A using the result and flags of the preceding BCD arithmetic operation |
 | 0x2F   | `CPL`    | `ExecuteCpl`  | Complement every bit of A; set Subtract and HalfCarry, preserve Zero and Carry        |
+| 0x37   | `SCF`    | `ExecuteScf`  | Set Carry; preserve Zero and clear Subtract and HalfCarry                             |
 | 0x3F   | `CCF`    | `ExecuteCcf`  | Toggle Carry, preserve Zero, and clear Subtract and HalfCarry                         |
 
 These instructions complete in their first handler resume, so they do not add an emulated M-cycle after opcode fetch.
@@ -348,7 +349,9 @@ first retains only Zero and Carry, then toggles Carry with the masked `Register:
 low nibble exceeds nine, and adds `0x60` when Carry is set or A exceeds `0x99`; the latter condition sets Carry.
 When Subtract is set, it subtracts `0x06` when HalfCarry is set and `0x60` when Carry is set. It clears HalfCarry,
 preserves Subtract and Carry, and sets Zero when the adjusted A is zero. DAA is specified by `daa_test.cpp`.
-Its test suites currently fail because the opcode is not implemented.
+
+`SCF` retains the Zero flag, clears Subtract and HalfCarry, and sets Carry. Its behavior is specified by
+`scf_test.cpp`.
 
 ## Unimplemented Instructions
 
@@ -356,8 +359,7 @@ Major categories not yet implemented:
 
 - **Control flow**: STOP
 - **Shift/Rotate**: SLA, SRA, SRL, SWAP, and the non-accumulator forms of RL, RR, RLC, RRC
-- **Decimal adjustment**: DAA (specified by failing tests)
-- **Special**: SCF, HALT
+- **Special**: HALT
 - **CB-prefixed**: All CB-prefixed instructions (bit operations, shifts, rotates)
 
 ## Opcode Reference Table
