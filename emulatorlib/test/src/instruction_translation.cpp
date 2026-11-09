@@ -27,6 +27,7 @@ namespace
     names[0x06] = "LoadBn8";
     names[0x07] = "Rlca";
     names[0x08] = "LoadA16SP";
+    names[0x09] = "AddHlBC";
     names[0x0A] = "LoadAFromIndirectBC";
     names[0x0B] = "DecBC";
     names[0x0C] = "IncC";
@@ -42,6 +43,7 @@ namespace
     names[0x16] = "LoadDn8";
     names[0x17] = "Rla";
     names[0x18] = "JR";
+    names[0x19] = "AddHlDE";
     names[0x1A] = "LoadAFromIndirectDE";
     names[0x1B] = "DecDe";
     names[0x1C] = "IncE";
@@ -57,6 +59,7 @@ namespace
     names[0x26] = "LoadHn8";
     names[0x20] = "JR_NZ";
     names[0x28] = "JR_Z";
+    names[0x29] = "AddHlHL";
     names[0x2A] = "LoadAFromIndirectHLIncrement";
     names[0x2B] = "DecHL";
     names[0x2C] = "IncL";
@@ -69,6 +72,7 @@ namespace
     names[0x32] = "LoadIndirectHLDecrementFromA";
     names[0x33] = "IncSP";
     names[0x38] = "JR_C";
+    names[0x39] = "AddHlSP";
     names[0x36] = "LoadHlN8";
     names[0x3A] = "LoadAFromIndirectHLDecrement";
     names[0x3B] = "DecSP";
