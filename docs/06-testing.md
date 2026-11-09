@@ -65,6 +65,7 @@ Parameterized tests for each instruction family:
 | `push_rr_test.cpp` | `PUSH rr` |
 | `pop_rr_test.cpp` | `POP rr` |
 | `add_r_test.cpp` | `ADD A, r` |
+| `add_hl_rr_test.cpp` | `ADD HL, rr` cycle timing and flags |
 | `add_a_n8_test.cpp` | `ADD A, n` |
 | `add_a_from_indirect_hl_test.cpp` | `ADD A, (HL)` |
 | `adc_r_test.cpp` | `ADC A, r` |
@@ -124,13 +125,21 @@ Parameterized tests for each instruction family:
 - Name tests after the behavior under test in PascalCase; use underscores only to separate a scenario or expected outcome when that improves readability.
 - Derive parameterized instruction-test names from `OpCodeToInstructionName`; do not duplicate instruction names in test data.
 
-### Test Pattern
-Instruction tests typically follow this pattern:
-1. Set up `EXPECT_CALL` or `ON_CALL` on the mock for bus operations
-2. Write the instruction byte + operands to `m_program`
-3. Set up register state
-4. Call `m_cpu.Step()`
-5. Assert final register state and instruction register
+### Instruction Test Pattern
+
+Group an instruction or instruction family in one test suite. Parameterize the suite when multiple opcodes share
+the same behavior, including the cycle-accuracy and flag tests.
+
+Use an `ExecutingOpcode` test to verify the detailed instruction pseudocode and timing. Set up the program,
+registers, and relevant bus expectations, then assert the relevant state after each `m_cpu.Step()` call: intermediate
+registers and flags, program counter, instruction register, and bus activity as applicable. Include the final
+completion and next-opcode fetch where the execution model calls for them.
+
+Use separate tests in the same suite for individual flag scenarios and outcomes, for example
+`ExecutingOpcode_ResultIsZero_ZeroFlagIsSet` and `ExecutingOpcode_ResultIsNotZero_ZeroFlagIsNotSet`. These tests
+run the instruction to completion and assert the relevant result and flags; they do not repeat the cycle-by-cycle
+assertions already covered by `ExecutingOpcode`. Cover flag preservation as well as setting and clearing where the
+instruction requires it.
 
 ### Parameterized Instruction Test Names
 

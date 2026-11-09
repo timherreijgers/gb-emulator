@@ -228,6 +228,17 @@ specified by `jump_relative_e8_test.cpp` and `jump_relative_conditional_e8_test.
 | 0x86      | `ADD A, (HL)` | `ExecuteAddAFromIndirectHL`                      | A = A + value at HL                  |
 | 0xC6      | `ADD A, n` | `ExecuteAddAn8`                                    | A = A + n (immediate)                |
 
+#### 16-bit Addition
+
+| Opcode(s) | Mnemonic | Description |
+|-----------|----------|-------------|
+| 0x09, 0x19, 0x29, 0x39 | `ADD HL, rr` | HL = HL + BC/DE/HL/SP |
+
+`ADD HL, rr` completes in two M-cycles. During M2, it adds the low bytes, stores the result in L, clears Subtract,
+and updates HalfCarry and Carry from the carries out of bits 3 and 7. During M3/M1, it adds the high bytes plus the
+M2 Carry, stores the result in H, clears Subtract, and updates HalfCarry and Carry from the carries out of bits 3 and
+7. Zero is preserved throughout. The source register remains unchanged unless it is HL itself.
+
 #### Addition with Carry
 
 | Opcode(s) | Mnemonic   | Handler                                            | Description                             |
