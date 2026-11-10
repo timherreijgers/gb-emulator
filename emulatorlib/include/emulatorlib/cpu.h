@@ -42,6 +42,7 @@ private:
     CpuRegisters m_registers;
 
     std::array<OpcodeHandler, 256> m_opcodeHandlers;
+    std::array<OpcodeHandler, 256> m_extendedOpcodeHandlers;
     InstructionHandler m_handler;
 };
 
