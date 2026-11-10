@@ -102,8 +102,10 @@ Parameterized tests for each instruction family:
 | `or_a_test.cpp` | `OR A, A` |
 | `or_a_n8_test.cpp` | `OR A, n` |
 | `inc_r_test.cpp` | `INC r` |
+| `inc_indirect_hl_test.cpp` | `INC (HL)` |
 | `inc_rr_test.cpp` | `INC rr` for BC, DE, HL, and SP |
 | `dec_r_test.cpp` | `DEC r` |
+| `dec_indirect_hl_test.cpp` | `DEC (HL)` |
 | `dec_rr_test.cpp` | `DEC rr` for BC, DE, HL, and SP |
 | `cpl_test.cpp` | `CPL` accumulator complement and flags |
 | `ccf_test.cpp` | `CCF` carry toggling, Zero preservation, and Subtract/HalfCarry clearing |
