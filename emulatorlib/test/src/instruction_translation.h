@@ -12,5 +12,6 @@ namespace EmulatorLib::Test
 {
 
 [[nodiscard]] auto OpCodeToInstructionName(std::byte opcode) noexcept -> std::string_view;
+[[nodiscard]] auto ExtendedOpCodeToInstructionName(std::byte opcode) noexcept -> std::string_view;
 
 } // namespace EmulatorLib::Test
