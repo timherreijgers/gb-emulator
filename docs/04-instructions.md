@@ -241,6 +241,11 @@ and updates HalfCarry and Carry from the carries out of bits 3 and 7. During M3/
 M2 Carry, stores the result in H, clears Subtract, and updates HalfCarry and Carry from the carries out of bits 3 and
 7. Zero is preserved throughout. The source register remains unchanged unless it is HL itself.
 
+Opcode 0xE8, `ADD SP, e8`, adds a signed 8-bit immediate to SP in four M-cycles. It clears Zero, Subtract,
+HalfCarry, and Carry before setting HalfCarry from bit 3 and Carry from bit 7 of the low-byte addition. The result
+wraps to 16 bits; the signed extension affects the high byte of the result, while the flags use the immediate's
+unsigned low-byte representation.
+
 #### Addition with Carry
 
 | Opcode(s)       | Mnemonic      | Handler                                                           | Description                           |
@@ -317,8 +322,13 @@ is zero and clear Subtract, HalfCarry, and Carry.
 |------------------------------------------|----------|----------------|------------------------------------|
 | 0x04, 0x0C, 0x14, 0x1C, 0x24, 0x2C, 0x3C | `INC r`  | `ExecuteIncR`  | r++                                |
 | 0x05, 0x0D, 0x15, 0x1D, 0x25, 0x2D, 0x3D | `DEC r`  | `ExecuteDecR`  | r--                                |
+| 0x34                                     | `INC (HL)` | `ExecuteIncIndirectHL` | Increment the byte at address HL; flags update as for `INC r` |
+| 0x35                                     | `DEC (HL)` | `ExecuteDecIndirectHL` | Decrement the byte at address HL; flags update as for `DEC r` |
 | 0x03, 0x13, 0x23, 0x33                   | `INC rr` | `ExecuteIncRR` | Increment 16-bit BC, DE, HL, or SP |
 | 0x0B, 0x1B, 0x2B, 0x3B                   | `DEC rr` | `ExecuteDecRR` | Decrement 16-bit BC, DE, HL, or SP |
+
+`INC (HL)` and `DEC (HL)` read the byte at HL, yield for one M-cycle, then write the updated byte back without changing
+HL. They preserve Carry and update Zero, Subtract, and HalfCarry according to the 8-bit increment or decrement result.
 
 The 16-bit `INC rr` and `DEC rr` instructions modify the selected register pair and do not modify CPU flags. Each
 handler updates its register pair, yields for one M-cycle, then completes. `ExecuteIncRR` is instantiated as

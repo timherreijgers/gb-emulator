@@ -11,16 +11,19 @@
 #include "instruction_handlers/adc_a_from_indirect_hl.h"
 #include "instruction_handlers/add_a_from_indirect_hl.h"
 #include "instruction_handlers/add_hl_rr.h"
+#include "instruction_handlers/add_sp_e8.h"
 #include "instruction_handlers/and_a_from_indirect_hl.h"
 #include "instruction_handlers/call_a16.h"
 #include "instruction_handlers/ccf.h"
 #include "instruction_handlers/cp_a_from_indirect_hl.h"
 #include "instruction_handlers/cpl.h"
 #include "instruction_handlers/daa.h"
+#include "instruction_handlers/dec_indirect_hl.h"
 #include "instruction_handlers/dec_r.h"
 #include "instruction_handlers/dec_rr.h"
 #include "instruction_handlers/disable_interrupts.h"
 #include "instruction_handlers/enable_interrupts.h"
+#include "instruction_handlers/inc_indirect_hl.h"
 #include "instruction_handlers/inc_r.h"
 #include "instruction_handlers/inc_rr.h"
 #include "instruction_handlers/jump_a16.h"
@@ -136,8 +139,8 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0x31] = {.name = "LD SP, nn", .handler = ExecuteLoadSPn16};
     handlers[0x32] = {.name = "LD (HL-), A", .handler = ExecuteLoadIndirectHLDecrementFromA};
     handlers[0x33] = {.name = "INC SP", .handler = ExecuteIncSP};
-    handlers[0x34] = {.name = "INC (HL)", .handler = UnimplementedOpcode};
-    handlers[0x35] = {.name = "DEC (HL)", .handler = UnimplementedOpcode};
+    handlers[0x34] = {.name = "INC (HL)", .handler = ExecuteIncIndirectHL};
+    handlers[0x35] = {.name = "DEC (HL)", .handler = ExecuteDecIndirectHL};
     handlers[0x36] = {.name = "LD (HL), n", .handler = ExecuteLoadIndirectHlN8};
     handlers[0x37] = {.name = "SCF", .handler = ExecuteScf};
     handlers[0x38] = {.name = "JR C, e8", .handler = ExecuteJumpRelativeCE8};
@@ -327,7 +330,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0xE5] = {.name = "PUSH HL", .handler = ExecutePushHL};
     handlers[0xE6] = {.name = "AND n", .handler = ExecuteAndAn8};
     handlers[0xE7] = {.name = "RST $20", .handler = ExecuteRst20};
-    handlers[0xE8] = {.name = "ADD SP, e8", .handler = UnimplementedOpcode};
+    handlers[0xE8] = {.name = "ADD SP, e8", .handler = ExecuteAddSPe8};
     handlers[0xE9] = {.name = "JP HL", .handler = ExecuteJumpHl};
     handlers[0xEA] = {.name = "LD (a16), A", .handler = ExecuteLoadIndirectA16FromA};
     handlers[0xEB] = {.name = "ILLEGAL", .handler = IllegalOpcode};
