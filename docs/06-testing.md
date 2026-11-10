@@ -109,6 +109,7 @@ Parameterized tests for each instruction family:
 | `ccf_test.cpp` | `CCF` carry toggling, Zero preservation, and Subtract/HalfCarry clearing |
 | `daa_test.cpp` | `DAA` decimal adjustment with Subtract clear and set |
 | `scf_test.cpp` | `SCF` Carry setting, Zero preservation, and Subtract/HalfCarry clearing |
+| `bit_test.cpp` | CB-prefixed `BIT b, r` for register targets, including bit-result flags and preserved Carry |
 | `load_hl_indirect_increment_a_test.cpp` | `LD A, (HL+)` |
 | `load_hl_indirect_decrement_a_test.cpp` | `LD A, (HL-)` |
 | `load_indirect_8bit_test.cpp` | `LD (HL), n` |
@@ -133,6 +134,9 @@ Parameterized tests for each instruction family:
   outcome when that improves readability.
 - Derive parameterized instruction-test names from `OpCodeToInstructionName`; do not duplicate instruction names in test
   data.
+- CB-prefixed instruction tests use `ExtendedOpCodeToInstructionName` and the extended opcode lookup table in
+  `instruction_translation.cpp` to name cases. The test program includes both the CB prefix and extended opcode byte;
+  parameter data identifies the extended opcode.
 
 ### Instruction Test Pattern
 

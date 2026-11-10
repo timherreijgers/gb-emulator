@@ -276,12 +276,297 @@ namespace
     return names;
 }
 
+[[nodiscard]] consteval auto CreateExtendedOpCodeLut() noexcept -> std::array<std::string_view, 256>
+{
+    std::array<std::string_view, 256> names{};
+
+    names[0x00] = "RlcB";
+    names[0x01] = "RlcC";
+    names[0x02] = "RlcD";
+    names[0x03] = "RlcE";
+    names[0x04] = "RlcH";
+    names[0x05] = "RlcL";
+    names[0x06] = "RlcHL";
+    names[0x07] = "RlcA";
+    names[0x08] = "RrcB";
+    names[0x09] = "RrcC";
+    names[0x0A] = "RrcD";
+    names[0x0B] = "RrcE";
+    names[0x0C] = "RrcH";
+    names[0x0D] = "RrcL";
+    names[0x0E] = "RrcHL";
+    names[0x0F] = "RrcA";
+
+    names[0x10] = "RlB";
+    names[0x11] = "RlC";
+    names[0x12] = "RlD";
+    names[0x13] = "RlE";
+    names[0x14] = "RlH";
+    names[0x15] = "RlL";
+    names[0x16] = "RlHL";
+    names[0x17] = "RlA";
+    names[0x18] = "RrB";
+    names[0x19] = "RrC";
+    names[0x1A] = "RrD";
+    names[0x1B] = "RrE";
+    names[0x1C] = "RrH";
+    names[0x1D] = "RrL";
+    names[0x1E] = "RrHL";
+    names[0x1F] = "RrA";
+
+    names[0x20] = "SlaB";
+    names[0x21] = "SlaC";
+    names[0x22] = "SlaD";
+    names[0x23] = "SlaE";
+    names[0x24] = "SlaH";
+    names[0x25] = "SlaL";
+    names[0x26] = "SlaHL";
+    names[0x27] = "SlaA";
+    names[0x28] = "SraB";
+    names[0x29] = "SraC";
+    names[0x2A] = "SraD";
+    names[0x2B] = "SraE";
+    names[0x2C] = "SraH";
+    names[0x2D] = "SraL";
+    names[0x2E] = "SraHL";
+    names[0x2F] = "SraA";
+
+    names[0x30] = "SwapB";
+    names[0x31] = "SwapC";
+    names[0x32] = "SwapD";
+    names[0x33] = "SwapE";
+    names[0x34] = "SwapH";
+    names[0x35] = "SwapL";
+    names[0x36] = "SwapHL";
+    names[0x37] = "SwapA";
+    names[0x38] = "SrlB";
+    names[0x39] = "SrlC";
+    names[0x3A] = "SrlD";
+    names[0x3B] = "SrlE";
+    names[0x3C] = "SrlH";
+    names[0x3D] = "SrlL";
+    names[0x3E] = "SrlHL";
+    names[0x3F] = "SrlA";
+
+    names[0x40] = "Bit0B";
+    names[0x41] = "Bit0C";
+    names[0x42] = "Bit0D";
+    names[0x43] = "Bit0E";
+    names[0x44] = "Bit0H";
+    names[0x45] = "Bit0L";
+    names[0x46] = "Bit0HL";
+    names[0x47] = "Bit0A";
+    names[0x48] = "Bit1B";
+    names[0x49] = "Bit1C";
+    names[0x4A] = "Bit1D";
+    names[0x4B] = "Bit1E";
+    names[0x4C] = "Bit1H";
+    names[0x4D] = "Bit1L";
+    names[0x4E] = "Bit1HL";
+    names[0x4F] = "Bit1A";
+
+    names[0x50] = "Bit2B";
+    names[0x51] = "Bit2C";
+    names[0x52] = "Bit2D";
+    names[0x53] = "Bit2E";
+    names[0x54] = "Bit2H";
+    names[0x55] = "Bit2L";
+    names[0x56] = "Bit2HL";
+    names[0x57] = "Bit2A";
+    names[0x58] = "Bit3B";
+    names[0x59] = "Bit3C";
+    names[0x5A] = "Bit3D";
+    names[0x5B] = "Bit3E";
+    names[0x5C] = "Bit3H";
+    names[0x5D] = "Bit3L";
+    names[0x5E] = "Bit3HL";
+    names[0x5F] = "Bit3A";
+
+    names[0x60] = "Bit4B";
+    names[0x61] = "Bit4C";
+    names[0x62] = "Bit4D";
+    names[0x63] = "Bit4E";
+    names[0x64] = "Bit4H";
+    names[0x65] = "Bit4L";
+    names[0x66] = "Bit4HL";
+    names[0x67] = "Bit4A";
+    names[0x68] = "Bit5B";
+    names[0x69] = "Bit5C";
+    names[0x6A] = "Bit5D";
+    names[0x6B] = "Bit5E";
+    names[0x6C] = "Bit5H";
+    names[0x6D] = "Bit5L";
+    names[0x6E] = "Bit5HL";
+    names[0x6F] = "Bit5A";
+
+    names[0x70] = "Bit6B";
+    names[0x71] = "Bit6C";
+    names[0x72] = "Bit6D";
+    names[0x73] = "Bit6E";
+    names[0x74] = "Bit6H";
+    names[0x75] = "Bit6L";
+    names[0x76] = "Bit6HL";
+    names[0x77] = "Bit6A";
+    names[0x78] = "Bit7B";
+    names[0x79] = "Bit7C";
+    names[0x7A] = "Bit7D";
+    names[0x7B] = "Bit7E";
+    names[0x7C] = "Bit7H";
+    names[0x7D] = "Bit7L";
+    names[0x7E] = "Bit7HL";
+    names[0x7F] = "Bit7A";
+
+    names[0x80] = "Res0B";
+    names[0x81] = "Res0C";
+    names[0x82] = "Res0D";
+    names[0x83] = "Res0E";
+    names[0x84] = "Res0H";
+    names[0x85] = "Res0L";
+    names[0x86] = "Res0HL";
+    names[0x87] = "Res0A";
+    names[0x88] = "Res1B";
+    names[0x89] = "Res1C";
+    names[0x8A] = "Res1D";
+    names[0x8B] = "Res1E";
+    names[0x8C] = "Res1H";
+    names[0x8D] = "Res1L";
+    names[0x8E] = "Res1HL";
+    names[0x8F] = "Res1A";
+
+    names[0x90] = "Res2B";
+    names[0x91] = "Res2C";
+    names[0x92] = "Res2D";
+    names[0x93] = "Res2E";
+    names[0x94] = "Res2H";
+    names[0x95] = "Res2L";
+    names[0x96] = "Res2HL";
+    names[0x97] = "Res2A";
+    names[0x98] = "Res3B";
+    names[0x99] = "Res3C";
+    names[0x9A] = "Res3D";
+    names[0x9B] = "Res3E";
+    names[0x9C] = "Res3H";
+    names[0x9D] = "Res3L";
+    names[0x9E] = "Res3HL";
+    names[0x9F] = "Res3A";
+
+    names[0xA0] = "Res4B";
+    names[0xA1] = "Res4C";
+    names[0xA2] = "Res4D";
+    names[0xA3] = "Res4E";
+    names[0xA4] = "Res4H";
+    names[0xA5] = "Res4L";
+    names[0xA6] = "Res4HL";
+    names[0xA7] = "Res4A";
+    names[0xA8] = "Res5B";
+    names[0xA9] = "Res5C";
+    names[0xAA] = "Res5D";
+    names[0xAB] = "Res5E";
+    names[0xAC] = "Res5H";
+    names[0xAD] = "Res5L";
+    names[0xAE] = "Res5HL";
+    names[0xAF] = "Res5A";
+
+    names[0xB0] = "Res6B";
+    names[0xB1] = "Res6C";
+    names[0xB2] = "Res6D";
+    names[0xB3] = "Res6E";
+    names[0xB4] = "Res6H";
+    names[0xB5] = "Res6L";
+    names[0xB6] = "Res6HL";
+    names[0xB7] = "Res6A";
+    names[0xB8] = "Res7B";
+    names[0xB9] = "Res7C";
+    names[0xBA] = "Res7D";
+    names[0xBB] = "Res7E";
+    names[0xBC] = "Res7H";
+    names[0xBD] = "Res7L";
+    names[0xBE] = "Res7HL";
+    names[0xBF] = "Res7A";
+
+    names[0xC0] = "Set0B";
+    names[0xC1] = "Set0C";
+    names[0xC2] = "Set0D";
+    names[0xC3] = "Set0E";
+    names[0xC4] = "Set0H";
+    names[0xC5] = "Set0L";
+    names[0xC6] = "Set0HL";
+    names[0xC7] = "Set0A";
+    names[0xC8] = "Set1B";
+    names[0xC9] = "Set1C";
+    names[0xCA] = "Set1D";
+    names[0xCB] = "Set1E";
+    names[0xCC] = "Set1H";
+    names[0xCD] = "Set1L";
+    names[0xCE] = "Set1HL";
+    names[0xCF] = "Set1A";
+
+    names[0xD0] = "Set2B";
+    names[0xD1] = "Set2C";
+    names[0xD2] = "Set2D";
+    names[0xD3] = "Set2E";
+    names[0xD4] = "Set2H";
+    names[0xD5] = "Set2L";
+    names[0xD6] = "Set2HL";
+    names[0xD7] = "Set2A";
+    names[0xD8] = "Set3B";
+    names[0xD9] = "Set3C";
+    names[0xDA] = "Set3D";
+    names[0xDB] = "Set3E";
+    names[0xDC] = "Set3H";
+    names[0xDD] = "Set3L";
+    names[0xDE] = "Set3HL";
+    names[0xDF] = "Set3A";
+
+    names[0xE0] = "Set4B";
+    names[0xE1] = "Set4C";
+    names[0xE2] = "Set4D";
+    names[0xE3] = "Set4E";
+    names[0xE4] = "Set4H";
+    names[0xE5] = "Set4L";
+    names[0xE6] = "Set4HL";
+    names[0xE7] = "Set4A";
+    names[0xE8] = "Set5B";
+    names[0xE9] = "Set5C";
+    names[0xEA] = "Set5D";
+    names[0xEB] = "Set5E";
+    names[0xEC] = "Set5H";
+    names[0xED] = "Set5L";
+    names[0xEE] = "Set5HL";
+    names[0xEF] = "Set5A";
+
+    names[0xF0] = "Set6B";
+    names[0xF1] = "Set6C";
+    names[0xF2] = "Set6D";
+    names[0xF3] = "Set6E";
+    names[0xF4] = "Set6H";
+    names[0xF5] = "Set6L";
+    names[0xF6] = "Set6HL";
+    names[0xF7] = "Set6A";
+    names[0xF8] = "Set7B";
+    names[0xF9] = "Set7C";
+    names[0xFA] = "Set7D";
+    names[0xFB] = "Set7E";
+    names[0xFC] = "Set7H";
+    names[0xFD] = "Set7L";
+    names[0xFE] = "Set7HL";
+    names[0xFF] = "Set7A";
+
+    return names;
+}
+
 } // namespace
 
 [[nodiscard]] auto OpCodeToInstructionName(std::byte opcode) noexcept -> std::string_view
 {
     static constexpr auto opCodeLut = CreateOpCodeLut();
     return opCodeLut[static_cast<size_t>(opcode)];
+}
+
+auto ExtendedOpCodeToInstructionName(std::byte opcode) noexcept -> std::string_view
+{
+    static constexpr auto extendedOpCodeLut = CreateExtendedOpCodeLut();
+    return extendedOpCodeLut[static_cast<size_t>(opcode)];
 }
 
 } // namespace EmulatorLib::Test
