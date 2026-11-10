@@ -72,6 +72,8 @@ namespace
     names[0x31] = "LoadSPn16";
     names[0x32] = "LoadIndirectHLDecrementFromA";
     names[0x33] = "IncSP";
+    names[0x34] = "IncIndirectHL";
+    names[0x35] = "DecIndirectHL";
     names[0x38] = "JR_C";
     names[0x39] = "AddHlSP";
     names[0x36] = "LoadHlN8";
@@ -253,6 +255,7 @@ namespace
     names[0xE5] = "PUSH_HL";
     names[0xE6] = "AndAn8";
     names[0xE7] = "Reset_0x20";
+    names[0xE8] = "AddSPe8";
     names[0xE9] = "JumpHL";
     names[0xEE] = "XorAn8";
     names[0xE2] = "LoadIndirectCFromA";
