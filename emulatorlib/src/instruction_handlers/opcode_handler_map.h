@@ -13,6 +13,7 @@
 #include "instruction_handlers/add_hl_rr.h"
 #include "instruction_handlers/and_a_from_indirect_hl.h"
 #include "instruction_handlers/call_a16.h"
+#include "instruction_handlers/cb_prefix.h"
 #include "instruction_handlers/ccf.h"
 #include "instruction_handlers/cp_a_from_indirect_hl.h"
 #include "instruction_handlers/cpl.h"
@@ -296,7 +297,7 @@ inline InstructionHandler ExecuteNoop(AddressBus& /*addressBus*/, CpuRegisters& 
     handlers[0xC8] = {.name = "RET Z", .handler = ExecuteRetZ};
     handlers[0xC9] = {.name = "RET", .handler = ExecuteRet};
     handlers[0xCA] = {.name = "JP Z, a16", .handler = ExecuteJumpZA16};
-    handlers[0xCB] = {.name = "PREFIX CB", .handler = UnimplementedOpcode};
+    handlers[0xCB] = {.name = "PREFIX CB", .handler = ExecuteCbPrefix};
     handlers[0xCC] = {.name = "CALL Z, a16", .handler = ExecuteCallZA16};
     handlers[0xCD] = {.name = "CALL a16", .handler = ExecuteCallA16};
     handlers[0xCE] = {.name = "ADC A, n", .handler = ExecuteAdcAn8};

@@ -54,6 +54,7 @@ struct CpuRegisters
     Register16Bit stackPointer{backingStackPointerRegister};
 
     MasterInterruptState masterInterruptState = MasterInterruptState::DISABLED;
+    bool instructionIsPrefixed = false;
 
 private:
     std::byte backingInstructionRegister{};
