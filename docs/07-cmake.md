@@ -33,7 +33,20 @@ implicit conversions.
 
 ## Build and Test
 
-Use the configured Conan preset to build and run tests:
+The platform-appropriate bootstrap script has already been executed for this checkout. Do not run it again unless explicitly instructed. When execution is required, run it from the repository root; it runs `conan install` and generates the `conan-debug` preset:
+
+```bash
+# Linux
+./bootstrap.sh
+
+# macOS
+./bootstrap_macos.sh
+
+# Windows (from a Bash-compatible shell)
+./bootstrap_windows.sh
+```
+
+Then use the configured Conan preset to rebuild and run the full test suite:
 
 ```bash
 cmake --build --preset conan-debug

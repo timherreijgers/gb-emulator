@@ -13,9 +13,10 @@ No upfront full implementations, no batching multiple tests together, no skippin
 
 Each turn covers exactly one RED-GREEN-REFACTOR cycle, then stops:
 
-1. **BASELINE** — Before changing code or tests, run the project's full test suite and
-   record existing failures. Use the repository's documented full-suite command; do
-   not substitute a focused test run.
+1. **BASELINE** — Before changing code or tests, follow the local build procedure in
+   `docs/07-cmake.md`, including its Conan installation prerequisite when the
+   `conan-debug` preset has not been generated. Then run the documented full-suite
+   command and record existing failures; do not substitute a focused test run.
 2. **RED** — Write a single, failing unit test for the smallest possible increment of
    behavior. Then run the full test suite and confirm the new test fails. Record
    unrelated failures against the baseline so they are not mistaken for regressions.
@@ -23,14 +24,16 @@ Each turn covers exactly one RED-GREEN-REFACTOR cycle, then stops:
    Resist the urge to generalize, handle unstated edge cases, or implement more than
    the test demands — even if the fuller solution is obvious. Run the full test suite
    again. The new test must pass, and there must be no new failures beyond the baseline.
-4. **REFACTOR** — Clean up the code just written (naming, duplication, structure), then
-   run the full test suite again. If nothing meaningfully needs cleanup, say so briefly
-   rather than inventing busywork; the GREEN full-suite result still applies.
+4. **REFACTOR** — Clean up the code just written (naming, duplication, structure). If
+   refactoring changes code, run the full test suite again and confirm the new test
+   passes with no additional failures beyond the GREEN baseline. If that condition is
+   not met, report the failure and stop. If nothing meaningfully needs cleanup, say so
+   briefly rather than inventing busywork; the GREEN full-suite result still applies.
 5. **STOP** — After REFACTOR, stop and wait for the user's next instruction. Do not
    automatically continue to the next test or next piece of functionality.
 
 Focused tests may be run in addition to the full suite to diagnose a failure, but they
-never replace a full-suite run at BASELINE, RED, GREEN, or after REFACTOR. If the full
+never replace a full-suite run at BASELINE, RED, GREEN, or after code-changing REFACTOR. If the full
 suite cannot run, report why and do not claim that phase is fully verified.
 
 ## Gathering context before the first cycle
@@ -87,8 +90,8 @@ Then stop. Do not add commentary after REFACTOR about what's coming next.
   code as it stands (missing function, wrong behavior, etc.) — not a trivially true
   assertion.
 - **Full-suite evidence every phase.** Never report a cycle as verified based only on
-  the focused test. Include full-suite outcomes at RED and GREEN (and after
-  REFACTOR), distinguishing pre-existing failures from regressions.
+  the focused test. Include full-suite outcomes at RED and GREEN (and after a
+  code-changing REFACTOR), distinguishing pre-existing failures from regressions.
 - **No test batching even if asked.** If the user asks for "a few tests at once" or
   "just implement the whole thing," gently remind them this skill follows strict
   one-test-at-a-time TDD, and ask if they want to proceed that way anyway or drop the
