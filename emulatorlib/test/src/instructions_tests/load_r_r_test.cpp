@@ -3,7 +3,7 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/test/src/register_function_wrappers.h"
+#include "register_function_wrappers.h"
 
 #include "instruction_handlers/register_io_helpers.h"
 #include "instruction_test_base.h"
