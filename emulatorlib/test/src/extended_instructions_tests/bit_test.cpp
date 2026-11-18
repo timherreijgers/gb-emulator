@@ -3,10 +3,9 @@
  * Licensed using the MIT license
  */
 
-#include "emulatorlib/test/src/register_function_wrappers.h"
-
-#include "instruction_test_base.h"
 #include "instruction_translation.h"
+#include "instructions_tests/instruction_test_base.h"
+#include "register_function_wrappers.h"
 
 #include "emulatorlib/cpu_flags.h"
 #include "instruction_handlers/register_io_helpers.h"
@@ -56,7 +55,7 @@ TEST_P(BitTest, ExecutingOpCode_WhenBitIsNotSet_SetsZeroFlag)
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));
 }
 
-TEST_P(BitTest, ExecutingOpCode_WhenBitNotSet_DoesntSetZeroFlag)
+TEST_P(BitTest, ExecutingOpCode_WhenBitIsSet_DoesNotSetZeroFlag)
 {
     [[maybe_unused]] const auto& [instruction, bitmask, sourceRegister] = GetParam();
     sourceRegister(m_cpu.Registers()) = bitmask;

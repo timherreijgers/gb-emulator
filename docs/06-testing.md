@@ -19,7 +19,7 @@
     - `ReadFromAddress(addr)` — returns byte from stored program at `addr - offset`
     - Returns `0x00_b` for out-of-bounds addresses
 
-### Instruction Test Base (`emulatorlib/test/instructions_tests/instruction_test_base.h`)
+### Instruction Test Base (`emulatorlib/test/src/instructions_tests/instruction_test_base.h`)
 
 ```cpp
 class InstructionTestBase : public ::testing::Test {
@@ -33,7 +33,7 @@ protected:
 
 ## Test Files
 
-### Unit Tests (emulatorlib/test/)
+### Unit Tests (`emulatorlib/test/src/`)
 
 | File                                                        | Tests                                                                                    |
 |-------------------------------------------------------------|------------------------------------------------------------------------------------------|
@@ -47,7 +47,7 @@ protected:
 | `masked_register_test.cpp`                                  | Register mask enforcement, including XOR assignment, and byte sub-register propagation   |
 | `flag_helpers_test.cpp`                                     | Addition, subtraction, AND, OR, and XOR flag calculations                                |
 
-### Instruction Tests (`emulatorlib/test/instructions_tests/`)
+### Instruction Tests (`emulatorlib/test/src/instructions_tests/`)
 
 Parameterized tests for each instruction family:
 | File | Instruction (s) |
@@ -111,7 +111,6 @@ Parameterized tests for each instruction family:
 | `ccf_test.cpp` | `CCF` carry toggling, Zero preservation, and Subtract/HalfCarry clearing |
 | `daa_test.cpp` | `DAA` decimal adjustment with Subtract clear and set |
 | `scf_test.cpp` | `SCF` Carry setting, Zero preservation, and Subtract/HalfCarry clearing |
-| `bit_test.cpp` | CB-prefixed `BIT b, r` for register targets, including bit-result flags and preserved Carry |
 | `load_hl_indirect_increment_a_test.cpp` | `LD A, (HL+)` |
 | `load_hl_indirect_decrement_a_test.cpp` | `LD A, (HL-)` |
 | `load_indirect_8bit_test.cpp` | `LD (HL), n` |
@@ -127,6 +126,14 @@ Parameterized tests for each instruction family:
 | `di_test.cpp` | `DI` immediate disable and cancellation of a pending `EI` enable |
 | `ei_test.cpp` | `EI` delayed enable, including the following multi-cycle instruction |
 
+### Extended Instruction Tests (`emulatorlib/test/src/extended_instructions_tests/`)
+
+| File | Instruction(s) |
+|------|----------------|
+| `bit_test.cpp` | CB-prefixed `BIT b, r` for register targets, including bit-result flags and preserved Carry |
+| `res_test.cpp` | CB-prefixed `RES b, r` for register targets; flags are preserved |
+| `set_test.cpp` | CB-prefixed `SET b, r` for register targets; flags are preserved |
+
 ### Test Conventions
 
 - Put emulator tests in the `EmulatorLib::Test` namespace.
@@ -136,9 +143,9 @@ Parameterized tests for each instruction family:
   outcome when that improves readability.
 - Derive parameterized instruction-test names from `OpCodeToInstructionName`; do not duplicate instruction names in test
   data.
-- CB-prefixed instruction tests use `ExtendedOpCodeToInstructionName` and the extended opcode lookup table in
-  `instruction_translation.cpp` to name cases. The test program includes both the CB prefix and extended opcode byte;
-  parameter data identifies the extended opcode.
+- CB-prefixed instruction tests live in `extended_instructions_tests/` and use `ExtendedOpCodeToInstructionName` and
+  the extended opcode lookup table in `instruction_translation.cpp` to name cases. The test program includes both the CB
+  prefix and extended opcode byte; parameter data identifies the extended opcode.
 
 ### Instruction Test Pattern
 
@@ -158,8 +165,9 @@ instruction requires it.
 
 ### Parameterized Instruction Test Names
 
-For every `INSTANTIATE_TEST_SUITE_P`, derive the parameter name from
-`OpCodeToInstructionName(info.param.instruction)`. Instruction names are defined only in
+For base opcode suites, derive every `INSTANTIATE_TEST_SUITE_P` parameter name from
+`OpCodeToInstructionName(info.param.instruction)`. For CB-prefixed suites, use
+`ExtendedOpCodeToInstructionName(info.param.instruction)`. Instruction names are defined only in
 `instruction_translation.cpp`; do not duplicate a name in the test parameter data.
 
 ### Utility Tests (`utilitylib/test/`)

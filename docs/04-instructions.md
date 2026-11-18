@@ -372,7 +372,7 @@ Major categories not yet implemented:
 - **Special**: HALT
 - **CB-prefixed shifts/rotates**: RLC, RRC, RL, RR, SLA, SRA, SWAP, and SRL for registers and `(HL)` remain
   unimplemented
-- **CB-prefixed bit modification**: RES and SET for registers and `(HL)` remain unimplemented
+- **CB-prefixed bit modification**: RES and SET `(HL)` remain unimplemented
 - **CB-prefixed BIT `(HL)`**: register-target BIT instructions are implemented; the memory-target form remains
   unimplemented
 
@@ -380,18 +380,30 @@ Major categories not yet implemented:
 
 Opcode `0xCB` selects the extended opcode table. The following byte is dispatched through a separate 256-entry table;
 the CPU records that it has consumed the prefix, fetches the extended opcode on the next step, and selects its handler
-from that table. The other entries are mapped but raise an unimplemented extended opcode error when executed.
+from that table. Unimplemented slots are mapped to an error handler that reports the extended opcode when executed.
 
 `BIT b, r` is implemented for register targets `A`, `B`, `C`, `D`, `E`, `H`, and `L` (the `0x40–0x7F` opcode range,
 excluding `(HL)` slots). It tests bit `b` without changing the target, sets Zero when the bit is clear, clears Subtract,
 sets HalfCarry, and preserves Carry.
 
+`SET b, r` is implemented for the same register targets in the `0xC0–0xFF` range, excluding `(HL)` slots. It sets the
+selected bit without changing flags. `RES b, r` is implemented for the same register targets in the `0x80–0xBF` range,
+excluding `(HL)` slots; it clears the selected bit without changing flags. The `(HL)` forms of both instructions remain
+unimplemented.
+
 ## Opcode Reference Table
 
 The test project maintains the opcode-to-name table in
-`emulatorlib/test/instruction_translation.cpp`, declared by
-`emulatorlib/test/instruction_translation.h`. `CreateOpCodeLut()` is test support used to name
+`emulatorlib/test/src/instruction_translation.cpp`, declared by
+`emulatorlib/test/src/instruction_translation.h`. `CreateOpCodeLut()` is test support used to name
 parameterized instruction cases; the runtime dispatch table remains in
 `emulatorlib/src/instruction_handlers/opcode_handler_map.h`. Extended opcode names are maintained separately by
 `CreateExtendedOpCodeLut()` and the runtime table in
 `emulatorlib/src/extended_instruction_handlers/extended_opcode_handler_map.h`.
+
+The test lookup tables and runtime opcode maps intentionally duplicate instruction identity but serve different
+contracts. Test tables provide sanitized, unique identifiers accepted by Google Test parameterized-test naming (for
+example, `LoadAFromB`). Runtime maps will grow canonical instruction metadata for execution and decompilation, including
+assembly-display names such as `LD A, B`, instruction length, and operand kind (`e8`, `r`, `rr`, and so on). Do not derive
+one table from the other: Google Test names cannot represent assembly syntax, and the two representations are expected to
+diverge as runtime metadata expands.

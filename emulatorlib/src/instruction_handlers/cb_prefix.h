@@ -12,7 +12,7 @@
 namespace EmulatorLib
 {
 
-inline auto ExecuteCbPrefix(const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) -> InstructionHandler
+inline auto ExecuteCbPrefix(const AddressBus& /*addressBus*/, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler
 {
     cpuRegisters.instructionIsPrefixed = true;
     co_return;

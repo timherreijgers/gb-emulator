@@ -9,6 +9,8 @@
 #include "emulatorlib/instruction_handler.h"
 
 #include "extended_instruction_handlers/bit.h"
+#include "extended_instruction_handlers/res.h"
+#include "extended_instruction_handlers/set.h"
 
 #include <array>
 #include <format>
@@ -170,149 +172,149 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0x7E] = {.name = "Bit7HL", .handler = UnimplementedExtendedOpcode};
     handlers[0x7F] = {.name = "Bit7A", .handler = ExecuteBit7A};
 
-    handlers[0x80] = {.name = "Res0B", .handler = UnimplementedExtendedOpcode};
-    handlers[0x81] = {.name = "Res0C", .handler = UnimplementedExtendedOpcode};
-    handlers[0x82] = {.name = "Res0D", .handler = UnimplementedExtendedOpcode};
-    handlers[0x83] = {.name = "Res0E", .handler = UnimplementedExtendedOpcode};
-    handlers[0x84] = {.name = "Res0H", .handler = UnimplementedExtendedOpcode};
-    handlers[0x85] = {.name = "Res0L", .handler = UnimplementedExtendedOpcode};
+    handlers[0x80] = {.name = "Res0B", .handler = ExecuteRes0B};
+    handlers[0x81] = {.name = "Res0C", .handler = ExecuteRes0C};
+    handlers[0x82] = {.name = "Res0D", .handler = ExecuteRes0D};
+    handlers[0x83] = {.name = "Res0E", .handler = ExecuteRes0E};
+    handlers[0x84] = {.name = "Res0H", .handler = ExecuteRes0H};
+    handlers[0x85] = {.name = "Res0L", .handler = ExecuteRes0L};
     handlers[0x86] = {.name = "Res0HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x87] = {.name = "Res0A", .handler = UnimplementedExtendedOpcode};
+    handlers[0x87] = {.name = "Res0A", .handler = ExecuteRes0A};
 
-    handlers[0x88] = {.name = "Res1B", .handler = UnimplementedExtendedOpcode};
-    handlers[0x89] = {.name = "Res1C", .handler = UnimplementedExtendedOpcode};
-    handlers[0x8A] = {.name = "Res1D", .handler = UnimplementedExtendedOpcode};
-    handlers[0x8B] = {.name = "Res1E", .handler = UnimplementedExtendedOpcode};
-    handlers[0x8C] = {.name = "Res1H", .handler = UnimplementedExtendedOpcode};
-    handlers[0x8D] = {.name = "Res1L", .handler = UnimplementedExtendedOpcode};
+    handlers[0x88] = {.name = "Res1B", .handler = ExecuteRes1B};
+    handlers[0x89] = {.name = "Res1C", .handler = ExecuteRes1C};
+    handlers[0x8A] = {.name = "Res1D", .handler = ExecuteRes1D};
+    handlers[0x8B] = {.name = "Res1E", .handler = ExecuteRes1E};
+    handlers[0x8C] = {.name = "Res1H", .handler = ExecuteRes1H};
+    handlers[0x8D] = {.name = "Res1L", .handler = ExecuteRes1L};
     handlers[0x8E] = {.name = "Res1HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x8F] = {.name = "Res1A", .handler = UnimplementedExtendedOpcode};
+    handlers[0x8F] = {.name = "Res1A", .handler = ExecuteRes1A};
 
-    handlers[0x90] = {.name = "Res2B", .handler = UnimplementedExtendedOpcode};
-    handlers[0x91] = {.name = "Res2C", .handler = UnimplementedExtendedOpcode};
-    handlers[0x92] = {.name = "Res2D", .handler = UnimplementedExtendedOpcode};
-    handlers[0x93] = {.name = "Res2E", .handler = UnimplementedExtendedOpcode};
-    handlers[0x94] = {.name = "Res2H", .handler = UnimplementedExtendedOpcode};
-    handlers[0x95] = {.name = "Res2L", .handler = UnimplementedExtendedOpcode};
+    handlers[0x90] = {.name = "Res2B", .handler = ExecuteRes2B};
+    handlers[0x91] = {.name = "Res2C", .handler = ExecuteRes2C};
+    handlers[0x92] = {.name = "Res2D", .handler = ExecuteRes2D};
+    handlers[0x93] = {.name = "Res2E", .handler = ExecuteRes2E};
+    handlers[0x94] = {.name = "Res2H", .handler = ExecuteRes2H};
+    handlers[0x95] = {.name = "Res2L", .handler = ExecuteRes2L};
     handlers[0x96] = {.name = "Res2HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x97] = {.name = "Res2A", .handler = UnimplementedExtendedOpcode};
+    handlers[0x97] = {.name = "Res2A", .handler = ExecuteRes2A};
 
-    handlers[0x98] = {.name = "Res3B", .handler = UnimplementedExtendedOpcode};
-    handlers[0x99] = {.name = "Res3C", .handler = UnimplementedExtendedOpcode};
-    handlers[0x9A] = {.name = "Res3D", .handler = UnimplementedExtendedOpcode};
-    handlers[0x9B] = {.name = "Res3E", .handler = UnimplementedExtendedOpcode};
-    handlers[0x9C] = {.name = "Res3H", .handler = UnimplementedExtendedOpcode};
-    handlers[0x9D] = {.name = "Res3L", .handler = UnimplementedExtendedOpcode};
+    handlers[0x98] = {.name = "Res3B", .handler = ExecuteRes3B};
+    handlers[0x99] = {.name = "Res3C", .handler = ExecuteRes3C};
+    handlers[0x9A] = {.name = "Res3D", .handler = ExecuteRes3D};
+    handlers[0x9B] = {.name = "Res3E", .handler = ExecuteRes3E};
+    handlers[0x9C] = {.name = "Res3H", .handler = ExecuteRes3H};
+    handlers[0x9D] = {.name = "Res3L", .handler = ExecuteRes3L};
     handlers[0x9E] = {.name = "Res3HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x9F] = {.name = "Res3A", .handler = UnimplementedExtendedOpcode};
+    handlers[0x9F] = {.name = "Res3A", .handler = ExecuteRes3A};
 
-    handlers[0xA0] = {.name = "Res4B", .handler = UnimplementedExtendedOpcode};
-    handlers[0xA1] = {.name = "Res4C", .handler = UnimplementedExtendedOpcode};
-    handlers[0xA2] = {.name = "Res4D", .handler = UnimplementedExtendedOpcode};
-    handlers[0xA3] = {.name = "Res4E", .handler = UnimplementedExtendedOpcode};
-    handlers[0xA4] = {.name = "Res4H", .handler = UnimplementedExtendedOpcode};
-    handlers[0xA5] = {.name = "Res4L", .handler = UnimplementedExtendedOpcode};
+    handlers[0xA0] = {.name = "Res4B", .handler = ExecuteRes4B};
+    handlers[0xA1] = {.name = "Res4C", .handler = ExecuteRes4C};
+    handlers[0xA2] = {.name = "Res4D", .handler = ExecuteRes4D};
+    handlers[0xA3] = {.name = "Res4E", .handler = ExecuteRes4E};
+    handlers[0xA4] = {.name = "Res4H", .handler = ExecuteRes4H};
+    handlers[0xA5] = {.name = "Res4L", .handler = ExecuteRes4L};
     handlers[0xA6] = {.name = "Res4HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0xA7] = {.name = "Res4A", .handler = UnimplementedExtendedOpcode};
+    handlers[0xA7] = {.name = "Res4A", .handler = ExecuteRes4A};
 
-    handlers[0xA8] = {.name = "Res5B", .handler = UnimplementedExtendedOpcode};
-    handlers[0xA9] = {.name = "Res5C", .handler = UnimplementedExtendedOpcode};
-    handlers[0xAA] = {.name = "Res5D", .handler = UnimplementedExtendedOpcode};
-    handlers[0xAB] = {.name = "Res5E", .handler = UnimplementedExtendedOpcode};
-    handlers[0xAC] = {.name = "Res5H", .handler = UnimplementedExtendedOpcode};
-    handlers[0xAD] = {.name = "Res5L", .handler = UnimplementedExtendedOpcode};
+    handlers[0xA8] = {.name = "Res5B", .handler = ExecuteRes5B};
+    handlers[0xA9] = {.name = "Res5C", .handler = ExecuteRes5C};
+    handlers[0xAA] = {.name = "Res5D", .handler = ExecuteRes5D};
+    handlers[0xAB] = {.name = "Res5E", .handler = ExecuteRes5E};
+    handlers[0xAC] = {.name = "Res5H", .handler = ExecuteRes5H};
+    handlers[0xAD] = {.name = "Res5L", .handler = ExecuteRes5L};
     handlers[0xAE] = {.name = "Res5HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0xAF] = {.name = "Res5A", .handler = UnimplementedExtendedOpcode};
+    handlers[0xAF] = {.name = "Res5A", .handler = ExecuteRes5A};
 
-    handlers[0xB0] = {.name = "Res6B", .handler = UnimplementedExtendedOpcode};
-    handlers[0xB1] = {.name = "Res6C", .handler = UnimplementedExtendedOpcode};
-    handlers[0xB2] = {.name = "Res6D", .handler = UnimplementedExtendedOpcode};
-    handlers[0xB3] = {.name = "Res6E", .handler = UnimplementedExtendedOpcode};
-    handlers[0xB4] = {.name = "Res6H", .handler = UnimplementedExtendedOpcode};
-    handlers[0xB5] = {.name = "Res6L", .handler = UnimplementedExtendedOpcode};
+    handlers[0xB0] = {.name = "Res6B", .handler = ExecuteRes6B};
+    handlers[0xB1] = {.name = "Res6C", .handler = ExecuteRes6C};
+    handlers[0xB2] = {.name = "Res6D", .handler = ExecuteRes6D};
+    handlers[0xB3] = {.name = "Res6E", .handler = ExecuteRes6E};
+    handlers[0xB4] = {.name = "Res6H", .handler = ExecuteRes6H};
+    handlers[0xB5] = {.name = "Res6L", .handler = ExecuteRes6L};
     handlers[0xB6] = {.name = "Res6HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0xB7] = {.name = "Res6A", .handler = UnimplementedExtendedOpcode};
+    handlers[0xB7] = {.name = "Res6A", .handler = ExecuteRes6A};
 
-    handlers[0xB8] = {.name = "Res7B", .handler = UnimplementedExtendedOpcode};
-    handlers[0xB9] = {.name = "Res7C", .handler = UnimplementedExtendedOpcode};
-    handlers[0xBA] = {.name = "Res7D", .handler = UnimplementedExtendedOpcode};
-    handlers[0xBB] = {.name = "Res7E", .handler = UnimplementedExtendedOpcode};
-    handlers[0xBC] = {.name = "Res7H", .handler = UnimplementedExtendedOpcode};
-    handlers[0xBD] = {.name = "Res7L", .handler = UnimplementedExtendedOpcode};
+    handlers[0xB8] = {.name = "Res7B", .handler = ExecuteRes7B};
+    handlers[0xB9] = {.name = "Res7C", .handler = ExecuteRes7C};
+    handlers[0xBA] = {.name = "Res7D", .handler = ExecuteRes7D};
+    handlers[0xBB] = {.name = "Res7E", .handler = ExecuteRes7E};
+    handlers[0xBC] = {.name = "Res7H", .handler = ExecuteRes7H};
+    handlers[0xBD] = {.name = "Res7L", .handler = ExecuteRes7L};
     handlers[0xBE] = {.name = "Res7HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0xBF] = {.name = "Res7A", .handler = UnimplementedExtendedOpcode};
+    handlers[0xBF] = {.name = "Res7A", .handler = ExecuteRes7A};
 
-    handlers[0xC0] = {.name = "Set0B", .handler = UnimplementedExtendedOpcode};
-    handlers[0xC1] = {.name = "Set0C", .handler = UnimplementedExtendedOpcode};
-    handlers[0xC2] = {.name = "Set0D", .handler = UnimplementedExtendedOpcode};
-    handlers[0xC3] = {.name = "Set0E", .handler = UnimplementedExtendedOpcode};
-    handlers[0xC4] = {.name = "Set0H", .handler = UnimplementedExtendedOpcode};
-    handlers[0xC5] = {.name = "Set0L", .handler = UnimplementedExtendedOpcode};
+    handlers[0xC0] = {.name = "Set0B", .handler = ExecuteSet0B};
+    handlers[0xC1] = {.name = "Set0C", .handler = ExecuteSet0C};
+    handlers[0xC2] = {.name = "Set0D", .handler = ExecuteSet0D};
+    handlers[0xC3] = {.name = "Set0E", .handler = ExecuteSet0E};
+    handlers[0xC4] = {.name = "Set0H", .handler = ExecuteSet0H};
+    handlers[0xC5] = {.name = "Set0L", .handler = ExecuteSet0L};
     handlers[0xC6] = {.name = "Set0HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0xC7] = {.name = "Set0A", .handler = UnimplementedExtendedOpcode};
+    handlers[0xC7] = {.name = "Set0A", .handler = ExecuteSet0A};
 
-    handlers[0xC8] = {.name = "Set1B", .handler = UnimplementedExtendedOpcode};
-    handlers[0xC9] = {.name = "Set1C", .handler = UnimplementedExtendedOpcode};
-    handlers[0xCA] = {.name = "Set1D", .handler = UnimplementedExtendedOpcode};
-    handlers[0xCB] = {.name = "Set1E", .handler = UnimplementedExtendedOpcode};
-    handlers[0xCC] = {.name = "Set1H", .handler = UnimplementedExtendedOpcode};
-    handlers[0xCD] = {.name = "Set1L", .handler = UnimplementedExtendedOpcode};
+    handlers[0xC8] = {.name = "Set1B", .handler = ExecuteSet1B};
+    handlers[0xC9] = {.name = "Set1C", .handler = ExecuteSet1C};
+    handlers[0xCA] = {.name = "Set1D", .handler = ExecuteSet1D};
+    handlers[0xCB] = {.name = "Set1E", .handler = ExecuteSet1E};
+    handlers[0xCC] = {.name = "Set1H", .handler = ExecuteSet1H};
+    handlers[0xCD] = {.name = "Set1L", .handler = ExecuteSet1L};
     handlers[0xCE] = {.name = "Set1HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0xCF] = {.name = "Set1A", .handler = UnimplementedExtendedOpcode};
+    handlers[0xCF] = {.name = "Set1A", .handler = ExecuteSet1A};
 
-    handlers[0xD0] = {.name = "Set2B", .handler = UnimplementedExtendedOpcode};
-    handlers[0xD1] = {.name = "Set2C", .handler = UnimplementedExtendedOpcode};
-    handlers[0xD2] = {.name = "Set2D", .handler = UnimplementedExtendedOpcode};
-    handlers[0xD3] = {.name = "Set2E", .handler = UnimplementedExtendedOpcode};
-    handlers[0xD4] = {.name = "Set2H", .handler = UnimplementedExtendedOpcode};
-    handlers[0xD5] = {.name = "Set2L", .handler = UnimplementedExtendedOpcode};
+    handlers[0xD0] = {.name = "Set2B", .handler = ExecuteSet2B};
+    handlers[0xD1] = {.name = "Set2C", .handler = ExecuteSet2C};
+    handlers[0xD2] = {.name = "Set2D", .handler = ExecuteSet2D};
+    handlers[0xD3] = {.name = "Set2E", .handler = ExecuteSet2E};
+    handlers[0xD4] = {.name = "Set2H", .handler = ExecuteSet2H};
+    handlers[0xD5] = {.name = "Set2L", .handler = ExecuteSet2L};
     handlers[0xD6] = {.name = "Set2HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0xD7] = {.name = "Set2A", .handler = UnimplementedExtendedOpcode};
+    handlers[0xD7] = {.name = "Set2A", .handler = ExecuteSet2A};
 
-    handlers[0xD8] = {.name = "Set3B", .handler = UnimplementedExtendedOpcode};
-    handlers[0xD9] = {.name = "Set3C", .handler = UnimplementedExtendedOpcode};
-    handlers[0xDA] = {.name = "Set3D", .handler = UnimplementedExtendedOpcode};
-    handlers[0xDB] = {.name = "Set3E", .handler = UnimplementedExtendedOpcode};
-    handlers[0xDC] = {.name = "Set3H", .handler = UnimplementedExtendedOpcode};
-    handlers[0xDD] = {.name = "Set3L", .handler = UnimplementedExtendedOpcode};
+    handlers[0xD8] = {.name = "Set3B", .handler = ExecuteSet3B};
+    handlers[0xD9] = {.name = "Set3C", .handler = ExecuteSet3C};
+    handlers[0xDA] = {.name = "Set3D", .handler = ExecuteSet3D};
+    handlers[0xDB] = {.name = "Set3E", .handler = ExecuteSet3E};
+    handlers[0xDC] = {.name = "Set3H", .handler = ExecuteSet3H};
+    handlers[0xDD] = {.name = "Set3L", .handler = ExecuteSet3L};
     handlers[0xDE] = {.name = "Set3HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0xDF] = {.name = "Set3A", .handler = UnimplementedExtendedOpcode};
+    handlers[0xDF] = {.name = "Set3A", .handler = ExecuteSet3A};
 
-    handlers[0xE0] = {.name = "Set4B", .handler = UnimplementedExtendedOpcode};
-    handlers[0xE1] = {.name = "Set4C", .handler = UnimplementedExtendedOpcode};
-    handlers[0xE2] = {.name = "Set4D", .handler = UnimplementedExtendedOpcode};
-    handlers[0xE3] = {.name = "Set4E", .handler = UnimplementedExtendedOpcode};
-    handlers[0xE4] = {.name = "Set4H", .handler = UnimplementedExtendedOpcode};
-    handlers[0xE5] = {.name = "Set4L", .handler = UnimplementedExtendedOpcode};
+    handlers[0xE0] = {.name = "Set4B", .handler = ExecuteSet4B};
+    handlers[0xE1] = {.name = "Set4C", .handler = ExecuteSet4C};
+    handlers[0xE2] = {.name = "Set4D", .handler = ExecuteSet4D};
+    handlers[0xE3] = {.name = "Set4E", .handler = ExecuteSet4E};
+    handlers[0xE4] = {.name = "Set4H", .handler = ExecuteSet4H};
+    handlers[0xE5] = {.name = "Set4L", .handler = ExecuteSet4L};
     handlers[0xE6] = {.name = "Set4HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0xE7] = {.name = "Set4A", .handler = UnimplementedExtendedOpcode};
+    handlers[0xE7] = {.name = "Set4A", .handler = ExecuteSet4A};
 
-    handlers[0xE8] = {.name = "Set5B", .handler = UnimplementedExtendedOpcode};
-    handlers[0xE9] = {.name = "Set5C", .handler = UnimplementedExtendedOpcode};
-    handlers[0xEA] = {.name = "Set5D", .handler = UnimplementedExtendedOpcode};
-    handlers[0xEB] = {.name = "Set5E", .handler = UnimplementedExtendedOpcode};
-    handlers[0xEC] = {.name = "Set5H", .handler = UnimplementedExtendedOpcode};
-    handlers[0xED] = {.name = "Set5L", .handler = UnimplementedExtendedOpcode};
+    handlers[0xE8] = {.name = "Set5B", .handler = ExecuteSet5B};
+    handlers[0xE9] = {.name = "Set5C", .handler = ExecuteSet5C};
+    handlers[0xEA] = {.name = "Set5D", .handler = ExecuteSet5D};
+    handlers[0xEB] = {.name = "Set5E", .handler = ExecuteSet5E};
+    handlers[0xEC] = {.name = "Set5H", .handler = ExecuteSet5H};
+    handlers[0xED] = {.name = "Set5L", .handler = ExecuteSet5L};
     handlers[0xEE] = {.name = "Set5HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0xEF] = {.name = "Set5A", .handler = UnimplementedExtendedOpcode};
+    handlers[0xEF] = {.name = "Set5A", .handler = ExecuteSet5A};
 
-    handlers[0xF0] = {.name = "Set6B", .handler = UnimplementedExtendedOpcode};
-    handlers[0xF1] = {.name = "Set6C", .handler = UnimplementedExtendedOpcode};
-    handlers[0xF2] = {.name = "Set6D", .handler = UnimplementedExtendedOpcode};
-    handlers[0xF3] = {.name = "Set6E", .handler = UnimplementedExtendedOpcode};
-    handlers[0xF4] = {.name = "Set6H", .handler = UnimplementedExtendedOpcode};
-    handlers[0xF5] = {.name = "Set6L", .handler = UnimplementedExtendedOpcode};
+    handlers[0xF0] = {.name = "Set6B", .handler = ExecuteSet6B};
+    handlers[0xF1] = {.name = "Set6C", .handler = ExecuteSet6C};
+    handlers[0xF2] = {.name = "Set6D", .handler = ExecuteSet6D};
+    handlers[0xF3] = {.name = "Set6E", .handler = ExecuteSet6E};
+    handlers[0xF4] = {.name = "Set6H", .handler = ExecuteSet6H};
+    handlers[0xF5] = {.name = "Set6L", .handler = ExecuteSet6L};
     handlers[0xF6] = {.name = "Set6HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0xF7] = {.name = "Set6A", .handler = UnimplementedExtendedOpcode};
+    handlers[0xF7] = {.name = "Set6A", .handler = ExecuteSet6A};
 
-    handlers[0xF8] = {.name = "Set7B", .handler = UnimplementedExtendedOpcode};
-    handlers[0xF9] = {.name = "Set7C", .handler = UnimplementedExtendedOpcode};
-    handlers[0xFA] = {.name = "Set7D", .handler = UnimplementedExtendedOpcode};
-    handlers[0xFB] = {.name = "Set7E", .handler = UnimplementedExtendedOpcode};
-    handlers[0xFC] = {.name = "Set7H", .handler = UnimplementedExtendedOpcode};
-    handlers[0xFD] = {.name = "Set7L", .handler = UnimplementedExtendedOpcode};
+    handlers[0xF8] = {.name = "Set7B", .handler = ExecuteSet7B};
+    handlers[0xF9] = {.name = "Set7C", .handler = ExecuteSet7C};
+    handlers[0xFA] = {.name = "Set7D", .handler = ExecuteSet7D};
+    handlers[0xFB] = {.name = "Set7E", .handler = ExecuteSet7E};
+    handlers[0xFC] = {.name = "Set7H", .handler = ExecuteSet7H};
+    handlers[0xFD] = {.name = "Set7L", .handler = ExecuteSet7L};
     handlers[0xFE] = {.name = "Set7HL", .handler = UnimplementedExtendedOpcode};
-    handlers[0xFF] = {.name = "Set7A", .handler = UnimplementedExtendedOpcode};
+    handlers[0xFF] = {.name = "Set7A", .handler = ExecuteSet7A};
 
     return handlers;
 }
