@@ -10,7 +10,15 @@
 
 #include "extended_instruction_handlers/bit.h"
 #include "extended_instruction_handlers/res.h"
+#include "extended_instruction_handlers/rl.h"
+#include "extended_instruction_handlers/rlc.h"
+#include "extended_instruction_handlers/rr.h"
+#include "extended_instruction_handlers/rrc.h"
 #include "extended_instruction_handlers/set.h"
+#include "extended_instruction_handlers/sla.h"
+#include "extended_instruction_handlers/sra.h"
+#include "extended_instruction_handlers/srl.h"
+#include "extended_instruction_handlers/swap.h"
 
 #include <array>
 #include <format>
@@ -28,77 +36,77 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
 {
     std::array<OpcodeHandler, 256> handlers{};
 
-    handlers[0x00] = {.name = "RlcB", .handler = UnimplementedExtendedOpcode};
-    handlers[0x01] = {.name = "RlcC", .handler = UnimplementedExtendedOpcode};
-    handlers[0x02] = {.name = "RlcD", .handler = UnimplementedExtendedOpcode};
-    handlers[0x03] = {.name = "RlcE", .handler = UnimplementedExtendedOpcode};
-    handlers[0x04] = {.name = "RlcH", .handler = UnimplementedExtendedOpcode};
-    handlers[0x05] = {.name = "RlcL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x06] = {.name = "RlcHL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x07] = {.name = "RlcA", .handler = UnimplementedExtendedOpcode};
+    handlers[0x00] = {.name = "RlcB", .handler = ExecuteRlcB};
+    handlers[0x01] = {.name = "RlcC", .handler = ExecuteRlcC};
+    handlers[0x02] = {.name = "RlcD", .handler = ExecuteRlcD};
+    handlers[0x03] = {.name = "RlcE", .handler = ExecuteRlcE};
+    handlers[0x04] = {.name = "RlcH", .handler = ExecuteRlcH};
+    handlers[0x05] = {.name = "RlcL", .handler = ExecuteRlcL};
+    handlers[0x06] = {.name = "RlcHL", .handler = ExecuteRlcIndirectHL};
+    handlers[0x07] = {.name = "RlcA", .handler = ExecuteRlcA};
 
-    handlers[0x08] = {.name = "RrcB", .handler = UnimplementedExtendedOpcode};
-    handlers[0x09] = {.name = "RrcC", .handler = UnimplementedExtendedOpcode};
-    handlers[0x0A] = {.name = "RrcD", .handler = UnimplementedExtendedOpcode};
-    handlers[0x0B] = {.name = "RrcE", .handler = UnimplementedExtendedOpcode};
-    handlers[0x0C] = {.name = "RrcH", .handler = UnimplementedExtendedOpcode};
-    handlers[0x0D] = {.name = "RrcL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x0E] = {.name = "RrcHL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x0F] = {.name = "RrcA", .handler = UnimplementedExtendedOpcode};
+    handlers[0x08] = {.name = "RrcB", .handler = ExecuteRrcB};
+    handlers[0x09] = {.name = "RrcC", .handler = ExecuteRrcC};
+    handlers[0x0A] = {.name = "RrcD", .handler = ExecuteRrcD};
+    handlers[0x0B] = {.name = "RrcE", .handler = ExecuteRrcE};
+    handlers[0x0C] = {.name = "RrcH", .handler = ExecuteRrcH};
+    handlers[0x0D] = {.name = "RrcL", .handler = ExecuteRrcL};
+    handlers[0x0E] = {.name = "RrcHL", .handler = ExecuteRrcIndirectHL};
+    handlers[0x0F] = {.name = "RrcA", .handler = ExecuteRrcA};
 
-    handlers[0x10] = {.name = "RlB", .handler = UnimplementedExtendedOpcode};
-    handlers[0x11] = {.name = "RlC", .handler = UnimplementedExtendedOpcode};
-    handlers[0x12] = {.name = "RlD", .handler = UnimplementedExtendedOpcode};
-    handlers[0x13] = {.name = "RlE", .handler = UnimplementedExtendedOpcode};
-    handlers[0x14] = {.name = "RlH", .handler = UnimplementedExtendedOpcode};
-    handlers[0x15] = {.name = "RlL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x16] = {.name = "RlHL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x17] = {.name = "RlA", .handler = UnimplementedExtendedOpcode};
+    handlers[0x10] = {.name = "RlB", .handler = ExecuteRlB};
+    handlers[0x11] = {.name = "RlC", .handler = ExecuteRlC};
+    handlers[0x12] = {.name = "RlD", .handler = ExecuteRlD};
+    handlers[0x13] = {.name = "RlE", .handler = ExecuteRlE};
+    handlers[0x14] = {.name = "RlH", .handler = ExecuteRlH};
+    handlers[0x15] = {.name = "RlL", .handler = ExecuteRlL};
+    handlers[0x16] = {.name = "RlHL", .handler = ExecuteRlIndirectHL};
+    handlers[0x17] = {.name = "RlA", .handler = ExecuteRlA};
 
-    handlers[0x18] = {.name = "RrB", .handler = UnimplementedExtendedOpcode};
-    handlers[0x19] = {.name = "RrC", .handler = UnimplementedExtendedOpcode};
-    handlers[0x1A] = {.name = "RrD", .handler = UnimplementedExtendedOpcode};
-    handlers[0x1B] = {.name = "RrE", .handler = UnimplementedExtendedOpcode};
-    handlers[0x1C] = {.name = "RrH", .handler = UnimplementedExtendedOpcode};
-    handlers[0x1D] = {.name = "RrL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x1E] = {.name = "RrHL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x1F] = {.name = "RrA", .handler = UnimplementedExtendedOpcode};
+    handlers[0x18] = {.name = "RrB", .handler = ExecuteRrB};
+    handlers[0x19] = {.name = "RrC", .handler = ExecuteRrC};
+    handlers[0x1A] = {.name = "RrD", .handler = ExecuteRrD};
+    handlers[0x1B] = {.name = "RrE", .handler = ExecuteRrE};
+    handlers[0x1C] = {.name = "RrH", .handler = ExecuteRrH};
+    handlers[0x1D] = {.name = "RrL", .handler = ExecuteRrL};
+    handlers[0x1E] = {.name = "RrHL", .handler = ExecuteRrIndirectHL};
+    handlers[0x1F] = {.name = "RrA", .handler = ExecuteRrA};
 
-    handlers[0x20] = {.name = "SlaB", .handler = UnimplementedExtendedOpcode};
-    handlers[0x21] = {.name = "SlaC", .handler = UnimplementedExtendedOpcode};
-    handlers[0x22] = {.name = "SlaD", .handler = UnimplementedExtendedOpcode};
-    handlers[0x23] = {.name = "SlaE", .handler = UnimplementedExtendedOpcode};
-    handlers[0x24] = {.name = "SlaH", .handler = UnimplementedExtendedOpcode};
-    handlers[0x25] = {.name = "SlaL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x26] = {.name = "SlaHL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x27] = {.name = "SlaA", .handler = UnimplementedExtendedOpcode};
+    handlers[0x20] = {.name = "SlaB", .handler = ExecuteSlaB};
+    handlers[0x21] = {.name = "SlaC", .handler = ExecuteSlaC};
+    handlers[0x22] = {.name = "SlaD", .handler = ExecuteSlaD};
+    handlers[0x23] = {.name = "SlaE", .handler = ExecuteSlaE};
+    handlers[0x24] = {.name = "SlaH", .handler = ExecuteSlaH};
+    handlers[0x25] = {.name = "SlaL", .handler = ExecuteSlaL};
+    handlers[0x26] = {.name = "SlaHL", .handler = ExecuteSlaIndirectHL};
+    handlers[0x27] = {.name = "SlaA", .handler = ExecuteSlaA};
 
-    handlers[0x28] = {.name = "SraB", .handler = UnimplementedExtendedOpcode};
-    handlers[0x29] = {.name = "SraC", .handler = UnimplementedExtendedOpcode};
-    handlers[0x2A] = {.name = "SraD", .handler = UnimplementedExtendedOpcode};
-    handlers[0x2B] = {.name = "SraE", .handler = UnimplementedExtendedOpcode};
-    handlers[0x2C] = {.name = "SraH", .handler = UnimplementedExtendedOpcode};
-    handlers[0x2D] = {.name = "SraL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x2E] = {.name = "SraHL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x2F] = {.name = "SraA", .handler = UnimplementedExtendedOpcode};
+    handlers[0x28] = {.name = "SraB", .handler = ExecuteSraB};
+    handlers[0x29] = {.name = "SraC", .handler = ExecuteSraC};
+    handlers[0x2A] = {.name = "SraD", .handler = ExecuteSraD};
+    handlers[0x2B] = {.name = "SraE", .handler = ExecuteSraE};
+    handlers[0x2C] = {.name = "SraH", .handler = ExecuteSraH};
+    handlers[0x2D] = {.name = "SraL", .handler = ExecuteSraL};
+    handlers[0x2E] = {.name = "SraHL", .handler = ExecuteSraIndirectHL};
+    handlers[0x2F] = {.name = "SraA", .handler = ExecuteSraA};
 
-    handlers[0x30] = {.name = "SwapB", .handler = UnimplementedExtendedOpcode};
-    handlers[0x31] = {.name = "SwapC", .handler = UnimplementedExtendedOpcode};
-    handlers[0x32] = {.name = "SwapD", .handler = UnimplementedExtendedOpcode};
-    handlers[0x33] = {.name = "SwapE", .handler = UnimplementedExtendedOpcode};
-    handlers[0x34] = {.name = "SwapH", .handler = UnimplementedExtendedOpcode};
-    handlers[0x35] = {.name = "SwapL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x36] = {.name = "SwapHL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x37] = {.name = "SwapA", .handler = UnimplementedExtendedOpcode};
+    handlers[0x30] = {.name = "SwapB", .handler = ExecuteSwapB};
+    handlers[0x31] = {.name = "SwapC", .handler = ExecuteSwapC};
+    handlers[0x32] = {.name = "SwapD", .handler = ExecuteSwapD};
+    handlers[0x33] = {.name = "SwapE", .handler = ExecuteSwapE};
+    handlers[0x34] = {.name = "SwapH", .handler = ExecuteSwapH};
+    handlers[0x35] = {.name = "SwapL", .handler = ExecuteSwapL};
+    handlers[0x36] = {.name = "SwapHL", .handler = ExecuteSwapIndirectHL};
+    handlers[0x37] = {.name = "SwapA", .handler = ExecuteSwapA};
 
-    handlers[0x38] = {.name = "SrlB", .handler = UnimplementedExtendedOpcode};
-    handlers[0x39] = {.name = "SrlC", .handler = UnimplementedExtendedOpcode};
-    handlers[0x3A] = {.name = "SrlD", .handler = UnimplementedExtendedOpcode};
-    handlers[0x3B] = {.name = "SrlE", .handler = UnimplementedExtendedOpcode};
-    handlers[0x3C] = {.name = "SrlH", .handler = UnimplementedExtendedOpcode};
-    handlers[0x3D] = {.name = "SrlL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x3E] = {.name = "SrlHL", .handler = UnimplementedExtendedOpcode};
-    handlers[0x3F] = {.name = "SrlA", .handler = UnimplementedExtendedOpcode};
+    handlers[0x38] = {.name = "SrlB", .handler = ExecuteSrlB};
+    handlers[0x39] = {.name = "SrlC", .handler = ExecuteSrlC};
+    handlers[0x3A] = {.name = "SrlD", .handler = ExecuteSrlD};
+    handlers[0x3B] = {.name = "SrlE", .handler = ExecuteSrlE};
+    handlers[0x3C] = {.name = "SrlH", .handler = ExecuteSrlH};
+    handlers[0x3D] = {.name = "SrlL", .handler = ExecuteSrlL};
+    handlers[0x3E] = {.name = "SrlHL", .handler = ExecuteSrlIndirectHL};
+    handlers[0x3F] = {.name = "SrlA", .handler = ExecuteSrlA};
 
     handlers[0x40] = {.name = "Bit0B", .handler = ExecuteBit0B};
     handlers[0x41] = {.name = "Bit0C", .handler = ExecuteBit0C};
@@ -106,7 +114,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0x43] = {.name = "Bit0E", .handler = ExecuteBit0E};
     handlers[0x44] = {.name = "Bit0H", .handler = ExecuteBit0H};
     handlers[0x45] = {.name = "Bit0L", .handler = ExecuteBit0L};
-    handlers[0x46] = {.name = "Bit0HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0x46] = {.name = "Bit0HL", .handler = ExecuteBit0IndirectHL};
     handlers[0x47] = {.name = "Bit0A", .handler = ExecuteBit0A};
 
     handlers[0x48] = {.name = "Bit1B", .handler = ExecuteBit1B};
@@ -115,7 +123,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0x4B] = {.name = "Bit1E", .handler = ExecuteBit1E};
     handlers[0x4C] = {.name = "Bit1H", .handler = ExecuteBit1H};
     handlers[0x4D] = {.name = "Bit1L", .handler = ExecuteBit1L};
-    handlers[0x4E] = {.name = "Bit1HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0x4E] = {.name = "Bit1HL", .handler = ExecuteBit1IndirectHL};
     handlers[0x4F] = {.name = "Bit1A", .handler = ExecuteBit1A};
 
     handlers[0x50] = {.name = "Bit2B", .handler = ExecuteBit2B};
@@ -124,7 +132,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0x53] = {.name = "Bit2E", .handler = ExecuteBit2E};
     handlers[0x54] = {.name = "Bit2H", .handler = ExecuteBit2H};
     handlers[0x55] = {.name = "Bit2L", .handler = ExecuteBit2L};
-    handlers[0x56] = {.name = "Bit2HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0x56] = {.name = "Bit2HL", .handler = ExecuteBit2IndirectHL};
     handlers[0x57] = {.name = "Bit2A", .handler = ExecuteBit2A};
 
     handlers[0x58] = {.name = "Bit3B", .handler = ExecuteBit3B};
@@ -133,7 +141,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0x5B] = {.name = "Bit3E", .handler = ExecuteBit3E};
     handlers[0x5C] = {.name = "Bit3H", .handler = ExecuteBit3H};
     handlers[0x5D] = {.name = "Bit3L", .handler = ExecuteBit3L};
-    handlers[0x5E] = {.name = "Bit3HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0x5E] = {.name = "Bit3HL", .handler = ExecuteBit3IndirectHL};
     handlers[0x5F] = {.name = "Bit3A", .handler = ExecuteBit3A};
 
     handlers[0x60] = {.name = "Bit4B", .handler = ExecuteBit4B};
@@ -142,7 +150,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0x63] = {.name = "Bit4E", .handler = ExecuteBit4E};
     handlers[0x64] = {.name = "Bit4H", .handler = ExecuteBit4H};
     handlers[0x65] = {.name = "Bit4L", .handler = ExecuteBit4L};
-    handlers[0x66] = {.name = "Bit4HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0x66] = {.name = "Bit4HL", .handler = ExecuteBit4IndirectHL};
     handlers[0x67] = {.name = "Bit4A", .handler = ExecuteBit4A};
 
     handlers[0x68] = {.name = "Bit5B", .handler = ExecuteBit5B};
@@ -151,7 +159,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0x6B] = {.name = "Bit5E", .handler = ExecuteBit5E};
     handlers[0x6C] = {.name = "Bit5H", .handler = ExecuteBit5H};
     handlers[0x6D] = {.name = "Bit5L", .handler = ExecuteBit5L};
-    handlers[0x6E] = {.name = "Bit5HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0x6E] = {.name = "Bit5HL", .handler = ExecuteBit5IndirectHL};
     handlers[0x6F] = {.name = "Bit5A", .handler = ExecuteBit5A};
 
     handlers[0x70] = {.name = "Bit6B", .handler = ExecuteBit6B};
@@ -160,7 +168,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0x73] = {.name = "Bit6E", .handler = ExecuteBit6E};
     handlers[0x74] = {.name = "Bit6H", .handler = ExecuteBit6H};
     handlers[0x75] = {.name = "Bit6L", .handler = ExecuteBit6L};
-    handlers[0x76] = {.name = "Bit6HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0x76] = {.name = "Bit6HL", .handler = ExecuteBit6IndirectHL};
     handlers[0x77] = {.name = "Bit6A", .handler = ExecuteBit6A};
 
     handlers[0x78] = {.name = "Bit7B", .handler = ExecuteBit7B};
@@ -169,7 +177,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0x7B] = {.name = "Bit7E", .handler = ExecuteBit7E};
     handlers[0x7C] = {.name = "Bit7H", .handler = ExecuteBit7H};
     handlers[0x7D] = {.name = "Bit7L", .handler = ExecuteBit7L};
-    handlers[0x7E] = {.name = "Bit7HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0x7E] = {.name = "Bit7HL", .handler = ExecuteBit7IndirectHL};
     handlers[0x7F] = {.name = "Bit7A", .handler = ExecuteBit7A};
 
     handlers[0x80] = {.name = "Res0B", .handler = ExecuteRes0B};
@@ -178,7 +186,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0x83] = {.name = "Res0E", .handler = ExecuteRes0E};
     handlers[0x84] = {.name = "Res0H", .handler = ExecuteRes0H};
     handlers[0x85] = {.name = "Res0L", .handler = ExecuteRes0L};
-    handlers[0x86] = {.name = "Res0HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0x86] = {.name = "Res0HL", .handler = ExecuteRes0IndirectHL};
     handlers[0x87] = {.name = "Res0A", .handler = ExecuteRes0A};
 
     handlers[0x88] = {.name = "Res1B", .handler = ExecuteRes1B};
@@ -187,7 +195,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0x8B] = {.name = "Res1E", .handler = ExecuteRes1E};
     handlers[0x8C] = {.name = "Res1H", .handler = ExecuteRes1H};
     handlers[0x8D] = {.name = "Res1L", .handler = ExecuteRes1L};
-    handlers[0x8E] = {.name = "Res1HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0x8E] = {.name = "Res1HL", .handler = ExecuteRes1IndirectHL};
     handlers[0x8F] = {.name = "Res1A", .handler = ExecuteRes1A};
 
     handlers[0x90] = {.name = "Res2B", .handler = ExecuteRes2B};
@@ -196,7 +204,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0x93] = {.name = "Res2E", .handler = ExecuteRes2E};
     handlers[0x94] = {.name = "Res2H", .handler = ExecuteRes2H};
     handlers[0x95] = {.name = "Res2L", .handler = ExecuteRes2L};
-    handlers[0x96] = {.name = "Res2HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0x96] = {.name = "Res2HL", .handler = ExecuteRes2IndirectHL};
     handlers[0x97] = {.name = "Res2A", .handler = ExecuteRes2A};
 
     handlers[0x98] = {.name = "Res3B", .handler = ExecuteRes3B};
@@ -205,7 +213,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0x9B] = {.name = "Res3E", .handler = ExecuteRes3E};
     handlers[0x9C] = {.name = "Res3H", .handler = ExecuteRes3H};
     handlers[0x9D] = {.name = "Res3L", .handler = ExecuteRes3L};
-    handlers[0x9E] = {.name = "Res3HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0x9E] = {.name = "Res3HL", .handler = ExecuteRes3IndirectHL};
     handlers[0x9F] = {.name = "Res3A", .handler = ExecuteRes3A};
 
     handlers[0xA0] = {.name = "Res4B", .handler = ExecuteRes4B};
@@ -214,7 +222,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0xA3] = {.name = "Res4E", .handler = ExecuteRes4E};
     handlers[0xA4] = {.name = "Res4H", .handler = ExecuteRes4H};
     handlers[0xA5] = {.name = "Res4L", .handler = ExecuteRes4L};
-    handlers[0xA6] = {.name = "Res4HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0xA6] = {.name = "Res4HL", .handler = ExecuteRes4IndirectHL};
     handlers[0xA7] = {.name = "Res4A", .handler = ExecuteRes4A};
 
     handlers[0xA8] = {.name = "Res5B", .handler = ExecuteRes5B};
@@ -223,7 +231,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0xAB] = {.name = "Res5E", .handler = ExecuteRes5E};
     handlers[0xAC] = {.name = "Res5H", .handler = ExecuteRes5H};
     handlers[0xAD] = {.name = "Res5L", .handler = ExecuteRes5L};
-    handlers[0xAE] = {.name = "Res5HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0xAE] = {.name = "Res5HL", .handler = ExecuteRes5IndirectHL};
     handlers[0xAF] = {.name = "Res5A", .handler = ExecuteRes5A};
 
     handlers[0xB0] = {.name = "Res6B", .handler = ExecuteRes6B};
@@ -232,7 +240,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0xB3] = {.name = "Res6E", .handler = ExecuteRes6E};
     handlers[0xB4] = {.name = "Res6H", .handler = ExecuteRes6H};
     handlers[0xB5] = {.name = "Res6L", .handler = ExecuteRes6L};
-    handlers[0xB6] = {.name = "Res6HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0xB6] = {.name = "Res6HL", .handler = ExecuteRes6IndirectHL};
     handlers[0xB7] = {.name = "Res6A", .handler = ExecuteRes6A};
 
     handlers[0xB8] = {.name = "Res7B", .handler = ExecuteRes7B};
@@ -241,7 +249,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0xBB] = {.name = "Res7E", .handler = ExecuteRes7E};
     handlers[0xBC] = {.name = "Res7H", .handler = ExecuteRes7H};
     handlers[0xBD] = {.name = "Res7L", .handler = ExecuteRes7L};
-    handlers[0xBE] = {.name = "Res7HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0xBE] = {.name = "Res7HL", .handler = ExecuteRes7IndirectHL};
     handlers[0xBF] = {.name = "Res7A", .handler = ExecuteRes7A};
 
     handlers[0xC0] = {.name = "Set0B", .handler = ExecuteSet0B};
@@ -250,7 +258,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0xC3] = {.name = "Set0E", .handler = ExecuteSet0E};
     handlers[0xC4] = {.name = "Set0H", .handler = ExecuteSet0H};
     handlers[0xC5] = {.name = "Set0L", .handler = ExecuteSet0L};
-    handlers[0xC6] = {.name = "Set0HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0xC6] = {.name = "Set0HL", .handler = ExecuteSet0IndirectHL};
     handlers[0xC7] = {.name = "Set0A", .handler = ExecuteSet0A};
 
     handlers[0xC8] = {.name = "Set1B", .handler = ExecuteSet1B};
@@ -259,7 +267,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0xCB] = {.name = "Set1E", .handler = ExecuteSet1E};
     handlers[0xCC] = {.name = "Set1H", .handler = ExecuteSet1H};
     handlers[0xCD] = {.name = "Set1L", .handler = ExecuteSet1L};
-    handlers[0xCE] = {.name = "Set1HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0xCE] = {.name = "Set1HL", .handler = ExecuteSet1IndirectHL};
     handlers[0xCF] = {.name = "Set1A", .handler = ExecuteSet1A};
 
     handlers[0xD0] = {.name = "Set2B", .handler = ExecuteSet2B};
@@ -268,7 +276,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0xD3] = {.name = "Set2E", .handler = ExecuteSet2E};
     handlers[0xD4] = {.name = "Set2H", .handler = ExecuteSet2H};
     handlers[0xD5] = {.name = "Set2L", .handler = ExecuteSet2L};
-    handlers[0xD6] = {.name = "Set2HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0xD6] = {.name = "Set2HL", .handler = ExecuteSet2IndirectHL};
     handlers[0xD7] = {.name = "Set2A", .handler = ExecuteSet2A};
 
     handlers[0xD8] = {.name = "Set3B", .handler = ExecuteSet3B};
@@ -277,7 +285,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0xDB] = {.name = "Set3E", .handler = ExecuteSet3E};
     handlers[0xDC] = {.name = "Set3H", .handler = ExecuteSet3H};
     handlers[0xDD] = {.name = "Set3L", .handler = ExecuteSet3L};
-    handlers[0xDE] = {.name = "Set3HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0xDE] = {.name = "Set3HL", .handler = ExecuteSet3IndirectHL};
     handlers[0xDF] = {.name = "Set3A", .handler = ExecuteSet3A};
 
     handlers[0xE0] = {.name = "Set4B", .handler = ExecuteSet4B};
@@ -286,7 +294,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0xE3] = {.name = "Set4E", .handler = ExecuteSet4E};
     handlers[0xE4] = {.name = "Set4H", .handler = ExecuteSet4H};
     handlers[0xE5] = {.name = "Set4L", .handler = ExecuteSet4L};
-    handlers[0xE6] = {.name = "Set4HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0xE6] = {.name = "Set4HL", .handler = ExecuteSet4IndirectHL};
     handlers[0xE7] = {.name = "Set4A", .handler = ExecuteSet4A};
 
     handlers[0xE8] = {.name = "Set5B", .handler = ExecuteSet5B};
@@ -295,7 +303,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0xEB] = {.name = "Set5E", .handler = ExecuteSet5E};
     handlers[0xEC] = {.name = "Set5H", .handler = ExecuteSet5H};
     handlers[0xED] = {.name = "Set5L", .handler = ExecuteSet5L};
-    handlers[0xEE] = {.name = "Set5HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0xEE] = {.name = "Set5HL", .handler = ExecuteSet5IndirectHL};
     handlers[0xEF] = {.name = "Set5A", .handler = ExecuteSet5A};
 
     handlers[0xF0] = {.name = "Set6B", .handler = ExecuteSet6B};
@@ -304,7 +312,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0xF3] = {.name = "Set6E", .handler = ExecuteSet6E};
     handlers[0xF4] = {.name = "Set6H", .handler = ExecuteSet6H};
     handlers[0xF5] = {.name = "Set6L", .handler = ExecuteSet6L};
-    handlers[0xF6] = {.name = "Set6HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0xF6] = {.name = "Set6HL", .handler = ExecuteSet6IndirectHL};
     handlers[0xF7] = {.name = "Set6A", .handler = ExecuteSet6A};
 
     handlers[0xF8] = {.name = "Set7B", .handler = ExecuteSet7B};
@@ -313,7 +321,7 @@ inline InstructionHandler UnimplementedExtendedOpcode(AddressBus& /*addressBus*/
     handlers[0xFB] = {.name = "Set7E", .handler = ExecuteSet7E};
     handlers[0xFC] = {.name = "Set7H", .handler = ExecuteSet7H};
     handlers[0xFD] = {.name = "Set7L", .handler = ExecuteSet7L};
-    handlers[0xFE] = {.name = "Set7HL", .handler = UnimplementedExtendedOpcode};
+    handlers[0xFE] = {.name = "Set7HL", .handler = ExecuteSet7IndirectHL};
     handlers[0xFF] = {.name = "Set7A", .handler = ExecuteSet7A};
 
     return handlers;

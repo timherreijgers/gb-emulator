@@ -368,13 +368,7 @@ preserves Subtract and Carry, and sets Zero when the adjusted A is zero. DAA is 
 Major categories not yet implemented:
 
 - **Control flow**: STOP
-- **Shift/Rotate**: SLA, SRA, SRL, SWAP, and the non-accumulator forms of RL, RR, RLC, RRC
 - **Special**: HALT
-- **CB-prefixed shifts/rotates**: RLC, RRC, RL, RR, SLA, SRA, SWAP, and SRL for registers and `(HL)` remain
-  unimplemented
-- **CB-prefixed bit modification**: RES and SET `(HL)` remain unimplemented
-- **CB-prefixed BIT `(HL)`**: register-target BIT instructions are implemented; the memory-target form remains
-  unimplemented
 
 ### CB-Prefixed Instructions
 
@@ -382,14 +376,47 @@ Opcode `0xCB` selects the extended opcode table. The following byte is dispatche
 the CPU records that it has consumed the prefix, fetches the extended opcode on the next step, and selects its handler
 from that table. Unimplemented slots are mapped to an error handler that reports the extended opcode when executed.
 
-`BIT b, r` is implemented for register targets `A`, `B`, `C`, `D`, `E`, `H`, and `L` (the `0x40–0x7F` opcode range,
-excluding `(HL)` slots). It tests bit `b` without changing the target, sets Zero when the bit is clear, clears Subtract,
-sets HalfCarry, and preserves Carry.
+`BIT b, r` is implemented for register targets `A`, `B`, `C`, `D`, `E`, `H`, and `L`, and `BIT b, (HL)` is implemented
+for the remaining slots in the `0x40–0x7F` range. Both forms test bit `b` without changing the target, set Zero when
+the bit is clear, clear Subtract, set HalfCarry, and preserve Carry. The `(HL)` form reads the byte at HL and yields one
+M-cycle before updating flags.
 
-`SET b, r` is implemented for the same register targets in the `0xC0–0xFF` range, excluding `(HL)` slots. It sets the
-selected bit without changing flags. `RES b, r` is implemented for the same register targets in the `0x80–0xBF` range,
-excluding `(HL)` slots; it clears the selected bit without changing flags. The `(HL)` forms of both instructions remain
-unimplemented.
+`SET b, r` is implemented for the same register targets in the `0xC0–0xFF` range. It sets the selected bit without
+changing flags. `SET b, (HL)` reads the byte at HL, yields one M-cycle, then writes the updated byte back with flags
+unchanged. `RES b, r` is implemented for the same register targets in the `0x80–0xBF` range; it clears the selected bit
+without changing flags. `RES b, (HL)` reads the byte at HL, yields one M-cycle, clears the selected bit, then writes it
+back without changing flags.
+
+`RLC r` is implemented for register targets B, C, D, E, H, L, and A. It rotates the target left, moving bit 7 into bit
+0 and Carry. It clears Subtract and HalfCarry, sets Zero when the rotated result is zero, and otherwise clears Zero.
+`RLC (HL)` reads the byte at HL, yields one M-cycle, then writes the rotated result back to HL with the same flags.
+
+`RRC r` rotates an 8-bit register right, moving bit 0 into bit 7 and Carry. It clears Subtract and HalfCarry, sets Zero
+when the rotated result is zero, and otherwise clears Zero. `RRC (HL)` reads the byte at HL, yields one M-cycle, then
+writes the rotated result back to HL with the same flags.
+
+`RL r` rotates an 8-bit register left through Carry: the prior Carry value moves into bit 0 and bit 7 moves into Carry.
+It clears Subtract and HalfCarry, and sets Zero when the result is zero. `RL (HL)` reads the byte at HL, yields one
+M-cycle, then writes the rotated result back to HL with the same flags.
+
+`RR r` rotates an 8-bit register right through Carry: the prior Carry value moves into bit 7 and bit 0 moves into Carry.
+It clears Subtract and HalfCarry, and sets Zero when the result is zero. `RR (HL)` reads the byte at HL, yields one
+M-cycle, then writes the rotated result back to HL with the same flags.
+
+`SLA r` shifts an 8-bit register left, shifting zero into bit 0 and moving bit 7 into Carry. It clears Subtract and
+HalfCarry, and sets Zero when the result is zero. `SLA (HL)` reads the byte at HL, yields one M-cycle, then writes the
+shifted result back to HL with the same flags.
+
+`SRA r` shifts an 8-bit register right while preserving bit 7, and moves bit 0 into Carry. It clears Subtract and
+HalfCarry, and sets Zero when the result is zero. `SRA (HL)` reads the byte at HL, yields one M-cycle, then writes the
+shifted result back to HL with the same flags.
+
+`SRL r` shifts an 8-bit register right, shifts zero into bit 7, and moves bit 0 into Carry. It clears Subtract and
+HalfCarry, and sets Zero when the result is zero. `SRL (HL)` follows the same memory read, yield, and writeback timing.
+
+`SWAP r` exchanges the high and low nibbles of an 8-bit register. It clears Subtract, HalfCarry, and Carry, and sets
+Zero when the result is zero. `SWAP (HL)` reads the byte at HL, yields one M-cycle, then writes the swapped result back
+to HL with the same flags.
 
 ## Opcode Reference Table
 
