@@ -177,10 +177,24 @@ registers and flags, program counter, instruction register, and bus activity as 
 completion and next-opcode fetch where the execution model calls for them.
 
 Use separate tests in the same suite for individual flag scenarios and outcomes, for example
-`ExecutingOpcode_ResultIsZero_ZeroFlagIsSet` and `ExecutingOpcode_ResultIsNotZero_ZeroFlagIsNotSet`. These tests
-run the instruction to completion and assert the relevant result and flags; they do not repeat the cycle-by-cycle
+`ExecutingOpcode_WhenResultIsZero_SetsZeroFlag` and `ExecutingOpcode_WhenBitZeroIsClear_ClearsCarryFlag`. These tests
+run the instruction to completion and assert the relevant result and flags; they need not repeat the cycle-by-cycle
 assertions already covered by `ExecutingOpcode`. Cover flag preservation as well as setting and clearing where the
 instruction requires it.
+
+For CB-prefixed register tests, the first step fetches `0xCB`, the second fetches the parameterized instruction byte,
+and the third executes the handler. The dedicated `ExecutingOpcode` test asserts both fetched instruction bytes
+and the resulting register and flags. Keep register-family tests parameterized across their opcodes.
+
+For CB-prefixed `(HL)` tests, `ExecutingOpcode` additionally checks the memory read into `zRegister`, the writeback
+where applicable, and the following opcode fetch. Place each memory expectation immediately before the step that
+performs that bus operation. `BIT` only reads memory; the other extended `(HL)` handlers write the result back.
+The BIT, RES, and SET suites are parameterized across bit indices; each rotate, shift, and SWAP `(HL)` suite covers
+a single opcode with `TEST_F`.
+
+The `(HL)` suites cover Carry setting and clearing for rotates and shifts, Zero results for RLC, SLA, SRA, SRL,
+and SWAP, and the BIT/RES/SET flag rules. Zero-result flag coverage for RL, RR, and RRC is still missing for both
+register and `(HL)` targets because of the implementation gap documented in [Instruction Set Architecture](04-instructions.md#cb-prefixed-instructions).
 
 ### Parameterized Instruction Test Names
 

@@ -370,11 +370,16 @@ Major categories not yet implemented:
 - **Control flow**: STOP
 - **Special**: HALT
 
-### CB-Prefixed Instructions
+## CB-Prefixed Instructions
 
 Opcode `0xCB` selects the extended opcode table. The following byte is dispatched through a separate 256-entry table;
 the CPU records that it has consumed the prefix, fetches the extended opcode on the next step, and selects its handler
 from that table. Unimplemented slots are mapped to an error handler that reports the extended opcode when executed.
+
+All CB-prefixed instruction families have register and `(HL)` handlers. The behavior described below is the intended
+instruction behavior. One known implementation gap remains: `RL`, `RR`, and `RRC`, for both register and `(HL)` targets,
+currently clear Zero unconditionally. Their handlers in `extended_instruction_handlers/rl.h`, `rr.h`, and `rrc.h`
+must still set Zero for a zero result; the current tests do not cover that missing behavior.
 
 `BIT b, r` is implemented for register targets `A`, `B`, `C`, `D`, `E`, `H`, and `L`, and `BIT b, (HL)` is implemented
 for the remaining slots in the `0x40–0x7F` range. Both forms test bit `b` without changing the target, set Zero when
