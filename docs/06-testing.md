@@ -131,8 +131,27 @@ Parameterized tests for each instruction family:
 | File | Instruction(s) |
 |------|----------------|
 | `bit_test.cpp` | CB-prefixed `BIT b, r` for register targets, including bit-result flags and preserved Carry |
+| `bit_indirect_hl_test.cpp` | CB-prefixed `BIT b, (HL)` read, cycle sequencing, and flags |
 | `res_test.cpp` | CB-prefixed `RES b, r` for register targets; flags are preserved |
+| `res_indirect_hl_test.cpp` | CB-prefixed `RES b, (HL)` read, write, cycle sequencing, and flags |
+| `rlc_test.cpp` | CB-prefixed `RLC r` for register targets, including rotate result and flags |
+| `rlc_indirect_hl_test.cpp` | CB-prefixed `RLC (HL)` read, write, cycle sequencing, and flags |
+| `rl_test.cpp` | CB-prefixed `RL r` for register targets, including Carry and flags |
+| `rl_indirect_hl_test.cpp` | CB-prefixed `RL (HL)` read, write, cycle sequencing, Carry input, and flags |
+| `rr_test.cpp` | CB-prefixed `RR r` for register targets, including Carry and flags |
+| `rr_indirect_hl_test.cpp` | CB-prefixed `RR (HL)` read, write, cycle sequencing, Carry input, and flags |
+| `rrc_test.cpp` | CB-prefixed `RRC r` for register targets, including rotate result and flags |
+| `rrc_indirect_hl_test.cpp` | CB-prefixed `RRC (HL)` read, write, cycle sequencing, and flags |
+| `sla_test.cpp` | CB-prefixed `SLA r` for register targets, including shift result and flags |
+| `sla_indirect_hl_test.cpp` | CB-prefixed `SLA (HL)` read, write, cycle sequencing, and flags |
+| `sra_test.cpp` | CB-prefixed `SRA r` for register targets, including arithmetic shift result and flags |
+| `sra_indirect_hl_test.cpp` | CB-prefixed `SRA (HL)` read, write, cycle sequencing, and flags |
+| `swap_test.cpp` | CB-prefixed `SWAP r` for register targets, including nibble exchange and flags |
+| `swap_indirect_hl_test.cpp` | CB-prefixed `SWAP (HL)` read, write, cycle sequencing, and flags |
+| `srl_test.cpp` | CB-prefixed `SRL r` for register targets, including logical shift result and flags |
+| `srl_indirect_hl_test.cpp` | CB-prefixed `SRL (HL)` read, write, cycle sequencing, and flags |
 | `set_test.cpp` | CB-prefixed `SET b, r` for register targets; flags are preserved |
+| `set_indirect_hl_test.cpp` | CB-prefixed `SET b, (HL)` read, write, cycle sequencing, and preserved flags |
 
 ### Test Conventions
 
@@ -158,10 +177,24 @@ registers and flags, program counter, instruction register, and bus activity as 
 completion and next-opcode fetch where the execution model calls for them.
 
 Use separate tests in the same suite for individual flag scenarios and outcomes, for example
-`ExecutingOpcode_ResultIsZero_ZeroFlagIsSet` and `ExecutingOpcode_ResultIsNotZero_ZeroFlagIsNotSet`. These tests
-run the instruction to completion and assert the relevant result and flags; they do not repeat the cycle-by-cycle
+`ExecutingOpcode_WhenResultIsZero_SetsZeroFlag` and `ExecutingOpcode_WhenBitZeroIsClear_ClearsCarryFlag`. These tests
+run the instruction to completion and assert the relevant result and flags; they need not repeat the cycle-by-cycle
 assertions already covered by `ExecutingOpcode`. Cover flag preservation as well as setting and clearing where the
 instruction requires it.
+
+For CB-prefixed register tests, the first step fetches `0xCB`, the second fetches the parameterized instruction byte,
+and the third executes the handler. The dedicated `ExecutingOpcode` test asserts both fetched instruction bytes
+and the resulting register and flags. Keep register-family tests parameterized across their opcodes.
+
+For CB-prefixed `(HL)` tests, `ExecutingOpcode` additionally checks the memory read into `zRegister`, the writeback
+where applicable, and the following opcode fetch. Place each memory expectation immediately before the step that
+performs that bus operation. `BIT` only reads memory; the other extended `(HL)` handlers write the result back.
+The BIT, RES, and SET suites are parameterized across bit indices; each rotate, shift, and SWAP `(HL)` suite covers
+a single opcode with `TEST_F`.
+
+The `(HL)` suites cover Carry setting and clearing for rotates and shifts, Zero results for RLC, SLA, SRA, SRL,
+and SWAP, and the BIT/RES/SET flag rules. Zero-result flag coverage for RL, RR, and RRC is still missing for both
+register and `(HL)` targets because of the implementation gap documented in [Instruction Set Architecture](04-instructions.md#cb-prefixed-instructions).
 
 ### Parameterized Instruction Test Names
 
