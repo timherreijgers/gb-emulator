@@ -47,25 +47,45 @@ TEST_P(RlTest, ExecutingOpcode)
     m_cpu.Step();
     ASSERT_THAT(targetRegister(m_cpu.Registers()), ::testing::Eq(0xE0_b));
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Carry.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));
 }
 
 TEST_P(RlTest, ExecutingOpcode_RotatesThroughCarry)
 {
     const auto& [instruction, targetRegister] = GetParam();
     targetRegister(m_cpu.Registers()) = 0x80_b;
-    m_cpu.Registers().flags = (CpuFlags::Zero | CpuFlags::Subtract | CpuFlags::HalfCarry | CpuFlags::Carry).AsByte();
+    m_cpu.Registers().flags = CpuFlags::Carry.AsByte();
 
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0xCB_b));
-
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(instruction));
-
     m_cpu.Step();
-
     ASSERT_THAT(targetRegister(m_cpu.Registers()), ::testing::Eq(0x01_b));
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Carry.AsByte()));
 }
+
+TEST_P(RlTest, ExecutingOpcode_ResultIsZero_SetsZeroFlag)
+{
+    const auto& [instruction, targetRegister] = GetParam();
+    targetRegister(m_cpu.Registers()) = 0x00_b;
+
+    m_cpu.Step();
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Zero.AsByte()));
+}
+
+TEST_P(RlTest, ExecutingOpcode_ClearsFlags)
+{
+    const auto& [instruction, targetRegister] = GetParam();
+    targetRegister(m_cpu.Registers()) = 0x80_b;
+    m_cpu.Registers().flags = (CpuFlags::Zero | CpuFlags::Subtract | CpuFlags::HalfCarry).AsByte();
+
+    m_cpu.Step();
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq((CpuFlags::Carry | CpuFlags::Zero).AsByte()));
+}
+
 
 INSTANTIATE_TEST_SUITE_P(
     RlTest, RlTest,

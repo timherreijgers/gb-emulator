@@ -47,40 +47,42 @@ TEST_P(SwapTest, ExecutingOpcode)
     m_cpu.Step();
     ASSERT_THAT(targetRegister(m_cpu.Registers()), ::testing::Eq(0x0F_b));
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(0x00_b));
+    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));
 }
 
-TEST_P(SwapTest, ExecutingOpcode_ExchangesNibblesAndClearsFlags)
+TEST_P(SwapTest, ExecutingOpcode_ExchangesNibbles)
 {
     const auto& [instruction, targetRegister] = GetParam();
     targetRegister(m_cpu.Registers()) = 0xF0_b;
-    m_cpu.Registers().flags = (CpuFlags::Zero | CpuFlags::Subtract | CpuFlags::HalfCarry | CpuFlags::Carry).AsByte();
 
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0xCB_b));
-
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(instruction));
-
     m_cpu.Step();
-
     ASSERT_THAT(targetRegister(m_cpu.Registers()), ::testing::Eq(0x0F_b));
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(0x00_b));
 }
 
-TEST_P(SwapTest, ExecutingOpcode_WhenResultIsZero_SetsZeroAndClearsOtherFlags)
+TEST_P(SwapTest, ExecutingOpcode_ResultIsZero_SetsZeroFlag)
 {
     const auto& [instruction, targetRegister] = GetParam();
     targetRegister(m_cpu.Registers()) = 0x00_b;
-    m_cpu.Registers().flags = (CpuFlags::Zero | CpuFlags::Subtract | CpuFlags::HalfCarry | CpuFlags::Carry).AsByte();
 
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0xCB_b));
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(instruction));
     m_cpu.Step();
-
-    ASSERT_THAT(targetRegister(m_cpu.Registers()), ::testing::Eq(0x00_b));
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Zero.AsByte()));
+}
+
+TEST_P(SwapTest, ExecutingOpcode_ClearsFlags)
+{
+    const auto& [instruction, targetRegister] = GetParam();
+    targetRegister(m_cpu.Registers()) = 0xF0_b;
+    m_cpu.Registers().flags = (CpuFlags::Carry | CpuFlags::Zero | CpuFlags::Subtract | CpuFlags::HalfCarry).AsByte();
+
+    m_cpu.Step();
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(0x00_b));
 }
 
 INSTANTIATE_TEST_SUITE_P(

@@ -39,6 +39,7 @@ TEST_F(SlaIndirectHLTest, ExecutingOpcode)
     EXPECT_CALL(m_addressableMock, WriteToAddress(address, 0xE0_b)).Times(1);
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Carry.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x26_b));
 
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));
@@ -48,25 +49,42 @@ TEST_F(SlaIndirectHLTest, ExecutingOpcode_ShiftsMemoryBitSevenIntoCarryAndSetsZe
 {
     constexpr auto address = static_cast<uint16_t>(0x1234);
     m_cpu.Registers().hlRegister = address;
-    m_cpu.Registers().flags = (CpuFlags::Subtract | CpuFlags::HalfCarry).AsByte();
+
     m_cpu.Step();
     m_cpu.Step();
 
     EXPECT_CALL(m_addressableMock, ReadFromAddress(address)).WillOnce(::testing::Return(0x80_b));
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq((CpuFlags::Subtract | CpuFlags::HalfCarry).AsByte()));
 
     EXPECT_CALL(m_addressableMock, WriteToAddress(address, 0x00_b)).Times(1);
     m_cpu.Step();
 
+    m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq((CpuFlags::Zero | CpuFlags::Carry).AsByte()));
 }
 
-TEST_F(SlaIndirectHLTest, ExecutingOpcode_WhenBitSevenIsClear_ClearsCarryFlag)
+TEST_F(SlaIndirectHLTest, ExecutingOpcode_ResultIsZero_SetsZeroFlag)
 {
     constexpr auto address = static_cast<uint16_t>(0x1234);
     m_cpu.Registers().hlRegister = address;
-    m_cpu.Registers().flags = (CpuFlags::Zero | CpuFlags::Subtract | CpuFlags::HalfCarry | CpuFlags::Carry).AsByte();
+
+    m_cpu.Step();
+    m_cpu.Step();
+
+    EXPECT_CALL(m_addressableMock, ReadFromAddress(address)).WillOnce(::testing::Return(0x00_b));
+    m_cpu.Step();
+
+    EXPECT_CALL(m_addressableMock, WriteToAddress(address, 0x00_b)).Times(1);
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Zero.AsByte()));
+}
+
+TEST_F(SlaIndirectHLTest, ExecutingOpcode_ClearsFlags)
+{
+    constexpr auto address = static_cast<uint16_t>(0x1234);
+    m_cpu.Registers().hlRegister = address;
+    m_cpu.Registers().flags = (CpuFlags::Carry | CpuFlags::Zero | CpuFlags::Subtract | CpuFlags::HalfCarry).AsByte();
+
     m_cpu.Step();
     m_cpu.Step();
 

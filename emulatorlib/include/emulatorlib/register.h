@@ -27,6 +27,7 @@ struct Register
         return *this;
     }
 
+
     constexpr operator T() const noexcept
     {
         return value & mask;
@@ -143,6 +144,11 @@ struct Register
         requires std::same_as<T, std::uint16_t>
     {
         return Register<std::byte>{*(reinterpret_cast<std::byte *>(&value) + 1), static_cast<std::byte>(mask >> 8)};
+    }
+
+    friend void PrintTo(const Register& reg, std::ostream * os)
+    {
+        *os << std::format("Register{{{}}}", reg.value);
     }
 };
 

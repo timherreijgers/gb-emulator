@@ -9,16 +9,27 @@
 #include "emulatorlib/instruction_handler.h"
 
 #include "extended_instruction_handlers/bit.h"
+#include "extended_instruction_handlers/bit_indirect_hl.h"
 #include "extended_instruction_handlers/res.h"
+#include "extended_instruction_handlers/res_indirect_hl.h"
 #include "extended_instruction_handlers/rl.h"
+#include "extended_instruction_handlers/rl_indirect_hl.h"
 #include "extended_instruction_handlers/rlc.h"
+#include "extended_instruction_handlers/rlc_indirect_hl.h"
 #include "extended_instruction_handlers/rr.h"
+#include "extended_instruction_handlers/rr_indirect_hl.h"
 #include "extended_instruction_handlers/rrc.h"
+#include "extended_instruction_handlers/rrc_indirect_hl.h"
 #include "extended_instruction_handlers/set.h"
+#include "extended_instruction_handlers/set_indirect_hl.h"
 #include "extended_instruction_handlers/sla.h"
+#include "extended_instruction_handlers/sla_indirect_hl.h"
 #include "extended_instruction_handlers/sra.h"
+#include "extended_instruction_handlers/sra_indirect_hl.h"
 #include "extended_instruction_handlers/srl.h"
+#include "extended_instruction_handlers/srl_indirect_hl.h"
 #include "extended_instruction_handlers/swap.h"
+#include "extended_instruction_handlers/swap_indirect_hl.h"
 
 #include <array>
 #include <format>
