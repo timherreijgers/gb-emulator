@@ -39,6 +39,7 @@ TEST_F(RlcIndirectHLTest, ExecutingOpcode)
     EXPECT_CALL(m_addressableMock, WriteToAddress(address, 0xE1_b)).Times(1);
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Carry.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x06_b));
 
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));

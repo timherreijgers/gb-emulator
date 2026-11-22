@@ -34,16 +34,4 @@ constexpr auto ExecuteSwapE = ExecuteSwap<RegisterE>;
 constexpr auto ExecuteSwapH = ExecuteSwap<RegisterH>;
 constexpr auto ExecuteSwapL = ExecuteSwap<RegisterL>;
 
-inline auto ExecuteSwapIndirectHL(AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler
-{
-    cpuRegisters.zRegister = addressBus.ReadFromAddress(cpuRegisters.hlRegister);
-    co_yield std::monostate{};
-
-    const auto result = (cpuRegisters.zRegister << 4) | (cpuRegisters.zRegister >> 4);
-    addressBus.WriteToAddress(cpuRegisters.hlRegister, result);
-    cpuRegisters.flags = static_cast<bool>(result) ? 0x00_b : CpuFlags::Zero.AsByte();
-
-    co_return;
-}
-
 } // namespace EmulatorLib

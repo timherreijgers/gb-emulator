@@ -1,3 +1,8 @@
+/*
+ * Copyright © 2026. Tim Herreijgers
+ * Licensed using the MIT license
+ */
+
 #pragma once
 
 #include "emulatorlib/address_bus.h"

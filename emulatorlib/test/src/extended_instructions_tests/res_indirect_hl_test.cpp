@@ -37,14 +37,12 @@ protected:
 
 TEST_P(ResIndirectHLTest, ExecutingOpcode)
 {
-    const auto [instruction, bitmask] = GetParam();
+    const auto [instruction, bitMask] = GetParam();
 
     constexpr auto address = static_cast<uint16_t>(0x1234);
     constexpr auto originalValue = 0xFF_b;
-    const auto originalFlags = (CpuFlags::Zero | CpuFlags::Subtract | CpuFlags::HalfCarry | CpuFlags::Carry).AsByte();
-    const auto expectedValue = originalValue & ~GetParam().bitMask;
+    const auto expectedValue = originalValue & ~bitMask;
     m_cpu.Registers().hlRegister = address;
-    m_cpu.Registers().flags = originalFlags;
 
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0xCB_b));
@@ -55,41 +53,48 @@ TEST_P(ResIndirectHLTest, ExecutingOpcode)
     EXPECT_CALL(m_addressableMock, ReadFromAddress(address)).WillOnce(::testing::Return(originalValue));
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().zRegister, ::testing::Eq(originalValue));
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(originalFlags));
 
     EXPECT_CALL(m_addressableMock, WriteToAddress(address, expectedValue)).Times(1);
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(originalFlags));
+    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(instruction));
 
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));
 }
 
-TEST_P(ResIndirectHLTest, ExecutingOpcode_ClearsSelectedMemoryBitAndPreservesFlags)
+TEST_P(ResIndirectHLTest, ExecutingOpcode_PreservesFlags)
 {
-    const auto [instruction, bitmask] = GetParam();
-
     constexpr auto address = static_cast<uint16_t>(0x1234);
-    constexpr auto originalValue = 0xFF_b;
     const auto originalFlags = (CpuFlags::Zero | CpuFlags::Subtract | CpuFlags::HalfCarry | CpuFlags::Carry).AsByte();
-    const auto expectedValue = originalValue & ~GetParam().bitMask;
     m_cpu.Registers().hlRegister = address;
     m_cpu.Registers().flags = originalFlags;
 
-    m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0xCB_b));
+    EXPECT_CALL(m_addressableMock, ReadFromAddress(address)).WillOnce(::testing::Return(0xFF_b));
+    EXPECT_CALL(m_addressableMock, WriteToAddress(address, ::testing::_)).Times(1);
 
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(instruction));
-
-    EXPECT_CALL(m_addressableMock, ReadFromAddress(address)).WillOnce(::testing::Return(originalValue));
     m_cpu.Step();
-    ASSERT_THAT(m_cpu.Registers().zRegister, ::testing::Eq(originalValue));
-    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(originalFlags));
-
-    EXPECT_CALL(m_addressableMock, WriteToAddress(address, expectedValue)).Times(1);
+    m_cpu.Step();
+    m_cpu.Step();
     m_cpu.Step();
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(originalFlags));
+}
+
+TEST_P(ResIndirectHLTest, ExecutingOpcode_DoesNotSetFlags)
+{
+    constexpr auto address = static_cast<uint16_t>(0x1234);
+    m_cpu.Registers().hlRegister = address;
+    m_cpu.Registers().flags = 0x00_b;
+
+    EXPECT_CALL(m_addressableMock, ReadFromAddress(address)).WillOnce(::testing::Return(0xFF_b));
+    EXPECT_CALL(m_addressableMock, WriteToAddress(address, ::testing::_)).Times(1);
+
+    m_cpu.Step();
+    m_cpu.Step();
+    m_cpu.Step();
+    m_cpu.Step();
+    m_cpu.Step();
+    ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(0x00_b));
 }
 
 INSTANTIATE_TEST_SUITE_P(

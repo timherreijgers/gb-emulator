@@ -47,6 +47,7 @@ TEST_P(RlcTest, ExecutingOpcode)
     m_cpu.Step();
     ASSERT_THAT(targetRegister(m_cpu.Registers()), ::testing::Eq(0xE1_b));
     ASSERT_THAT(m_cpu.Registers().flags, ::testing::Eq(CpuFlags::Carry.AsByte()));
+    ASSERT_THAT(m_cpu.Registers().instructionRegister, ::testing::Eq(0x00_b));
 }
 
 TEST_P(RlcTest, ExecutingOpcode_RotatesBitSevenIntoBitZeroAndCarry)
