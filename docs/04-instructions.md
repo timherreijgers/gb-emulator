@@ -374,12 +374,18 @@ Major categories not yet implemented:
 
 Opcode `0xCB` selects the extended opcode table. The following byte is dispatched through a separate 256-entry table;
 the CPU records that it has consumed the prefix, fetches the extended opcode on the next step, and selects its handler
-from that table. Unimplemented slots are mapped to an error handler that reports the extended opcode when executed.
+from that table. `CreateExtendedOpcodeHandlers()` in
+`extended_instruction_handlers/extended_opcode_handler_map.h` maps all 256 slots to concrete handlers;
+`UnimplementedExtendedOpcode` remains defined but is not assigned to any slot.
 
-All CB-prefixed instruction families have register and `(HL)` handlers. The behavior described below is the intended
-instruction behavior. One known implementation gap remains: `RL`, `RR`, and `RRC`, for both register and `(HL)` targets,
-currently clear Zero unconditionally. Their handlers in `extended_instruction_handlers/rl.h`, `rr.h`, and `rrc.h`
-must still set Zero for a zero result; the current tests do not cover that missing behavior.
+All CB-prefixed instruction families have register and `(HL)` handlers. The `0x00–0x3F` range contains eight-opcode
+groups for RLC, RRC, RL, RR, SLA, SRA, SWAP, and SRL, respectively. Each group orders its targets as B, C, D, E, H, L,
+`(HL)`, A. BIT, RES, and SET use the same target order within each bit-index group.
+
+Register handlers complete without yielding. Memory handlers first read the byte at HL into `zRegister` and yield.
+`BIT (HL)` then updates flags and completes without a write. The other `(HL)` handlers compute and write the result,
+then yield again before completion and the next opcode fetch. RL, RR, and RRC set Zero when their result is zero and
+clear it otherwise, for both register and memory targets.
 
 `BIT b, r` is implemented for register targets `A`, `B`, `C`, `D`, `E`, `H`, and `L`, and `BIT b, (HL)` is implemented
 for the remaining slots in the `0x40–0x7F` range. Both forms test bit `b` without changing the target, set Zero when
