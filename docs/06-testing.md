@@ -31,6 +31,9 @@ protected:
 };
 ```
 
+`Register<T>` supplies a `PrintTo` overload in `emulatorlib/register.h` so Google Test diagnostics display
+`Register{<value>}` using the underlying backing value.
+
 ## Test Files
 
 ### Unit Tests (`emulatorlib/test/src/`)
@@ -192,9 +195,8 @@ performs that bus operation. `BIT` only reads memory; the other extended `(HL)` 
 The BIT, RES, and SET suites are parameterized across bit indices; each rotate, shift, and SWAP `(HL)` suite covers
 a single opcode with `TEST_F`.
 
-The `(HL)` suites cover Carry setting and clearing for rotates and shifts, Zero results for RLC, SLA, SRA, SRL,
-and SWAP, and the BIT/RES/SET flag rules. Zero-result flag coverage for RL, RR, and RRC is still missing for both
-register and `(HL)` targets because of the implementation gap documented in [Instruction Set Architecture](04-instructions.md#cb-prefixed-instructions).
+The register and `(HL)` suites cover Zero results for RLC, RRC, RL, RR, SLA, SRA, SRL, and SWAP, Carry behavior for
+rotates and shifts, and the BIT/RES/SET flag rules. RL and RR additionally exercise rotation through the incoming Carry.
 
 ### Parameterized Instruction Test Names
 

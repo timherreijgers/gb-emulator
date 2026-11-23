@@ -114,3 +114,5 @@ A template wrapper `Register<T>` that applies a mask to selected operations:
 - Conversion to `T` returns `value & mask`
 - `LowerByteAsRegister()` / `UpperByteAsRegister()` — expose byte sub-registers (only for `Register16Bit`)
 - Post-increment/decrement and comparisons operate directly on backing values
+- `PrintTo(const Register&, std::ostream*)` — Google Test diagnostic printer; formats the backing value as
+  `Register{<value>}` without applying the register mask

@@ -72,7 +72,7 @@ The emulator follows a device-interconnect model:
 
 - **AddressBus** routes read/write operations to connected devices via `AddressBusAddressable` interface
 - **CPU** contains registers, base and CB-prefixed opcode dispatch, and uses coroutines to sequence instruction cycles;
-  only a subset of DMG instructions is implemented
+  all 256 CB-prefixed opcodes have handlers, while the base instruction set remains incomplete (HALT and STOP)
 - **Cartridge** loads ROM bytes and checks ROM-size metadata; logo and header-checksum checks are separate queries, and
   MBC banking is not implemented
 - **Ram** provides a fixed 8 KiB region at `0xC000–0xDFFF`; echo RAM and other memory-mapped devices are not implemented
