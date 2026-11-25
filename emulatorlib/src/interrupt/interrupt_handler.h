@@ -11,7 +11,6 @@
 
 namespace EmulatorLib
 {
-
 template <uint16_t HandlerAddress>
 constexpr auto InterruptHandler = [](AddressBus& addressBus, CpuRegisters& cpuRegisters) noexcept -> InstructionHandler {
     cpuRegisters.programCounter--;
@@ -33,5 +32,9 @@ constexpr auto InterruptHandler = [](AddressBus& addressBus, CpuRegisters& cpuRe
 };
 
 constexpr auto VBlankInterruptHandler = InterruptHandler<0x40>;
+constexpr auto LcdInterruptHandler = InterruptHandler<0x48>;
+constexpr auto TimerInterruptHandler = InterruptHandler<0x50>;
+constexpr auto SerialInterruptHandler = InterruptHandler<0x58>;
+constexpr auto JoypadInterruptHandler = InterruptHandler<0x60>;
 
 } // namespace EmulatorLib

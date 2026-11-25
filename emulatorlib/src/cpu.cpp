@@ -15,6 +15,24 @@
 namespace EmulatorLib
 {
 
+namespace
+{
+
+[[nodiscard]] constexpr auto GetInterruptHandler(Interrupt interrupt) noexcept -> OpcodeHandler
+{
+    switch (interrupt)
+    {
+    case Interrupt::VBlank: return OpcodeHandler{"ISR_VBlank", VBlankInterruptHandler};
+    case Interrupt::Lcd: return OpcodeHandler{"ISR_LCD", LcdInterruptHandler};
+    case Interrupt::Timer: return OpcodeHandler{"ISR_TIMER", TimerInterruptHandler};
+    case Interrupt::Serial: return OpcodeHandler{"ISR_Serial", SerialInterruptHandler};
+    case Interrupt::Joypad: return OpcodeHandler{"ISR_Joypad", JoypadInterruptHandler};
+    }
+    return OpcodeHandler{"ISR_Uknown", UnimplementedOpcode};
+}
+
+} // namespace
+
 Cpu::Cpu(AddressBus& bus, InterruptAcknowledgeable& interruptAcknowledgeable)
     : m_bus(bus)
     , m_interruptAcknowledgeable(interruptAcknowledgeable)
@@ -78,7 +96,8 @@ void Cpu::Step()
             return;
         }
 
-        m_handler = VBlankInterruptHandler(m_bus, m_registers);
+        const auto interruptHandler = GetInterruptHandler(*pending);
+        m_handler = interruptHandler.handler(m_bus, m_registers);
         m_interruptAcknowledgeable.Acknowledge(*pending);
     }
 }

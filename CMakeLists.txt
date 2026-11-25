@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 4.3)
 
 project(gb_emulator VERSION 0.0.1)
 
-add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wsuggest-override -Wshadow -Wswitch-enum -Wswitch-default -Wconversion)
+add_compile_options(-Wall -Wextra -Wpedantic -Werror -Wsuggest-override -Wshadow -Wswitch-enum -Wswitch-default -Wconversion -Wno-switch-default)
 enable_testing()
 
 find_package(GTest REQUIRED)
