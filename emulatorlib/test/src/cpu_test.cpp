@@ -7,6 +7,7 @@
 #include "emulatorlib/cpu.h"
 #include "emulatorlib/cpu_flags.h"
 #include "emulatorlib/test/address_bus_addressable_mock.h"
+#include "emulatorlib/test/interrupt_acknowedgable_mock.h"
 #include "utilitylib/byte_utils.h"
 
 #include <gmock/gmock.h>
@@ -24,8 +25,9 @@ protected:
     }
 
     ::testing::NiceMock<AddressBusAddressableMock> m_addressableMock;
+    ::testing::NiceMock<InterruptAcknowledgeableMock> m_interruptAcknowledgeableMock;
     AddressBus m_bus{{m_addressableMock}};
-    Cpu m_cpu{m_bus};
+    Cpu m_cpu{m_bus, m_interruptAcknowledgeableMock};
 };
 
 TEST_F(CpuTest, Initialization_InitializesRegistersCorrectly)

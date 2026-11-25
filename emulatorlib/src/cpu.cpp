@@ -10,12 +10,14 @@
 
 #include "extended_instruction_handlers/extended_opcode_handler_map.h"
 #include "instruction_handlers/opcode_handler_map.h"
+#include "interrupt/interrupt_handler.h"
 
 namespace EmulatorLib
 {
 
-Cpu::Cpu(AddressBus& bus)
+Cpu::Cpu(AddressBus& bus, InterruptAcknowledgeable& interruptAcknowledgeable)
     : m_bus(bus)
+    , m_interruptAcknowledgeable(interruptAcknowledgeable)
     , m_opcodeHandlers(CreateOpcodeHandlers())
     , m_extendedOpcodeHandlers(CreateExtendedOpcodeHandlers())
     , m_handler(m_opcodeHandlers[0x00].handler(bus, m_registers))
@@ -67,6 +69,18 @@ void Cpu::Step()
     }
 
     m_handler = m_opcodeHandlers[static_cast<uint8_t>(m_registers.instructionRegister.value)].handler(m_bus, m_registers);
+
+    if (m_registers.masterInterruptState == MasterInterruptState::ENABLED)
+    {
+        const auto pending = m_interruptAcknowledgeable.HighestPriorityPending();
+        if (!pending)
+        {
+            return;
+        }
+
+        m_handler = VBlankInterruptHandler(m_bus, m_registers);
+        m_interruptAcknowledgeable.Acknowledge(*pending);
+    }
 }
 
 auto Cpu::Registers() noexcept -> CpuRegisters&

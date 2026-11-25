@@ -8,6 +8,7 @@
 #include "emulatorlib/address_bus.h"
 #include "emulatorlib/cpu_registers.h"
 #include "emulatorlib/instruction_handler.h"
+#include "emulatorlib/interrupt/interrupt_acknowedgable.h"
 
 #include <array>
 #include <functional>
@@ -25,7 +26,7 @@ struct OpcodeHandler
 class Cpu
 {
 public:
-    Cpu(AddressBus& bus);
+    Cpu(AddressBus& bus, InterruptAcknowledgeable& interruptAcknowledgeable);
     ~Cpu() = default;
     Cpu(Cpu&) = delete;
     Cpu& operator=(Cpu&) = delete;
@@ -39,6 +40,7 @@ public:
 
 private:
     AddressBus& m_bus;
+    InterruptAcknowledgeable& m_interruptAcknowledgeable;
     CpuRegisters m_registers;
 
     std::array<OpcodeHandler, 256> m_opcodeHandlers;
