@@ -28,7 +28,6 @@ struct CpuRegisters
     CpuRegisters& operator=(CpuRegisters&&) noexcept = delete;
 
     Register8Bit instructionRegister{backingInstructionRegister};
-    Register8Bit interruptEnableRegister{backingInterruptEnableRegister};
 
     Register16Bit afRegister{backingAfRegister, 0xFFF0_u16};
     Register8Bit accumulator{afRegister.UpperByteAsRegister()};
@@ -58,7 +57,6 @@ struct CpuRegisters
 
 private:
     std::byte backingInstructionRegister{};
-    std::byte backingInterruptEnableRegister{};
     uint16_t backingAfRegister{};
     uint16_t backingBcRegister{};
     uint16_t backingDeRegister{};
